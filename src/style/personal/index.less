@@ -1,0 +1,32 @@
+@import '../common/mixin.less';
+.personal-index{
+	font-size:28upx;
+	.content{
+		margin: @g_margin
+	}
+	.mounting{
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 100;
+		background: white
+	}
+	.module{
+		margin-bottom: @g_bottom;
+		image{
+			height: 100upx;
+			width: 100upx;
+			margin: 10upx
+		}
+	}
+	.tabs{
+		margin-bottom: @g_bottom;
+		.active{
+			border-bottom: 1px solid #ccc
+		}
+	}
+	.types{
+		margin-bottom: @g_bottom;
+	}
+}
