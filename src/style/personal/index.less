@@ -1,32 +1,93 @@
 @import '../common/mixin.less';
 .personal-index{
-	font-size:28upx;
+	font-size:28upx;	
 	.content{
 		margin: @g_margin
 	}
 	.mounting{
 		position: fixed;
-		top: 0;
+		top: 100upx;
 		left: 0;
 		width: 100%;
 		z-index: 100;
-		background: white
+		background: white;
+		padding-top:76upx; 
+		z-index: 1;
 	}
-	.module{
+	.modules{
+		background: white;
+		padding: 26upx 50upx 15upx;
+		font-size: 24upx;
 		margin-bottom: @g_bottom;
-		image{
-			height: 100upx;
-			width: 100upx;
-			margin: 10upx
+		.module{	
+			image{
+				height: 80upx;
+				width: 80upx;
+				margin-bottom: 15upx;
+			}
 		}
 	}
 	.tabs{
-		margin-bottom: @g_bottom;
+		background: white;
+		border-bottom: @g_border;
+		height: 94upx;
+		color:#333;
+		position: relative;
+		z-index: 50;
+		.sliderBorder{
+			position: absolute;
+			bottom: 0;
+			width: 15px;
+			background: @g_color;
+			height: 5upx;
+			left:0;
+			z-index: 10
+		}
+		.tab{
+			width: 33.33%;
+			height: 100%;
+			line-height: 94upx;
+			text-align: center
+		}
 		.active{
-			border-bottom: 1px solid #ccc
+			font-size: 36upx;
+			color: @g_color;
+			font-weight: 500
 		}
 	}
 	.types{
-		margin-bottom: @g_bottom;
+		background: white;
+		height: 74upx;
+		font-size: 24upx;
+		position: relative;
+		border-bottom: @g_border;
+		text{
+			width: 50%;
+			text-align: center;
+		}
+		text:nth-of-type(1){
+			margin-right: 10upx
+		}
+		.border{
+			height: 64upx;
+			margin-top: 4upx;
+			position: absolute;
+			left: 50%;
+			width: 2upx;
+			top:0;
+			background: #f5f5f5
+		}
 	}
+	@keyframes myfirst
+	{
+		0%   {background:red; height: 100%}
+		100% {background:red; height: 0}
+	}
+	.tt{
+		padding-top: 244upx
+	}
+}
+.loadmore{
+	text-align: center;
+	margin: 10upx 0
 }

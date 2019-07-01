@@ -1,0 +1,121 @@
+@import '../common/mixin.less';
+.interviewDetail{
+	font-size: 28upx;
+	.detailTop{
+		margin: @g_margin 0;
+		padding: @g_margin;
+		background: white;
+		.avatar{
+			height: 88upx;
+			width: 88upx;
+			border-radius: 4upx;
+			margin-right: 24upx;
+		}
+		.name{
+			font-size: 28upx;
+			font-weight: 500;
+		}
+		.post{
+			color: #999;
+			font-size: 22upx;
+		}
+		.saraly{
+			font-size: 28upx;
+		}
+	}
+	.detailContent{
+		margin: @g_margin 18upx;
+		background: white;
+		border-radius: 4upx;
+		color: #666;
+		padding: 0 20upx 30upx;		
+		.list{
+			margin-top: 30upx;
+		}
+		.degree{
+			border-bottom: @g_border;
+			padding: 55upx 0;
+			.active,.active1,.active2{
+				position: absolute;
+				left: 25%;
+				transform: translateX(-50%);
+				color: #adadad;
+				.icon-youjiantou{
+					margin-left: -16upx
+				}
+				.icon-youjiantou:nth-of-type(2){
+					font-size: 42upx;
+					color:@g_color;
+					margin-top: -6upx
+				}
+			}
+			.active1{
+				left: 50%;
+			}
+			.active2{
+				left: 75%;
+			}
+			.cir{
+				height: 12upx;
+				width: 12upx;
+				border-radius: 50%;
+				border: 6upx solid #adadad;
+				// display: inline-block;
+				margin-bottom: 26upx;
+			}
+			.icon-duigou1{
+				color: @g_color;
+				margin-bottom: 20upx;
+			}
+			.hook{
+				color: white;
+				background: @g_color;
+				height: 32upx;
+				line-height: 32upx;
+				text-align: center;
+				width: 32upx;
+				font-size: 22upx;
+				border-radius: 50%;
+			}
+			.steps{
+				font-size: 10px;
+				color: #999;
+				text-align: center;
+				margin-top: 20upx;
+				position: relative;
+				.step{
+					width: 25%;
+					height: 132upx;
+				}
+				.time{
+					font-size: 8px;
+					margin-top: 15upx;
+				}
+			}
+		}
+		.lists{
+			.tips{
+				.h(92upx,92upx,center);
+				color:#bcbcbc
+			}
+		}
+		.list{
+			.iconfont{
+				font-size: 42upx;
+				margin-right: 30upx;
+				font-size: #666;
+			}
+		}
+		
+		.icon-youjiantou{
+			float: right;
+			margin-right: 0
+		}
+		.tt{
+			left: 33.33% !important
+		}
+		.tt1{
+			left: 66.66% !important
+		}
+	}	
+}

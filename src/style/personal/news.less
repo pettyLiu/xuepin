@@ -1,10 +1,38 @@
+@import '../common/mixin.less';
 .personal-news{
+	font-size: 28upx;
 	.tabs{
+		background: white;
+		border-bottom: @g_border;
+		height: 94upx;
+		color:#333;
+		position: relative;
+		margin-bottom: @g_bottom;
+		.sliderBorder{
+			position: absolute;
+			bottom: 0;
+			width: 15px;
+			background: @g_color;
+			height: 5upx;
+			left:0;
+			z-index: 10
+		}
 		.tab{
-			height: 50upx;
-			line-height: 50upx;
-			border-bottom: 1px solid #ccc;
+			width: 25%;
+			height: 100%;
+			line-height: 94upx;
 			text-align: center
 		}
+		.active{
+			font-size: 36upx;
+			color: @g_color;
+			font-weight: 500
+		}
+	}
+	.newsTip{
+		float: right
+	}
+	.icon-youjiantou{
+		
 	}
 }

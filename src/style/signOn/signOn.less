@@ -1,0 +1,48 @@
+@import '../../style/common/mixin.less';
+.signOn{
+	.top{
+		position: relative;
+		height: 476upx;
+		color: white;
+		.bg{
+			height: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			z-index: -1;
+		}
+		.naviBar{
+			height: 44px;
+			line-height: 44px;
+			position: relative;
+			width: 100%;
+			.icon-jiantou3{
+				position: absolute;
+				font-size: 32upx;
+				margin-left: 20upx;
+				left: 0
+			}
+		}
+		.signOnDetail{
+			padding: 22upx 22upx 0 80upx;
+			.icon-youjiantou{
+				font-size: 52upx
+			}
+		}
+		.tips{
+			position: absolute;
+			bottom: 106upx;
+			right: 22upx
+		}
+	}
+	.calendar{
+		background: white;
+		border-radius: 12upx;
+		margin: -90upx 22upx 0;
+		padding: 0 42upx;
+		.tips{
+			.h(90upx,90upx,left)
+		}
+	}
+}

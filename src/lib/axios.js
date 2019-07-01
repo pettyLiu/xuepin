@@ -32,9 +32,17 @@ export default function (options) {
     }
     return new Promise((resolve, reject) => {		
         axios.request(options).then(res => {
-            if (res.data.code == 'w1005' || res.data.msg == 'token过期') {
-                store.state.currRouter.instance.push({ name: 'login' })
-            } else {
+			console.log(res)
+            if (res.data.code == 503 || res.data.msg == 'token过期') {
+				uni.redirectTo({
+					url: '/pages/login/index'
+				})
+                // store.state.currRouter.instance.push({ name: 'login' })
+            }else if(false){
+				uni.redirectTo({
+					url: '/pages/basicInformation'
+				})
+			} else {
                 resolve(res.data)
             }
         }, error => {

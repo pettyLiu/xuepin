@@ -1,0 +1,68 @@
+@import '../common/mixin.less';
+.postDetail{
+	.top, .content, .footer{
+		margin: @g_margin 0 0;
+		background: white;
+		padding: 0 30upx 0 35upx;
+		.title{
+			font-size: 30upx;
+			line-height: 68upx;
+			height: 68upx;
+			border-bottom: @g_border;
+			display: inline-block;
+			width: 100%;
+		}
+	}
+	.top{
+		padding-top: 42upx;
+		.address{
+			position: relative;
+			line-height: 88upx;
+			height: 88upx;
+			color:#666;
+			border-top: @g_border;
+			.icon-weizhi{
+				margin-right: 18upx
+			}
+		}
+		.other{
+			color: #999;
+			margin: 24upx 0;
+			display: block
+		}
+	}
+	.content{
+		.postDescribe{
+			padding: 25upx 0 30upx;
+		}
+	}
+	.footer{
+		.companyTxt{
+			padding: @g_margin 0;
+			.companyAvatar{
+				height: 96upx;
+				width: 96upx;
+				border-radius: 4upx;
+				margin-right: 22upx;
+			}
+			.tocompany{
+				position: relative;
+				flex: 1
+			}
+		}
+	}
+	.icon-youjiantou{
+		position: absolute;
+		right: 0;
+		top: 50%;
+		transform: translateY(-50%)
+	}
+	.btn{
+		height: 88upx;
+		background: @g_color;
+		color: white;
+		width: 90%;
+		margin: 20upx 5%;
+		font-size: 30upx;
+	}
+}

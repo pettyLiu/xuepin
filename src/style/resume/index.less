@@ -1,0 +1,52 @@
+@import '../../style/common/mixin.less';
+.resumeIndex{
+	.resumeList{
+		background: white;
+		margin: 36upx 26upx;
+		box-shadow:0px 6upx 13upx 0px rgba(59,55,136,0.26);
+		border-radius:10upx;
+		position: relative;
+		.border{
+			position: absolute;
+			top:0;
+			left:0;
+			height: 72upx;
+			width: 4upx;
+			background: @g_color;
+			display: inline-block
+		}
+		.resumeType{
+			height: 72upx;
+			line-height: 72upx;
+			padding-left: 22upx;
+			width: calc(100% - 22upx);
+			display: inline-block;
+			border-bottom: @g_border
+		}
+		.resumeDetails{
+			padding: 15upx 22upx;
+			.resumeLeft{
+				.resumeDetail{
+					margin-top: 40upx;
+					.intention{
+						.h(38upx, 38upx, center);
+						background: #f6f6f6;
+						border-radius: 6upx;
+						margin: 24upx 20upx 0 0;
+						padding: 0 10upx;
+					}
+				}
+				.avatar{
+					height: 98upx;
+					width: 98upx;
+					border-radius: 50%;
+					margin-right: 26upx;
+				}
+				.nickName{
+					font-weight: 500;
+					margin-bottom: 20upx;
+				}
+			}
+		}
+	}
+}

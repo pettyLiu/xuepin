@@ -1,0 +1,46 @@
+@import '../../style/common/mixin.less';
+.form{
+	margin: 24upx 0;
+	background: white;
+	padding: 0 32upx 0 44upx;
+	.list{
+		border-bottom: @g_border;
+		padding-bottom: 22upx;
+		.title{
+			.h(63upx, 63upx, none)
+		}
+	}
+}
+
+
+.changeTelPage{
+	.changeTel{
+		background: white;
+		margin-top: 24upx;
+		padding-bottom: 65upx;
+		.list{
+			border-bottom: @g_border;
+			margin: 0 16upx 0 26upx;
+			padding-top: 65upx;
+			position: relative;
+			.listTit{
+				width: 130upx;
+				padding-left: 10upx
+			}
+			.code{
+				position: absolute;
+				right: 10upx
+			}
+			input{
+				flex: 0.6
+			}
+		}
+	}
+	.btn{
+		background: white;
+		.h(98upx, 98upx ,center);
+		margin: 72upx 5%;
+		width: 90%;
+		border-radius: 6upx;
+	}
+}

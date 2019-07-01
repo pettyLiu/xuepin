@@ -1,3 +1,3 @@
 export default{
-	baseUrl: 'http://arw.test/',
-	}
+	baseUrl: 'https://kuma.dev.0797i.cn/',
+}

@@ -1,0 +1,64 @@
+@import '../../style/common/mixin.less';
+.FullTime{
+	.topDetail{
+		margin: 26upx 26upx 0;
+		padding: 20upx 26upx 26upx 40upx;
+		background: white;
+		position: relative;
+		border-radius: 10upx;
+		.avatar{
+			.wh(98upx, 98upx);
+			margin-right: 26upx;
+		}
+		.edit{
+			position: absolute;
+			top: 20upx;
+			right: 26upx
+		}
+		.lists{
+			margin-top: 6upx;
+			.list{
+				margin-top: 24upx;
+			}
+		}
+	}
+	.content{
+		background-color: white;
+		margin: 26upx 0;
+		.part{
+			border-bottom: @g_border;
+			.title{
+				font-weight: 500;
+				padding: 26upx 0 0 30upx;
+				display: inline-block
+			}
+			.btn{
+				.wh(68upx, 430upx);
+				text-align: center;
+				line-height: 68upx;
+				border:2upx solid rgba(225,225,225,1);
+				border-radius:6upx;	
+				margin: 60upx 0 46upx
+			}
+			.partTop{
+				width: calc(100% - 60upx);
+				position: relative;
+				margin: 46upx 30upx 0;
+				.address{
+					padding-top: 10upx
+				}
+			}
+		}
+		
+	}
+	.icon-youjiantou{
+		position: absolute;
+		right: 0upx;
+		top: 0;
+	}
+	.time{
+		position: absolute;
+		right: 35upx;
+		top: 0;
+	}
+}

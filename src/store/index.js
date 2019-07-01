@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import footer_store from "./modules/footer_store.js"
+import axios from '../lib/axios'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -9,9 +10,15 @@ const store = new Vuex.Store({
 		base_url:"https://cnodejs.org/api/v1",
 		list:[],
 		detail:'',
-		token:''
+		token:'',
+		information: {name: '',email: ''},
+		JobIntension: {}
 	},
-	mutations: {		
+	mutations: {
+		changeInfo(state, payload){ // 修改个人基础信息
+			state.information.name = payload.name ? payload.name : state.information.name
+			state.information.email = payload.email ? payload.email : state.information.email
+		},
 		switch_loading(state,status){
 			console.log(status)
 			if(status == "change"){
@@ -33,10 +40,15 @@ const store = new Vuex.Store({
 		}
 	},
 	actions: {
+		changeJobIntension(context, payload){
+			
+		},
+		getBasicConfig(context){
+			context.state.information = {name: '11',email: '2323'}
+		},
 		get_data(ctx){		
 			console.log(ctx)
-			ctx.commit("switch_loading","1")
-			
+			ctx.commit("switch_loading","1")		
 			uni.request({
 				url:ctx.state.base_url+"/topics",
 				data:{

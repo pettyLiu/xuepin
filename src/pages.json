@@ -3,14 +3,49 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "uni-app",
-				"titleNView":false
+				"navigationBarTitleText": "NavBar 导航栏",
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white",
+				"enablePullDownRefresh": true,
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none",
+					"pullToRefresh": {
+						"style": "circle",
+						"offset": "50px"
+					}
+				}
+			}			
+		},
+		{
+			"path": "pages/filterArea",
+			"style": {
+				"autoBackButton":"false",
+				"navigationBarTitleText": "筛选"
+			}	
+		},
+		{
+			"path": "pages/login/index",
+			"style": {
+				"titleNView": false
+			}	
+		},
+		{
+			"path": "pages/login/code",
+			"style": {
+				"titleNView": false
+			}	
+		},
+		{
+			"path": "pages/basicInformation",
+			"style": {
+				"titleNView": false
 			}	
 		},
 		{
 			"path": "pages/company/index",
 			"style": {
-				"navigationBarTitleText": "公司"
+				"navigationBarTitleText": "企业"
 			}	
 		},
 		{
@@ -22,13 +57,21 @@
 		{
 			"path": "pages/user/index",
 			"style": {
-				"navigationBarTitleText": "我的"
+				"navigationBarTitleText": "我的",
+				"titleNView":false,
+				"navigationBarTextStyle": "white"
 			}	
 		},
 		{
 			"path": "pages/signOn",
 			"style": {
-				"navigationBarTitleText": "签到"
+				"navigationBarTitleText": "签到",
+				"titleNView":false
+			}	
+		},{
+			"path": "pages/index/search",
+			"style": {
+				"navigationBarTitleText": "搜索"
 			}	
 		},
 		{
@@ -37,44 +80,211 @@
 				"navigationBarTitleText": "职位详情",
 				"titleNView": {
 					"buttons": [ //原生标题栏按钮配置,
+						{ "type": "share"},
+						{ "type": "favorite" }
+					]
+				}
+			}	
+		},
+		{
+			"path": "pages/companyDetail",
+			"style": {
+				"navigationBarTitleText": "公司详情",
+				"titleNView": {
+					"buttons": [ //原生标题栏按钮配置,
 						{ "type": "share" },
 						{ "type": "favorite" }
 					]
 				}
 			}	
+		},
+		{
+			"path": "pages/news/InterviewDetail",
+			"style": {
+				"navigationBarTitleText": "面试详情"
+			}	
+		},
+		{
+			"path": "pages/user/integral",
+			"style": {
+				"navigationBarTitleText": "积分记录"
+			}	
+		},
+		{
+			"path": "pages/user/gold",
+			"style": {
+				"navigationBarTitleText": "金币",
+				"titleNView": {
+					"buttons": [ //原生标题栏按钮配置,
+						{ "type": "none", "text": "金币明细","fontSize": "12" }
+					]
+				}
+			}	
+		},
+		{
+			"path": "pages/user/goldRecord",
+			"style": {
+				"navigationBarTitleText": "金币记录"
+			}	
+		},
+		{
+			"path": "pages/user/goldRecharge",
+			"style": {
+				"navigationBarTitleText": "充值金币"
+			}	
+		},
+		{
+			"path": "pages/user/excharge",
+			"style": {
+				"navigationBarTitleText": "积分兑换"
+			}	
+		},
+		{
+			"path": "pages/resume/index",
+			"style": {
+				"navigationBarTitleText": "我的简历"
+			}	
+		},
+		{
+			"path": "pages/resume/Full-time",
+			"style": {
+				"navigationBarTitleText": "我的全职简历"
+			}	
+		},
+		{
+			"path": "pages/resume/Part-time",
+			"style": {
+				"navigationBarTitleText": "我的兼职简历"
+			}	
+		},
+		{
+			"path": "pages/resume/editInformation",
+			"style": {
+				"navigationBarTitleText": "基本信息",
+				"titleNView": {
+					"buttons": [ //原生标题栏按钮配置,
+						{ "type": "none", "text": "保存", "fontSize": "16px" }
+					]
+				}
+			}	
+		},
+		{
+			"path": "pages/resume/editList",
+			"style": {
+				"navigationBarTitleText": "信息",
+				"titleNView": {
+					"buttons": [ //原生标题栏按钮配置,
+						{ "type": "none", "text": "保存", "fontSize": "16px" }
+					]
+				}
+			}	
+		},
+		{
+			"path": "pages/resume/jobIntension",
+			"style": {
+				"navigationBarTitleText": "求职意向",
+				"titleNView": {
+					"buttons": [ //原生标题栏按钮配置,
+						{ "type": "none", "text": "保存", "fontSize": "16px" }
+					]
+				}
+			}	
+		},
+		{
+			"path": "pages/resume/educationExperience",
+			"style": {
+				"navigationBarTitleText": "教育经历",
+				"titleNView": {
+					"buttons": [ //原生标题栏按钮配置,
+						{ "type": "none", "text": "保存", "fontSize": "16px" }
+					]
+				}
+			}	
+		},
+		{
+			"path": "pages/resume/workExperience",
+			"style": {
+				"navigationBarTitleText": "工作经历",
+				"titleNView": {
+					"buttons": [ //原生标题栏按钮配置,
+						{ "type": "none", "text": "保存", "fontSize": "16px" }
+					]
+				}
+			}	
+		},
+		{
+			"path": "pages/resume/selfAssessment",
+			"style": {
+				"navigationBarTitleText": "自我评价",
+				"titleNView": {
+					"buttons": [ //原生标题栏按钮配置,
+						{ "type": "none", "text": "保存", "fontSize": "16px" }
+					]
+				}
+			}	
+		},
+		{
+			"path": "pages/collection",
+			"style": {
+				"navigationBarTitleText": "我的收藏"
+			}	
+		},
+		{
+			"path": "pages/setting/index",
+			"style": {
+				"navigationBarTitleText": "设置"
+			}	
+		},
+		{
+			"path": "pages/setting/changeTel",
+			"style": {
+				"navigationBarTitleText": "更换手机号"
+			}	
+		},
+		{
+			"path": "pages/setting/changePassword",
+			"style": {
+				"navigationBarTitleText": "修改密码"
+			}	
+		},
+		{
+			"path": "pages/setting/authorize",
+			"style": {
+				"navigationBarTitleText": "社交账号绑定"
+			}	
 		}
 	],
 	"tabBar": {
 		"color": "#7A7E83",
-		"selectedColor": "#3cc51f",
+		"selectedColor": "#5E57EB",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [{
 			"pagePath": "pages/index/index",
-			"iconPath": "static/image/icon_component.png",
-			"selectedIconPath": "static/image/icon_component_HL.png",
+			"iconPath": "/static/image/home_nor.png",
+			"selectedIconPath": "/static/image/home_hov.png",
 			"text": "首页"
 		},{
 			"pagePath": "pages/company/index",
-			"iconPath": "static/image/icon_component.png",
-			"selectedIconPath": "static/image/icon_component_HL.png",
+			"iconPath": "static/image/company_nor.png",
+			"selectedIconPath": "static/image/company_hov.png",
 			"text": "公司"
 		},{
 			"pagePath": "pages/news/index",
-			"iconPath": "static/image/icon_component.png",
-			"selectedIconPath": "static/image/icon_component_HL.png",
+			"iconPath": "static/image/news_hov.png",
+			"selectedIconPath": "static/image/news_nor.png",
 			"text": "消息"
 		}, {
 			"pagePath": "pages/user/index",
-			"iconPath": "static/image/icon_API.png",
-			"selectedIconPath": "static/image/icon_API_HL.png",
-			"text": "接口"
+			"iconPath": "static/image/personal_nor.png",
+			"selectedIconPath": "static/image/personal_hov.png",
+			"text": "我的"
 		}]
 	},
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
+		"navigationBarBackgroundColor": "#5E57EB",
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "app",
 		"backgroundColor": "#F8F8F8"
 	}
 }

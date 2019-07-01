@@ -1,3 +1,4 @@
+@import '../common/mixin.less';
 .personal-company{
 	font-size: 28upx;
 	.search{
@@ -7,14 +8,64 @@
 		top: 17px;
 		right: 20upx
 	}
+	.classfiy{
+		background: white;
+		height: 74upx;
+		margin-bottom: @g_bottom;
+		position: relative;
+		.classfiyItem{
+			width: 50%;
+			text-align: center;
+			line-height: 74upx;
+		}
+		.border{
+			height: 64upx;
+			margin-top: 4upx;
+			position: absolute;
+			left: 50%;
+			width: 2upx;
+			top:0;
+			background: #f5f5f5
+		}
+	}
 	.companyLists{
+		font-size: 20upx;
 		.companyList{
-			.companyTxt{			
+			background: white;
+			margin-bottom: @g_bottom;
+			padding: 25upx @g_margin @g_margin;
+			.companyTxt{
+				.companyName{
+					font-weight: 500;
+					font-size: 28upx;
+				}
 				.companyAvatar{
-					height: 100upx;
-					width: 100upx;
+					height: 64upx;
+					width: 64upx;
+					border-radius: 4upx;
+					margin-right: 24upx;
 				}
 			}
+			.companyTypes{
+				padding: 30upx 0 22upx;
+				border-bottom: 1px solid #f5f5f5;
+				.companyType{
+					padding: 6upx;
+					margin-right: 30upx;
+					background: #f5f5f5;
+					color: #adadad;
+					border-radius: 6upx;
+				}
+			}
+			.companyRecruit{
+				margin-top: 30upx;
+			}
 		}
+	}
+	.icon-weizhi{
+		font-size: 28upx;
+	}
+	.globeColor{
+		color: @g_color
 	}
 }
