@@ -1,0 +1,62 @@
+@import '../../style/common/mixin.less';
+.search{
+	height: 76upx;
+	background: @g_color;
+	color:white;
+	padding: 0 3%;
+	position: fixed;
+	top:0;
+	left:0;
+	width: 94%;
+	z-index: 100;
+	.searchView{
+		position: relative
+	}
+	.icon-sanjiao{
+		position: absolute;
+		left: 56upx;
+		z-index: 10;
+	}
+	.icon-sousuo{
+		position: absolute;
+		left: 10upx;
+		top: 10upx;
+		z-index: 10;
+		color:#999
+	}
+	.address{
+		text-align: center;
+		line-height: 56upx;
+		position: relative
+	}
+	.searchInp{
+		width: 400upx;
+		padding: 0 50upx;
+		border-radius: 28upx;
+		background: white;
+		color:#333;
+		height: 56upx;
+	}
+	.signOn{
+		width: 20%;
+		text-align: center;
+		border-left: 1px solid #ccc
+	}
+}
+.history{
+	margin-top: 44px;
+	padding: 0 32upx;
+	.lists{
+		flex-wrap: wrap;
+		.list{
+			.wh(60upx,33.33%);
+			line-height: 60upx;
+		}
+		.list:nth-of-type(3n+2){
+			text-align: center
+		}
+		.list:nth-of-type(3n+3){
+			text-align: right
+		}
+	}
+}

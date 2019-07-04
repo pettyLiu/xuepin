@@ -1,0 +1,73 @@
+@import '../common/mixin.less';
+uni-page-body{
+	background: white;
+	height: 100%
+}
+	.filterCompany{
+		// padding-top: 77upx;
+		.title{
+			padding: 76upx 0 20upx 30upx;
+			display: inline-block
+		}
+		.content{
+			display: flex;
+			flex-wrap: wrap;
+			.contentList{
+				width: 33.33%;
+				text-align: center;
+				height: 60upx;
+				padding: 10upx 0;
+				.contentTxt{
+					height: 100%;
+					line-height: 60upx;
+					width: 176upx;
+					display: inline-block;
+					background: #efefef;
+					border-radius: 4upx
+				}
+			}
+			.active{
+				background: @g_color !important;
+				color:white
+			}
+		}
+		.handle{
+			width: 100%;
+			border-top: 1px solid #999;
+			.reset,.comfirm{
+				width: calc(50% - 0.5px);
+				display: inline-block;
+				text-align: center;
+				height: 50upx;
+				line-height: 50upx
+			}
+			.reset{
+				border-right: 1px solid #999
+			}
+		}
+		.btn{
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			width: calc(100% - 68upx);
+			z-index: 100;
+			padding: 20upx 34upx;
+			border-top: @g_border;
+			background: white;
+			.reset{
+				.wh(78upx,196upx);
+				border-radius: 12upx;
+				background: #e0e0e0;
+				text-align: center;
+				line-height: 78upx
+			}
+			.comfirm{
+				.wh(78upx,426upx);
+				border-radius: 12upx;
+				background: @g_color;
+				text-align: center;
+				line-height: 78upx;
+				color:white;
+			}
+		}
+	}

@@ -28,7 +28,7 @@
 				</view>
 			</view>
 		</view>
-		<button type="primary" class="btn">投递简历</button>
+		<button type="primary" class="btn" @click="sendingResume">投递简历</button>
 	</view>
 </template>
 
@@ -55,6 +55,11 @@
 				uni.navigateTo({
 					url: '/pages/companyDetail'
 				})
+			},
+			sendingResume () {
+				uni.setNavigationBarTitle({
+					title: '新的标题'
+				});
 			}
 		},
 		computed:{

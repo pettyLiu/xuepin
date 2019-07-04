@@ -1,7 +1,7 @@
 <template>
 	<view class="selfAssessment">
 		<textarea class="text" @blur="bindTextAreaBlur" @input="changeWord" v-model="content"
-		placeholder="自我介绍,最多输入500字" maxlength="500" placeholder-class="placeholder"/>
+		:placeholder="placeholder" maxlength="500" placeholder-class="placeholder"/>
 		<text class="f_26 num">{{num}}/500</text>
 	</view>
 </template>
@@ -12,7 +12,8 @@
 		data() {
 			return {
 				num: 0,
-				content:''
+				content:'',
+				placeholder: '自我介绍,最多输入500字'
 			};
 		},
 		methods:{
@@ -21,6 +22,14 @@
 			},
 			changeWord (e) { // 输入字符
 				this.num = e.detail.value.length
+			}
+		},
+		onLoad (options) {
+			if(options.title){
+				uni.setNavigationBarTitle({
+					title: '工作描述'
+				})
+				this.placeholder = '请描述工作职位，最多输入500字'
 			}
 		},
 		

@@ -1,17 +1,22 @@
 <template>
-	<view class="area row">
-		<scroll-view scroll-y="true" class="areaLeft column">
-			<view class="areaItem globelColor" >服务业</view>
-		</scroll-view>
-		<scroll-view scroll-y="true" class="areaCenter column">
-			<view class="areaItem" v-for="(item, index) in area" :key="index" @click="showNext(index)" :class="{active: activeArea == index}">{{item}}</view>
-		</scroll-view>
-		<scroll-view scroll-y="true" class="areaRight">
-			<view class="areaItem" @click="closeMask(subArea)">{{subArea}}</view>
-		</scroll-view>
-		<view class="btn row ali_center just_btw">
-			<text class="reset">重置</text>
-			<text class="comfirm">确定</text>
+	<view class="area ">
+		<view class="top row ali_center">
+			<text class="list globelColor" v-for="(item, index) in choose" :key="index" v-if="choose.length > 0">
+				{{item}}
+				<text class="iconfont icon-del" @click="del(index)"></text>
+			</text>
+			<text class="c_999 f_24 tips" v-if="choose.length == 0">请选择期望职位！</text>
+		</view>
+		<view class="content row">
+			<scroll-view scroll-y="true" class="areaLeft column">
+				<view class="areaItem globelColor">服务业</view>
+			</scroll-view>
+			<scroll-view scroll-y="true" class="areaCenter column">
+				<view class="areaItem" v-for="(item, index) in area" :key="index" @click="showNext(index)" :class="{active: activeArea == index}">{{item}}</view>
+			</scroll-view>
+			<scroll-view scroll-y="true" class="areaRight">
+				<view class="areaItem" @click="chooseIntension(subArea)">{{subArea}}</view>
+			</scroll-view>
 		</view>
 	</view>
 </template>
@@ -25,9 +30,11 @@
 				subArea: '',
 				activeArea: 0,
 				statusBarHeight: 0,
-				thirActiveArea: 0
+				thirActiveArea: 0,
+				choose: []
 			}
 		},
+		props:['limit'],
 		mounted() {
 			this.getArea()
 			console.log(getApp().globalData)
@@ -37,10 +44,11 @@
 		methods:{
 			moveHandle () {
 			},
-			// 关闭弹窗
-			closeMask (item) {
-				console.log(item)
-				this.$emit("closeMask", {name: item,type: 'area'})
+			del (index) {
+				this.choose.splice(index, 1)
+			},
+			chooseIntension (item) {
+				this.choose.push(item)
 			},
 			getArea () {
 				this.area=['零售','家政','餐饮','酒店']
@@ -50,6 +58,11 @@
 				this.subArea = '全' + this.area[index]
 				this.activeArea = index	
 			}
+		},
+		watch:{
+			choose(val, oldval){
+				this.$emit('choose', val)
+			}
 		}
 	}
 </script>
@@ -58,17 +71,31 @@
 	@import '../style/common/mixin.less';
 	uni-page-body{
 		height: 100%}
-	.area{
+	.area,.content{
 		height: 100%;
-		.mask{
-			background: rgba(0,0,0,0.2);
-			height: 100%;
-			width: 100%;
-			position: absolute;
-			top: 0;
-			left: 0;
-			z-index: -1;
-			margin-top: 244upx;
+		.top{
+			widtdh: 100%;
+			min-height: 80upx;
+			padding: 20upx 0 ;
+			background: white;
+			border-bottom: @g_border;
+			flex-wrap: wrap;
+			.list{
+				.h(52upx, 52upx, center);
+				width: 152upx;
+				background: #f4f4f4;
+				margin: 0 0 20upx 32upx;
+				position: relative;
+				.icon-del{
+					position: absolute;
+					top: -20upx;
+					right: 0;
+					font-size: 14upx
+				}
+			}
+			.tips{
+				padding-left: 32upx
+			}
 		}
 		.areaLeft,.areaCenter,.areaRight{
 			width: 25%;

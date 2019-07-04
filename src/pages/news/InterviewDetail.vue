@@ -13,19 +13,7 @@
 		</view>
 		<view class="detailContent">
 			<view class="degree">
-				<view class="row just_arw ali_center">
-					<!-- <view class="row ali_center just_arw" style="width: 90%">
-						<text class="iconfont icon-duigou1"></text>
-						<text style="letter-spacing:-6upx" class="active row center">><text class="globelColor">></text>></text>
-						<text class="iconfont icon-duigou1"></text>
-						<text style="letter-spacing:-6upx" class="active row center">><text class="globelColor">></text>></text>
-						<text class="iconfont icon-duigou1"></text>
-						<text style="letter-spacing:-4upx">>>></text>
-						<text class="cir"></text>
-					</view> -->
-					<!-- <text class="">>>></text>
-					<text class="">>>></text> -->
-				</view>				
+				<!-- status:1已投递2被查看3不合适4邀面试5已接受 -->
 				<view class="steps row just_arw">
 					<view class="step column center" :class="{globelColor: status==1}">
 						<text class="iconfont icon-duigou1"></text>
@@ -37,25 +25,30 @@
 						<text class="iconfont icon-youjiantou"></text>
 						<text class="iconfont icon-youjiantou"></text>
 					</text>
-					<view class="step column center" :class="{globelColor: status==2}">
-						<text class="iconfont icon-duigou1"></text>
-						<!-- <text class="cir"></text> -->
+					<view class="step column ali_center just_btw" :class="{globelColor: status==2}">
+						<text class="iconfont icon-duigou1" v-if="status!=1"></text>
+						<text class="cir" v-if="status==1"></text>
 						<text>已被查看</text>
 						<text class="time">6月15日 15:30</text>
 					</view>
-					<text class="active1 row center"  :class="{tt1:status==3}" v-if="status==2">
+					<text class="active1 row center"  v-if="status!=3">
+						<text class="iconfont icon-youjiantou"></text>
+						<text class="iconfont icon-youjiantou"></text>
+						<text class="iconfont icon-youjiantou"></text>
+					</text>
+					<text class="active1 row center"  :class="{tt1:status==3}" v-if="status==3">
 						<text class="iconfont icon-youjiantou"></text>
 						<text class="iconfont icon-youjiantou"></text>
 						<text class="iconfont icon-youjiantou"></text>
 					</text>
 					<view class="step column center" :class="{globelColor: status==3}" v-if="status==3">
-						<text class="iconfont icon-duigou1"></text>
-						<!-- <text class="cir"></text> -->
+						<text class="iconfont icon-delete"></text>
 						<text>不合适</text>
 						<text class="time">6月15日 15:30</text>
 					</view>
-					<view class="step column center" :class="{globelColor: status==4}" v-if="status!=3">
-						<text class="iconfont icon-duigou1"></text>
+					<view class="step column ali_center just_btw" :class="{globelColor: status==4}" v-if="status!=3">
+						<text class="iconfont icon-duigou1" v-if="status==4"></text>
+						<text class="cir" v-if="status!=4"></text>
 						<text>邀面试</text>
 						<text class="time">6月15日 15:30</text>
 					</view>					
@@ -64,8 +57,9 @@
 						<text class="iconfont icon-youjiantou"></text>
 						<text class="iconfont icon-youjiantou"></text>
 					</text>
-					<view class="step column center" :class="{globelColor: status==5}" v-if="status!=3">
-						<text class="cir"></text>
+					<view class="step column ali_center just_btw" :class="{globelColor: status==5}" v-if="status!=3">
+						<text class="iconfont icon-duigou1" v-if="status==5"></text>
+						<text class="cir" v-if="status!=5"></text>
 						<text>已接受</text>
 						<text class="time">6月15日 15:30</text>
 					</view>

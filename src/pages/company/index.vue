@@ -1,11 +1,11 @@
 <template>
 	<view class="personal-company">
 		<!-- 筛选 -->
-		<view class="classfiy row">
+		<!-- <view class="classfiy row">
 			<text class="classfiyItem" @click="show(1)">行业<text class="iconfont icon-sanjiao"></text></text>
 			<text class="classfiyItem" @click="show(2)">规模<text class="iconfont icon-sanjiao"></text></text>
 			<text class="border"></text>
-		</view>
+		</view> -->
 		<!-- 公司列表 -->
 		<view class="companyLists">
 			<view class="companyList" v-for="(item, index) in 9" :key="index" @click="toCompanyDetail">
@@ -32,8 +32,8 @@
 </template>
 
 <script>
-	import nature from './components/nature'
-	import scale from './components/scale'
+	import { createNamespacedHelpers } from 'vuex'
+	import { mapState } from 'vuex';
 	export default{
 		data(){
 			return{
@@ -47,14 +47,17 @@
 		},
 		methods:{
 			show (type) {
+				console.log(this.information)
 				if(this.type != type && this.type === 0){					
 					this.type = type
 				}
-				// this.animationData.rotate(45).scale(2, 2).step()
-				// this.animationData = this.animation.export()
+				uni.navigateTo({
+					url: '/pages/filterCompany'
+				})
 			},
 			searchData (datas) {
 				this.type = 0 // 关闭选择窗
+				
 				if(datas.type == 'nature'){
 					
 				}
@@ -65,22 +68,30 @@
 				})
 			}
 		},
+		onNavigationBarButtonTap (val){
+			if(val.index == 0){
+				uni.navigateTo({
+					url: '/pages/filterCompany'
+				})
+			}else{
+				uni.navigateTo({
+					url: '/pages/search/index'
+				})
+			}
+		},
 		onShow: function(){
-			// var animation = uni.createAnimation({
-			// 	duration: 1000,
-			// 	timingFunction: 'ease',
-			// })
-			// this.animation = animation
-			// animation.scale(2,2).rotate(45).step()
-			// this.animationData = animation.export()
-			// setTimeout(function() {
-			// 	animation.translate(30).step()
-			//     this.animationData = animation.export()
-			// }.bind(this), 1000)
 		},
 		components:{
-			nature,
-			scale
+		},
+		watch:{
+			filter(val){
+				console.log(val)
+			}
+		},
+		computed:{
+			filter:function(){
+				return this.$store.state.filterCompany.filter
+			}
 		}
 	}
 </script>

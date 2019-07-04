@@ -25,7 +25,7 @@
 				</view>
 				<view class="address column">
 					<text class="title">公司地址</text>
-					<text class="addressDetail"><text class="iconfont icon-weizhi"></text>详细地址<text class="iconfont icon-youjiantou"></text></text>
+					<text class="addressDetail" @click="toNext"><text class="iconfont icon-weizhi"></text>详细地址<text class="iconfont icon-youjiantou"></text></text>
 					<view class="map">
 						<map style="width: 100%; height: 120px;" :latitude="latitude" :longitude="longitude" :markers="covers">
 						</map>
@@ -89,6 +89,21 @@
 					this.sliderLeft = e.target.offsetLeft + this.tt
 				}
 			},
+			toNext () {
+				uni.openLocation({
+					latitude: 25.854021,
+					longitude: 114.928111,
+					name: '江西理工大学',
+					address: '红旗大道86号',
+					success: function (res) {
+					}
+				});
+			},
+			toPostDetail () {
+				uni.navigateTo({
+					url: '/pages/postDetail'
+				})
+			}
 		},
 		computed:{
 		},

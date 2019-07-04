@@ -9,7 +9,7 @@
 				<text class="company" @click.stop="toCompanyDetail"><i></i>章贡区<i></i>赣州公司</text>
 				<text class="date">6月15日</text>
 			</view>			
-			<view class="">
+			<view class="column" >
 				<view class="row tags">
 					<text class="tag">带薪休假</text>
 					<text class="tag">五险一金</text>
@@ -20,8 +20,7 @@
 					<text class="newstype" v-if="item==1">待查看<text class="iconfont icon-youjiantou"></text></text>
 					<text class="newstype" v-if="item==2">已被查看<text class="iconfont icon-youjiantou"></text></text>
 					<text class="newstype" v-if="item==3">不合适<text class="iconfont icon-youjiantou"></text></text>
-					<text class="newstype" v-if="item==4">待面试<text class="iconfont icon-youjiantou"></text></text>
-					
+					<text class="newstype" v-if="item==4">待面试<text class="iconfont icon-youjiantou"></text></text>	
 				</view>	
 			</view>
 		</view>
@@ -115,6 +114,7 @@
 			.newsTip{
 				border-top: @g_border;
 				padding-top: 14upx;
+				width: 100%;
 				.icon-youjiantou{
 					color: #adadad;
 				}

@@ -21,7 +21,24 @@
 			"path": "pages/filterArea",
 			"style": {
 				"autoBackButton":"false",
-				"navigationBarTitleText": "筛选"
+				"navigationBarTitleText": "筛选",
+				"animationType": "slide-in-bottom"
+			}	
+		},
+		{
+			"path": "pages/filterPost",
+			"style": {
+				"autoBackButton":"false",
+				"navigationBarTitleText": "筛选",
+				"animationType": "slide-in-bottom"
+			}	
+		},
+		{
+			"path": "pages/filterCompany",
+			"style": {
+				"autoBackButton":"false",
+				"navigationBarTitleText": "筛选",
+				"animationType": "slide-in-bottom"
 			}	
 		},
 		{
@@ -45,7 +62,13 @@
 		{
 			"path": "pages/company/index",
 			"style": {
-				"navigationBarTitleText": "企业"
+				"navigationBarTitleText": "企业",
+				"titleNView": {
+					"buttons": [ //原生标题栏按钮配置,
+						{ "text": "\ue60d","fontSrc": "/static/font/iconfont.ttf","fontSize":"18px","width":"32px"},
+						{ "text": "\ue651","fontSrc": "/static/font/iconfont.ttf","fontSize":"16px","width":"32px"}
+					]
+				}
 			}	
 		},
 		{
@@ -69,9 +92,15 @@
 				"titleNView":false
 			}	
 		},{
-			"path": "pages/index/search",
+			"path": "pages/search/index",
 			"style": {
-				"navigationBarTitleText": "搜索"
+				"navigationBarTitleText": "搜索",
+				"titleNView":false
+			}	
+		},{
+			"path": "pages/search/moduleSearch",
+			"style": {
+				"navigationBarTitleText": "模块搜索"
 			}	
 		},
 		{
@@ -105,7 +134,7 @@
 			}	
 		},
 		{
-			"path": "pages/user/integral",
+			"path": "pages/user/integralRecord",
 			"style": {
 				"navigationBarTitleText": "积分记录"
 			}	
@@ -191,6 +220,17 @@
 			}	
 		},
 		{
+			"path": "pages/common/chooseIntension",
+			"style": {
+				"navigationBarTitleText": "期望职位",
+				"titleNView": {
+					"buttons": [ //原生标题栏按钮配置,
+						{ "type": "none", "text": "保存", "fontSize": "16px" }
+					]
+				}
+			}	
+		},
+		{
 			"path": "pages/resume/educationExperience",
 			"style": {
 				"navigationBarTitleText": "教育经历",
@@ -226,7 +266,8 @@
 		{
 			"path": "pages/collection",
 			"style": {
-				"navigationBarTitleText": "我的收藏"
+				"navigationBarTitleText": "我的收藏",
+				"bounce":"none"
 			}	
 		},
 		{

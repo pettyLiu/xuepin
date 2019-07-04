@@ -20,10 +20,10 @@
 			<view class="part">
 				<text class="title f_30">求职意向</text>
 				<view class="column center">
-					<view class="partTop column">
+					<navigator class="partTop column" url="/pages/resume/jobIntension">
 						<text>产品经理 10-20k<text class="iconfont icon-youjiantou"></text></text>
 						<text class="f_22 c_999 address">赣州 章贡区</text>
-					</view>
+					</navigator>
 					<text class="btn" @click="toNext('/pages/resume/jobIntension')">添加求职意向</text>
 				</view>	
 			</view>
@@ -60,8 +60,11 @@
 			<view class="part">
 				<text class="title f_30">视频简介</text>
 				<view class="column center">
-					<view class=""></view>
-					<text class="btn">添加视频简介</text>
+					<view class="videoList" v-if="video != ''">
+						<video :src="video" controls ></video>
+						<cover-view class="iconfont icon-delete" @click="delVideo"></cover-view>
+					</view>
+					<text class="btn" @click="addVideo">添加视频简介</text>
 				</view>	
 			</view>
 			<view class="part">
@@ -82,7 +85,8 @@
 	export default {
 		name: 'Full-time',
 		data() {
-			return {	
+			return {
+				video: ''
 			};
 		},
 		methods:{
@@ -97,14 +101,36 @@
 					animationType: 'slide-in-bottom',
 					animationDuration: 200
 				})
+			},
+			addVideo () { // 上传视频
+				const that = this
+				uni.chooseVideo({
+					success(res) {
+						that.video = res.tempFilePath
+						console.log(res.tempFilePath)
+					}
+				})
+			},
+			delVideo () { // 删除视频
+				const that = this
+				uni.showModal({
+					content: '确定删除该视频？',
+					success(res) {
+						if(res.confirm){
+							that.video = ''
+						}
+					}
+				})
 			}
 		},
 		onShow(){
 			console.log('onshow')
 		},
+		onLoad() {
+			console.log('onload')
+		},
 		onBackPress(e){
-			console.log(e)
-			return true
+			
 		},
 		computed:{
 		},

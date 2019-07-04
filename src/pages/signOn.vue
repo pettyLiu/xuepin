@@ -1,9 +1,10 @@
 <template>
 	<view class="signOn">
 		<view class="top" :style="{paddingTop: statusBarHeight + 'px'}">
-			<view class="naviBar row center">
+			<view class="naviBar row just_btw">
 				<text class="iconfont icon-jiantou3" @click="back"></text>
 				<text>签到</text>
+				<text @click="toNext">兑换</text>
 			</view>
 			<image class="bg" src="/static/icon/bg1.png" mode=""></image>
 			<view class="signOnDetail row just_btw ali_center">
@@ -43,6 +44,11 @@
 			},
 			checkIn () { //签到
 				this.signOnDay += 1
+			},
+			toNext () {
+				uni.navigateTo({
+					url: '/pages/user/excharge'
+				})
 			}
 		},
 		onLoad() {

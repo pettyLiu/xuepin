@@ -3,8 +3,8 @@
 		<!-- 个人角色模块 -->
 		<section class="personal-index">		
 			<pageTop :istop="istop"></pageTop><!-- 轮播图 -->
-			<view class="modules row just_btw" v-if="!istop" >
-				<view class="module column center"  v-for="(item, index) in module" :key="index">
+			<view class="modules row just_btw" v-if="!istop" ><!-- 快捷搜索 -->
+				<view class="module column center"  v-for="(item, index) in module" :key="index" @click="toNext(item.text)">
 					<image :src="item.img" mode=""></image>
 					<text>{{item.text}}</text>
 				</view>
@@ -17,7 +17,6 @@
 					<view class="sliderBorder"
 					:style="{transform: 12,left: sliderLeft + 'px'}"></view>
 				</view>				
-				 <!-- :style="{left: sliderLeft + 'px', transform: translateX(sliderOffset + 'px')}"></view> -->
 				<view class="types row ali_center">
 					<text @click="chooseArea">{{area}}<text class="iconfont">&#xe65a;</text></text>
 					<text @click="chooseType" v-if="tabs != 1">{{post}}<text class="iconfont">&#xe65a;</text></text>
@@ -27,8 +26,6 @@
 			<view  :class="{tt: istop}" :style="{marginTop: istop ? (statusBarHeight + 10 + 'px') : 0 }">
 				<postList :list="postList" type="index"></postList><!-- 职位列表 -->	
 			</view>					
-			<areas v-if="showArea" v-on:closeMask="closeMasks"></areas><!-- 地区选择 -->			
-			<posts v-if="showPost"  v-on:closeMask="closeMasks"></posts><!-- 职位选择 -->
 		</section>
 		<view class="loadmore" v-if="showLoadMore">{{loadMoreText}}</view>
 	</view>
@@ -37,13 +34,10 @@
 <script>
 	import pageTop from './components/top'
 	import postList from '@/components/postList'
-	import areas from '@/components/area'
-	import posts from '@/components/post'
 	const sliderWidth = 20;
 	export default {
 		data() {
 			return {
-				title: 'Hello',
 				tabs: 1,
 				top: '',
 				istop: false,
@@ -77,7 +71,6 @@
 			this.$axios({url: 'api/dishes', method: 'post'}).then(res =>{
 				console.log(res)
 			})
-			this.title = this.$store.state.footer_store.footer_nav[1].name_code
 			var that = this
 			uni.getSystemInfo({
 			    success: function (res) {
@@ -100,8 +93,6 @@
 		components:{
 			pageTop,
 			postList,
-			areas,
-			posts
 		},
 		mounted(){
 			const that = this
@@ -126,9 +117,9 @@
 			},
 			chooseArea () { // 点击地区
 				this.changePlace()
-				// uni.navigateTo({
-				// 	url:'/pages/filterArea'
-				// })
+				uni.navigateTo({
+					url:'/pages/filterArea'
+				})
 				const that = this
 				if(!that.showArea){
 					setTimeout(function(){				
@@ -140,6 +131,9 @@
 			chooseType () { // 点击职位类型
 				this.changePlace()
 				const that = this
+				uni.navigateTo({
+					url:'/pages/filterPost'
+				})
 				if(!that.showPost){
 					setTimeout(function(){
 						that.showPost = true
@@ -168,13 +162,11 @@
 				}
 			},
 			changePlace () { // 改变位置
-				if(!this.istop){
-					// uni.pageScrollTo({
-					// 	scrollTop: this.top - 35,
-					// 	duration: 300
-					// })
-					this.istop = true
-				}
+			},
+			toNext (title) {
+				uni.navigateTo({
+					url: '/pages/search/moduleSearch?title=' + title
+				})
 			}
 		},
 		onPageScroll(e){

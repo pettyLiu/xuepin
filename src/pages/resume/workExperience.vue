@@ -13,7 +13,7 @@
 				<view class="title f_24 c_999 row just_btw"><text>在职时间</text><text class="iconfont icon-youjiantou"></text></view>
 				<text class="f_30">2012.09--2015.12</text>
 			</view>
-			<view class="list">
+			<view class="list" @click="toNext">
 				<view class="title f_24 c_999 row just_btw"><text>工作描述</text><text class="iconfont icon-youjiantou"></text></view>
 				<text class="f_30">本科</text>
 			</view>
@@ -30,6 +30,11 @@
 			};
 		},
 		methods:{
+			toNext () {
+				uni.navigateTo({
+					url: '/pages/resume/selfAssessment?title=' + '工作描述'
+				})
+			}
 		},
 		computed:{
 		},

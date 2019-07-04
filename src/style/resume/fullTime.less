@@ -1,5 +1,6 @@
 @import '../../style/common/mixin.less';
-.FullTime{
+.FullTime,.PartTime{
+	// padding: 26upx 26upx 0;
 	.topDetail{
 		margin: 26upx 26upx 0;
 		padding: 20upx 26upx 26upx 40upx;
@@ -32,6 +33,22 @@
 				padding: 26upx 0 0 30upx;
 				display: inline-block
 			}
+			.videoList{
+				width: calc(100% - 60upx);
+				margin: 46upx 30upx 0;
+				position: relative;
+				video{
+					height: 400upx;
+					width: 100%
+				}
+				.icon-delete{
+					color:white;
+					position: absolute;
+					top: 0upx;
+					right: 0upx;
+					z-index: 100
+				}
+			}
 			.btn{
 				.wh(68upx, 430upx);
 				text-align: center;
@@ -48,8 +65,7 @@
 					padding-top: 10upx
 				}
 			}
-		}
-		
+		}	
 	}
 	.icon-youjiantou{
 		position: absolute;

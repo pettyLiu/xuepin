@@ -1,14 +1,13 @@
 <template>
-	<view class="filterArea">
-		<areas></areas>
+	<view class="filterPost">
+		<posts></posts>
 	</view>
 </template>
 
 <script>
-	import areas from '@/components/area'
 	import posts from '@/components/post'
 	export default {
-		name: 'filterArea',
+		name: 'filterPost',
 		data() {
 			return {
 				
@@ -19,16 +18,13 @@
 		computed:{
 		},
 		components:{
-			areas
+			posts
 		}
 	}
 </script>
 
 <style lang="less">
-	uni-page-body{
-		height: 100%
-	}
-	.filterArea{
+	.filterPost{
 		height: 100%
 	}
 </style>

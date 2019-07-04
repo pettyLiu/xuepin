@@ -1,7 +1,7 @@
 <template>
 	<view class="">
 		<view class="form">
-			<view class="list">
+			<view class="list" @click="showIntension" >
 				<view class="title f_24 c_999 row just_btw"><text>期望职位</text><text class="iconfont icon-youjiantou"></text></view>
 				<text class="f_30">44</text>
 			</view>
@@ -29,10 +29,16 @@
 				jobIntension:['1-2k','7-10k'],
 				jobIntensionIndex: 0,
 				areaIntension: [['赣州'],['会餐','瑞金']],
-				areaIntensionIndex: 0
+				areaIntensionIndex: 0,
+				show: false
 			};
 		},
 		methods:{
+			showIntension () {
+				uni.navigateTo({
+					url: '/pages/common/chooseIntension'
+				})
+			}
 		},
 		computed:{
 		},

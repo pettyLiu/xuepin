@@ -1,0 +1,57 @@
+@import '../../style/common/mixin.less';
+.excharge,.goldRecharge{
+	.bg{
+		height: 200upx;
+		background: @g_color;
+	}
+	.content{
+		margin: -130upx 32upx 0;
+		background: white;
+		border-radius: 12upx;
+		box-shadow:0 4upx 24upx 0 rgba(89,81,249,0.26);
+		.top,.footer{
+			padding: 32upx;
+			input{
+				border-bottom: 1px solid @g_color;
+				padding: 20upx 0;
+				margin: 30upx 0 20upx;
+				font-weight: 500;
+				font-size: 48upx
+			}
+			.tips{
+				color:#999;
+			}
+		}
+		.border{
+			.cir,.cir1{
+				.wh(24upx,12upx);
+				border-radius: 24upx 0 0 24upx;
+				background: #e0e0e0;
+			}
+			.cir1{
+				border-radius: 0 24upx 24upx 0;
+			}
+			.line{
+				height: 2upx;
+				width: 60upx;
+				background: #e0e0e0
+			}
+		}
+		.footer{
+			.num{
+				margin: 20upx 0 10upx
+			}
+		}
+	}
+	.btn{
+		.h(88upx,88upx,center);
+		border-radius: 12upx;
+		color: white;
+		opacity: 0.68;
+		background: @g_color;
+		margin: 165upx 32upx;
+	}
+	.opacity{
+		opacity: 1
+	}
+}

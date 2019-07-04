@@ -1,0 +1,149 @@
+@import '../common/mixin.less';
+.collection{
+	.tabs{
+		background: white;
+		border-bottom: @g_border;
+		height: 94upx;
+		color:#333;
+		position: relative;
+		z-index: 50;
+		.sliderBorder{
+			position: absolute;
+			bottom: 0;
+			width: 15px;
+			background: @g_color;
+			height: 5upx;
+			left:0;
+			z-index: 10
+		}
+		.tab{
+			width: 33.33%;
+			height: 100%;
+			line-height: 94upx;
+			text-align: center
+		}
+		.active{
+			font-size: 36upx;
+			color: @g_color;
+			font-weight: 500
+		}
+	}
+	.postLists{
+		margin-top: @g_bottom;
+		.postList{
+			margin-bottom: @g_bottom;
+			background: white;
+			padding: 15upx @g_margin 10upx;
+			
+		}
+	}
+	.title{
+		font-size: 34upx;
+		font-weight: 500;
+	}
+	.salary{
+		color: @g_color;
+		font-size: 30upx;
+	}
+	.tags{
+		margin-bottom: 16upx;
+		.tag{
+			padding: 6upx 10upx;
+			background: #f6f6f6;
+			color: #adadad;
+			margin-right: 24upx;
+			font-size: 20upx;
+		}
+	}
+	.txt{
+		margin: 24upx 30upx 14upx;
+		.company{
+			font-size: 22upx;
+			color: #666;
+		}
+		.date{
+			font-size: 20upx;
+			color:#999;
+		}
+	}
+	.address{
+		font-size: 20upx;
+		margin-top: 15upx;
+	}
+	.time{
+		font-size: 20upx;
+	}
+	.nothing{
+		color: #adadad;
+		margin-top: 100upx;
+		image{
+			height: 320upx;
+			width: 370upx;
+			margin-bottom: 72upx;
+		}
+	}
+	.companyLists{
+		font-size: 22upx;
+		margin-top: @g_bottom;
+		
+	}
+	.companyList{
+		background: white;
+		margin-bottom: @g_bottom;
+		padding: 25upx @g_margin @g_margin;		
+	}
+	.companyName{
+		font-weight: 500;
+		font-size: 28upx;
+	}
+	.companyAvatar{
+		height: 64upx;
+		width: 64upx;
+		border-radius: 4upx;
+		margin: 0 24upx 0 30upx;
+	}
+	.companyTypes{
+		padding: 30upx 30upx 0;
+		.companyType{
+			padding: 6upx;
+			margin-right: 30upx;
+			background: #f5f5f5;
+			color: #adadad;
+			border-radius: 6upx;
+		}
+	}
+	.uni-swipe-action {
+		width: 100%;
+		overflow: hidden;
+		&__container {
+			background-color: #FFFFFF;
+			width: 200%;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			transition: transform 350ms cubic-bezier(.165, .84, .44, 1);
+			margin: 30upx 0;	
+		}
+		&__content {
+			width: 50%;
+			padding: 30upx 0
+		}
+		&__btn-group {
+			display: flex;
+			flex-direction: row;
+		}
+		&--btn {
+			padding: 0 32upx;
+			color: #FFFFFF;
+			background-color: red;
+			font-size: 28upx;
+			display: inline-flex;
+			text-align: center;
+			flex-direction: row;
+			align-items: center;
+		}
+	}
+	.indent{
+		padding: 0upx 30upx 0
+	}
+}

@@ -15,25 +15,23 @@
 			};
 		},
 		onLoad(options) {
-			this.title = options.title
-			uni.setNavigationBarTitle({
-				title: this.title
-			})
-			if(this.title == '姓名'){
-				this.txt = this.$store.state.information.name
+			this.title = options.title		
+			this.txt = this.$store.state.information.info[options.title]
+			if(this.title == 'nickName'){
+				uni.setNavigationBarTitle({
+					title: '姓名'
+				})
 				this.placeholder = '请输入姓名'
 			}else{
-				this.txt = this.$store.state.information.email
+				uni.setNavigationBarTitle({
+					title: '邮箱'
+				})
 				this.placeholder = '请输入邮箱'
 			}
 		},
 		// 保存信息
 		onNavigationBarButtonTap (val){
-			if(this.title == '姓名'){
-				this.$store.commit('changeInfo',{ name:this.txt, email:'' })
-			}else{
-				this.$store.commit('changeInfo',{ name:'', email:this.txt })
-			}
+			this.$store.commit('changeInfo',{ key:this.title, value: this.txt })
 			uni.navigateBack({
 				delta: 1
 			});

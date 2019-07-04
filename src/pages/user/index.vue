@@ -5,15 +5,15 @@
 			<text class="f_24 signOut">退出登录</text>
 			<view class="row just_btw userTxt">
 				<view class="column">
-					<text class="nickName f_48">用户姓名</text>
+					<text class="nickName f_48">{{info.nickName}}</text>
 					<text class="f_26 c_e4" @click="toNext('/pages/resume/index')">点击查看简历并编辑</text>
 				</view>
-				<image class="avatar" :src="avatar" mode="" @click="uploadAvatar"></image>
+				<image class="avatar" :src="info.avatar" mode="" @click="uploadAvatar"></image>
 			</view>
 			<view class="row just_btw">
 				<view class="row">
-					<text class="recharge" @click="toNext('/pages/user/integral')">20</br>积分</text>
-					<text class="recharge" @click="toNext('/pages/user/gold')">100</br>金币</text>
+					<text class="recharge" @click="toNext('/pages/user/integralRecord')">20</br>积分</text>
+					<text class="recharge" @click="toNext('/pages/user/goldRecord')">100</br>金币</text>
 				</view>
 				<text class="signOn globelColor f_24" @click="toNext('/pages/signOn')">去签到</text>
 			</view>		
@@ -47,7 +47,8 @@
 	export default{
 		data(){
 			return{
-				avatar: '../../static/icon/moren.png'
+				avatar: '../../static/icon/moren.png',
+				info: {}
 			}
 		},
 		components:{
@@ -80,6 +81,10 @@
 			    })
 			    return height
 			}
+		},
+		onLoad() {
+			this.info = uni.getStorageSync('info')
+			console.log(uni.getStorageSync('info'))
 		},
 		onReady() {
 			var context = uni.createCanvasContext('degree')

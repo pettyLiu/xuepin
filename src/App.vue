@@ -4,8 +4,7 @@
             statusBarHeight: 0
         }, 
 		onLaunch: function() {
-			console.log(444)
-			this.$store.dispatch('getBasicConfig')
+			// this.$store.dispatch('getBasicConfig')
 			console.log(this.$store.state)
 		},
 		onShow: function() {
@@ -24,5 +23,8 @@
 		background: #f5f5f5;
 		font-size: 28upx;
 		height: 100%;
+	}
+	.searchPlaceholder{
+		margin-left: 40upx;
 	}
 </style>
