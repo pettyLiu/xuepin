@@ -69,7 +69,7 @@
 		},
 		onLoad() {
 			this.$axios({url: 'api/dishes', method: 'post'}).then(res =>{
-				console.log(res)
+				// console.log(res)
 			})
 			var that = this
 			uni.getSystemInfo({

@@ -59,7 +59,7 @@
 			},
 			focusOn () { // 点击搜索框时
 				uni.navigateTo({
-					url:'../search/index'
+					url:'../search/index?type=1'
 				})
 			}
 		},

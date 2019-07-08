@@ -1,12 +1,9 @@
 <template>
 	<view class="personal-company">
-		<!-- 筛选 -->
-		<!-- <view class="classfiy row">
-			<text class="classfiyItem" @click="show(1)">行业<text class="iconfont icon-sanjiao"></text></text>
-			<text class="classfiyItem" @click="show(2)">规模<text class="iconfont icon-sanjiao"></text></text>
-			<text class="border"></text>
-		</view> -->
 		<!-- 公司列表 -->
+		<view class="" style="margin: 50upx;width: 100upx;height:100upx;box-shadow: -0upx -0upx 3px 0px #87CEEB;background: white;">
+			
+		</view>
 		<view class="companyLists">
 			<view class="companyList" v-for="(item, index) in 9" :key="index" @click="toCompanyDetail">
 				<view class="companyTxt row ali_center">
@@ -25,47 +22,47 @@
 				</view>
 			</view>
 		</view>
-		<text v-if="type==2">jfudfh</text>
-		<nature v-if="type==1" v-on:search="searchData"></nature>
-		<scale v-if="type==2" v-on:search="searchData"></scale>
+		<view class="loadmore" v-if="showLoadMore">{{loadMoreText}}</view>
 	</view>
 </template>
 
 <script>
-	import { createNamespacedHelpers } from 'vuex'
 	import { mapState } from 'vuex';
 	export default{
 		data(){
 			return{
-				ac: '',
-				animationData: {},
-				type: 0
+				loadMoreText: "加载中...",
+				showLoadMore: false,
+				currentPage: 1,
+				total: 1,
 			}
 		},
 		mounted() {
 
 		},
 		methods:{
-			show (type) {
-				console.log(this.information)
-				if(this.type != type && this.type === 0){					
-					this.type = type
-				}
-				uni.navigateTo({
-					url: '/pages/filterCompany'
+			getCompanyList () {
+				const that = this
+				that.$axios({ url: '', data: { currentPage: that.currentPage } }).then(res =>{
+					if(res.code == 1){
+						this.showLoadMore = false
+						that.currentPage += 1
+					}
 				})
-			},
-			searchData (datas) {
-				this.type = 0 // 关闭选择窗
-				
-				if(datas.type == 'nature'){
-					
-				}
 			},
 			toCompanyDetail () {
 				uni.navigateTo({
 					url: '../companyDetail'
 				})
+			}
+		},
+		onReachBottom() {
+			if(this.total > this.currentPage){
+				this.showLoadMore = true
+				this.getCompanyList()
+			}else{
+				this.loadMoreText = "没有更多数据了"
+				this.showLoadMore = true
 			}
 		},
 		onNavigationBarButtonTap (val){
@@ -75,7 +72,7 @@
 				})
 			}else{
 				uni.navigateTo({
-					url: '/pages/search/index'
+					url: '/pages/search/index?type=2'
 				})
 			}
 		},

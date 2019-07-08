@@ -120,7 +120,7 @@
 				uni.chooseImage({
 					count: 1,
 					success: function (res) {
-						that.image = res.tempFilePaths[0]
+						that.avatar = res.tempFilePaths[0]
 					}
 				})
 			},

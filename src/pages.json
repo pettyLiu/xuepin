@@ -54,6 +54,12 @@
 			}	
 		},
 		{
+			"path": "pages/login/otherLogin",
+			"style": {
+				"titleNView": false
+			}	
+		},
+		{
 			"path": "pages/basicInformation",
 			"style": {
 				"titleNView": false
@@ -65,8 +71,8 @@
 				"navigationBarTitleText": "企业",
 				"titleNView": {
 					"buttons": [ //原生标题栏按钮配置,
-						{ "text": "\ue60d","fontSrc": "/static/font/iconfont.ttf","fontSize":"18px","width":"32px"},
-						{ "text": "\ue651","fontSrc": "/static/font/iconfont.ttf","fontSize":"16px","width":"32px"}
+						{ "text": "\ue60d","fontSrc": "/static/font/iconfont.ttf","fontSize":"22px","width":"32px"},
+						{ "text": "\ue651","fontSrc": "/static/font/iconfont.ttf","fontSize":"19px","width":"32px"}
 					]
 				}
 			}	
@@ -89,7 +95,17 @@
 			"path": "pages/signOn",
 			"style": {
 				"navigationBarTitleText": "签到",
-				"titleNView":false
+				"titleNView":false,
+				"subNVues":[{  
+                    "id": "popup", // 唯一标识  
+                    "path": "pages/subNVues/popUp", // 页面路径  
+                    "type": "popup",
+                    "style": {   
+                        "width": "100upx",  
+                        "height": "150upx",  
+                        "background": "transparent"  
+                    }  
+                }]  
 			}	
 		},{
 			"path": "pages/search/index",
@@ -110,7 +126,7 @@
 				"titleNView": {
 					"buttons": [ //原生标题栏按钮配置,
 						{ "type": "share"},
-						{ "type": "favorite" }
+						{ "text": "\ue654","fontSrc": "/static/font/iconfont.ttf","fontSize":"24px","width":"32px"}
 					]
 				}
 			}	
@@ -120,9 +136,9 @@
 			"style": {
 				"navigationBarTitleText": "公司详情",
 				"titleNView": {
-					"buttons": [ //原生标题栏按钮配置,
+					"buttons": [ //原生标题栏按钮配置
 						{ "type": "share" },
-						{ "type": "favorite" }
+						{ "text": "\ue654","fontSrc": "/static/font/iconfont.ttf","fontSize":"24px","width":"32px"}
 					]
 				}
 			}	

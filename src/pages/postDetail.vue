@@ -37,7 +37,7 @@
 		name: 'postDetail',
 		data() {
 			return {
-				
+				collect: false
 			};
 		},
 		methods:{
@@ -69,6 +69,18 @@
 				console.log('点击了分享')
 			}else{
 				console.log('点击了收藏')
+				var webView = this.$mp.page.$getAppWebview()
+				if(val.index == 0){
+					console.log('点击了分享')
+				}else{
+					if(collect){ // 更换收藏图标
+						webView.setTitleNViewButtonStyle(1, {  text: '\ue657' })
+					}else{
+						webView.setTitleNViewButtonStyle(1, {  text: '\ue654' })
+					}
+					this.collect = !this.collect
+					uni.showToast({ title: this.collect ? '收藏成功' : '取消收藏', icon: "none" })
+				}
 			}
 		},
 	}

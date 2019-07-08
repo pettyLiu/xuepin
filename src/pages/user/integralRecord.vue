@@ -28,10 +28,37 @@
 		name: 'integral',
 		data() {
 			return {
-				
+				loadMoreText: "加载中...",
+				showLoadMore: false,
+				currentPage: 1,
+				total: 1,
+				record: []
 			};
 		},
 		methods:{
+			getRecord () {
+				const that = this
+				that.$axios({ url: '', data: { currentPage: that.currentPage }}).then(res =>{
+					// console.log(res)
+					if(res.code == 1){
+						that.record = res.data
+						that.showLoadMore = false
+						that.currentPage += 1
+					}
+				})
+			}
+		},
+		onReachBottom () {
+			if(this.total > this.currentPage){
+				this.showLoadMore = true
+				this.getRecord()
+			}else{
+				this.showLoadMore = true
+				this.loadMoreText = '没有更多数据了!'
+			}
+		},
+		onLoad() {
+			this.getRecord()
 		},
 		computed:{
 		},

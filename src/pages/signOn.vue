@@ -4,10 +4,10 @@
 			<view class="naviBar row just_btw">
 				<text class="iconfont icon-jiantou3" @click="back"></text>
 				<text>签到</text>
-				<text @click="toNext">兑换</text>
+				<text @click="toNext('/pages/user/excharge')">兑换</text>
 			</view>
 			<image class="bg" src="/static/icon/bg1.png" mode=""></image>
-			<view class="signOnDetail row just_btw ali_center">
+			<view class="signOnDetail row just_btw ali_center" @click="toNext('/pages/user/integralRecord')">
 				<view class="column">
 					<text class="f_32 c_d6">我的积分</text>
 					<text class="f_72">50</text>
@@ -21,7 +21,14 @@
 			<text class="f_34 tips" v-else>本月暂无签到</text>
 			<text class="f_26 c_333">{{currentMonth}}</text>
 			<calendar :selected="data" v-on:checkIn="checkIn"></calendar>
-		</view>		
+		</view>
+		<view class="masks" v-if="showMask">
+			<view class="mask column ali_center just_btw f_30">
+				<image src="/static/icon/sec_iocn@2x.png" mode=""></image>
+				<text class=" globelColor">签到成功！积分+10</text>
+				<text class="btn" @click="confirm">确定</text>
+			</view>
+		</view>	
 	</view>
 </template>
 
@@ -35,7 +42,8 @@
 				data: [],
 				statusBarHeight: getApp().globalData.statusBarHeight,
 				currentMonth: '',
-				signOnDay: 0
+				signOnDay: 0,
+				showMask: false
 			};
 		},
 		methods:{
@@ -44,11 +52,15 @@
 			},
 			checkIn () { //签到
 				this.signOnDay += 1
+				this.showMask = true
 			},
-			toNext () {
+			toNext (url) {
 				uni.navigateTo({
-					url: '/pages/user/excharge'
+					url: url
 				})
+			},
+			confirm () {
+				this.showMask = false
 			}
 		},
 		onLoad() {

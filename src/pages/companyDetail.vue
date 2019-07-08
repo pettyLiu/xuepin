@@ -27,10 +27,10 @@
 					<text class="title">公司地址</text>
 					<text class="addressDetail" @click="toNext"><text class="iconfont icon-weizhi"></text>详细地址<text class="iconfont icon-youjiantou"></text></text>
 					<view class="map">
-						<map style="width: 100%; height: 120px;" :latitude="latitude" :longitude="longitude" :markers="covers">
-						</map>
+						<map style="width: 100%; height: 220px;" :latitude="latitude" :longitude="longitude" :markers="covers"></map>
 					</view>
 				</view>
+				
 			</view>
 			<view class="second"  v-if="activeTab == 1">
 				<view class="postList" @click="toPostDetail()" v-for="(item, index) in post" :key="index">
@@ -53,12 +53,23 @@
 				</view>
 			</view>
 		</view>
-		
+		<view class="masks" v-if="showMask">
+			<view class="mask column f_30">
+				<view class="row just_arw">
+					<view class="list column center" v-for="(item, index) in providerList" :key='index' @click="share(item)">
+						<text class="iconfont" :class="item.icon"></text>
+						<text class="">{{item.name}}</text>
+					</view>
+				</view>
+				<text class="btn" @click="cancel">取消</text>
+			</view>
+		</view>
 	</view>
 </template>
 
 <script>
 	const sliderWidth = 20
+	import { getProvider } from '@/lib/getProvider.js'
 	export default {
 		name: 'companyDetail',
 		data() {
@@ -66,24 +77,42 @@
 				welfares: ['带薪休假', '包吃', '包住', '餐补', '房补', '养老保险', '医疗保险', '加班补', '住房公积金', '话补'],
 				title: 'map',
 				tabs: ['公司信息', '在招职位'],
+				collect: false,
 				activeTab: 0,
 				sliderLeft: 0,
-				latitude: 39.909,
-				longitude: 116.39742,
+				latitude: 25.854021,
+				longitude: 114.928111,
 				post: [1,2,2,2,2,2,2,2,2],
 				covers: [{
-					latitude: 39.909,
-					longitude: 116.39742,
-				}, {
-					latitude: 39.90,
-					longitude: 116.39,
-					iconPath: '/static/image/banner3.png'
-				}]
+					id: '1',
+					latitude: 25.854021,
+					longitude: 114.928111,
+					iconPath: '/static/image/biaoji @2x.png',
+					anchor: {x: .5, y: 1},
+					callout: {content: '红旗大道86号江西理工大徐',display:'ALWAYS'}
+				}],
+				showMask: false,
+				providerList: '',
 			};
 		},
 		methods:{
+			cancel () { // 显示遮罩层
+				this.showMask = false
+			},
+			share (data, index) { // 分享
+				uni.share({
+					provider: data.name,
+					type: 1,
+					summary: "分享微信！",
+					success: function (res) {
+						console.log("success:" + JSON.stringify(res));
+					},
+					fail: function (err) {
+						console.log("fail:" + JSON.stringify(err));
+					}
+				});
+			},
 			changeTabs (e) {
-				console.log(e)
 				if(this.activeTab != e.target.id){
 					this.activeTab = e.target.id
 					this.sliderLeft = e.target.offsetLeft + this.tt
@@ -107,16 +136,19 @@
 		},
 		computed:{
 		},
-		onNavigationBarButtonTap (val){
+		onNavigationBarButtonTap (val){			
 			if(val.index == 0){
 				console.log('点击了分享')
+				this.showMask = true
 			}else{
-				// 更换收藏图标
-				var webView = this.$mp.page.$getAppWebview();
-				webView.setTitleNViewButtonStyle(1, {  
-					text: 'he',  
-				});
-				console.log('点击了收藏')
+				var webView = this.$mp.page.$getAppWebview()
+				if(collect){ // 更换收藏图标
+					webView.setTitleNViewButtonStyle(1, {  text: '\ue657' })
+				}else{
+					webView.setTitleNViewButtonStyle(1, {  text: '\ue654' })
+				}
+				this.collect = !this.collect
+				uni.showToast({ title: this.collect ? '收藏成功' : '取消收藏', icon: "none" })
 			}
 		},
 		onLoad() {
@@ -127,7 +159,9 @@
 					that.tt = (res.windowWidth/that.tabs.length - sliderWidth)/2
 			    }
 			})
-		},
+			this.providerList = getProvider()
+			this.providerList=[{name: '微信', id: 1, icon:'icon-weixin'},{name: 'QQ',id: 3, icon:'icon-qq'}] //测试用
+		}, 
 		components:{
 		}
 	}

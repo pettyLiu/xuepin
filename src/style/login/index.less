@@ -3,8 +3,7 @@ uni-page-body{
 	height: 100%
 }
 .pages{
-	height: 100%;
-	// width: 100%;
+	height: calc(100% - 300upx);
 	background: white;
 	padding: 300upx 65upx 0;
 	position: relative;
@@ -13,10 +12,17 @@ uni-page-body{
 		left: 65upx;
 		padding-top: 10upx
 	}
+	.otherLogin{
+		position: absolute;
+		padding-top: 10upx;
+		right: 65upx
+	}
+	.loginTitle{
+		margin-bottom: 154upx;
+	}
 	.inp{
 		border-bottom: 1px solid #bcbcbc;
 		padding: 35upx 0;
-		margin-top: 154upx;
 	}
 	.btn{
 		margin: 86upx 0 30upx;
@@ -24,6 +30,10 @@ uni-page-body{
 		.h(88upx, 88upx, center);
 		color: white;
 		background: #5E57EB;
+		opacity: 0.68;
 		border-radius: 6upx
+	}
+	.opacity{
+		opacity: 1
 	}
 }

@@ -40,6 +40,12 @@
 				})
 			}
 		},
+		onNavigationBarButtonTap (val){ // 点击保存
+			uni.navigateBack()
+		},
+		onBackPress() { // 返回时，重置store的期望职位
+			console.log('back')
+		},
 		computed:{
 		},
 	}

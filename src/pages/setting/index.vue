@@ -14,7 +14,6 @@
 				<text class="f_30">未绑定</text>
 			</view>
 		</view>
-		<button type="primary">退出登录</button>
 	</view>
 </template>
 

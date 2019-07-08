@@ -1,16 +1,20 @@
 /**
 数据验证（表单验证）
-来自 grace.hcoder.net 
-作者 hcoder 深海
 */
 module.exports = {
 	error:'',
 	check : function (data, rule){
-		for(var i = 0; i < rule.length; i++){
-			if (!rule[i].checkType){return true;}
-			if (!rule[i].name) {return true;}
+		for(var i = 0; i < rule.length; i++){			
+			if (!rule[i].checkType){return true;}			
+			if (!rule[i].name) {return true;}			
 			if (!rule[i].errorMsg) {return true;}
-			if (!data[rule[i].name]) {this.error = rule[i].errorMsg; return false;}
+			if (!data[rule[i].name]) {
+				if(typeof(rule[i].errorMsg) == 'object'){
+					this.error = rule[i].errorMsg[i]; return false;
+				}else{
+					this.error = rule[i].errorMsg; return false;
+				}
+			}	
 			switch (rule[i].checkType){
 				case 'string':
 					var reg = new RegExp('^.{' + rule[i].checkRule + '}$');
@@ -85,6 +89,25 @@ module.exports = {
 				break;
 				case 'notnull':
 					if(data[rule[i].name] == null || data[rule[i].name].length < 1){this.error = rule[i].errorMsg; return false;}
+				break;
+				case 'password':
+					var str = data[rule[i].name];
+					console.log(str)
+					if (str == null || str.length < 6 || str.length > 12) {
+						this.error = rule[i].errorMsg[0];
+						return false;
+					}
+					var reg1 = new RegExp(/^[0-9A-Za-z]+$/);
+					if (!reg1.test(str)) {
+						this.error = rule[i].errorMsg[1];
+						return false;
+					}
+					var reg = new RegExp(/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/);
+					if (!reg.test(str)) {
+						console.log(333)
+						this.error = rule[i].errorMsg[1];
+						return false;
+					} 
 				break;
 			}
 		}

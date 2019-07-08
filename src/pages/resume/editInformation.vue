@@ -21,19 +21,25 @@
 				<picker @change="bindPickerQualification" :value="qualificationIndex" :range="qualification">
 					<view class="title f_24 c_999 row just_btw"><text>学历</text><text class="iconfont icon-youjiantou"></text></view>
 					<text class="f_30">{{qualification[info.qualification]}}</text>
-				</picker>	
+				</picker>
 			</view>
 			<view class="list">
-				<picker mode="date" :value="info.birthDate" :start="startDate" :end="endDate" @change="bindBirthDateChange" fields="month">
+				<picker class="picker" mode="multiSelector" @change="bindBirthDateChange" :value="indexInterval" :range="dateInterval" >
 					<view class="title f_24 c_999 row just_btw"><text>出生年份</text><text class="iconfont icon-youjiantou"></text></view>
 					<text class="f_30">{{info.birthDate}}</text>
 				</picker>	
 			</view>
-			<view class="list">
+			<!-- <view class="list">
 				<picker mode="date" :value="info.workDate" :start="startDate" :end="endDate" @change="bindWorkDateChange" fields="month">
 					<view class="title f_24 c_999 row just_btw"><text>参加工作时间</text><text class="iconfont icon-youjiantou"></text></view>
 					<text class="f_30">{{info.workDate}}</text>
 				</picker>	
+			</view> -->
+			<view class="list">
+				<picker class="picker" mode="multiSelector" @change="bindWorkDateChange" :value="indexInterval" :range="dateInterval" >
+				    <view class="title f_24 c_999 row just_btw"><text>参加工作时间</text><text class="iconfont icon-youjiantou"></text></view>
+				    <text class="f_30">{{info.workDate}}</text>
+				</picker>
 			</view>
 			<view class="list">
 				<view class="title f_24 c_999 row just_btw"><text>手机</text><text class="iconfont icon-youjiantou"></text></view>
@@ -58,7 +64,7 @@
 
 <script>
 	import { mapState } from 'vuex';
-	import { getDate } from '../../lib/util.js'
+	import { getDate, getDateInterval } from '../../lib/util.js'
 	export default {
 		name: 'editInformation',
 		data() {
@@ -72,15 +78,21 @@
 				sexname: '',				
 				identityIndex: 0,				
 				qualificationIndex: 0,
-				edit: false
+				edit: false,
+				dates: [["a","b"], ["c","d"]],
+				datesIndex: [0,0]
 			};
 		},
 		onNavigationBarButtonTap (val){
-			uni.navigateBack({
-				delta:1
-			})
+			uni.showToast({ title: '保存成功', icon: 'none' })
+			setTimeout(function(){
+				uni.navigateBack({
+					delta:1
+				})
+			}, 1500)
 		},
 		mounted(){
+			
 		},
 		
 		methods:{
@@ -99,10 +111,12 @@
 				
 			},
 			bindBirthDateChange (e) { // 生日时间选择
-				this.info.birthDate  = e.detail.value
+				const ind = e.detail.value
+				this.info.birthDate = this.dateInterval[0][ind[0]].replace('年','') + '-' + this.dateInterval[1][ind[1]].replace('月','')
 			},
 			bindWorkDateChange (e) { // 工作时间选择
-				this.info.workDate  = e.detail.value
+				const ind = e.detail.value
+				this.info.workDate = this.dateInterval[0][ind[0]].replace('年','') + '-' + this.dateInterval[1][ind[1]].replace('月','')
 			},
 			bindCityChange (e) { // 城市选择器
 				
@@ -126,6 +140,7 @@
 		},
 		onLoad() {
 			console.log(78)
+			
 		},
 		watch:{
 			info: { // 检查是否修改过内容
@@ -144,6 +159,12 @@
 			},
 			info(){
 				return this.$store.state.information.info
+			},
+			dateInterval(){
+				return getDateInterval('date')
+			},
+			indexInterval(){
+				return getDateInterval('index')
 			}
 		},
 	}

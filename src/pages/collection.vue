@@ -10,13 +10,13 @@
 			<block v-for="(it,i) of resumeCollection" :key="i">
 				<view class="uni-swipe-action__container" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd"
 				 @touchcancel="touchEnd" :style="{'transform':messageIndex == i ? transformX : 'translateX(0px)','-webkit-transform':messageIndex == i ? transformX : 'translateX(0px)'}" :data-index="i" :data-disabled="it.disabled">
-					<view class="uni-swipe-action__content" @click="toCompanyDetail">
+					<view class="uni-swipe-action__content" @click="toPostDetail">
 						<view class="row just_btw indent">
 							<text class="title">技术总监</text>
 							<text class="salary">10k-20k/月</text>
 						</view>
 						<view class="txt row just_btw">
-							<text class="company" @click.stop="toCompanyDetail"><i></i>章贡区<i></i>赣州公司</text>
+							<text class="company"><i></i>章贡区<i></i>赣州公司</text>
 							<text class="date">6月15日</text>
 						</view>			
 						<view class=" indent">
@@ -51,7 +51,7 @@
 						<view class="companyTypes">
 							<text class="companyType">互联网/电子商务</text>
 						</view>
-					</view>
+					</view> 
 					<view class="uni-swipe-action__btn-group" :id="elId">
 						<div v-for="(item,index) in options" :key="index" class="uni-swipe-action--btn" 
 						 @click="bindClickBtn(item,i)">
@@ -61,6 +61,7 @@
 				</view>
 			</block>
 		</view>
+		<view class="loadmore" v-if="showLoadMore">{{loadMoreText}}</view>
 	</view>
 </template>
 
@@ -85,16 +86,42 @@
 				resumeCollection: [1,2,3],
 				companyCollection: [1,2,3,4],
 				messagesList:[1,2],
-				options: [{text:'取消收藏'}]
+				options: [{text:'取消收藏'}],
+				loadMoreText: "加载中...",
+				showLoadMore: false,
+				currentPage: 1,
+				total: 1,
 			};
 		},
 		methods:{
+			getCollectionList () {
+				const that = this
+				that.$axios({ url: '', data: { currentPage: that.currentPage } }).then(res =>{
+					if(res.code == 1){
+						that.currentPage += that.currentPage
+					}
+				})
+			},
 			changeTabs (e) {
 				if(e.target.id != this.tabs){
 					this.tabs = e.target.id
 					this.sliderLeft = e.target.offsetLeft + this.tt	
-					this.messageIndex = -1;
+					this.messageIndex = -1
+					this.currentPage = 1
+					this.total = 1
+					this.loadMoreText = "加载中..."
+					this.showLoadMore = false
 				}	
+			},
+			toPostDetail () {
+				uni.navigateTo({
+					url: '/pages/postDetail'
+				})
+			},
+			toCompanyDetail () {
+				uni.navigateTo({
+					url: '/pages/companyDetail'
+				})
 			},
 			getSize() {
 				uni.createSelectorQuery().in(this).select(`#${this.elId}`).boundingClientRect().exec((ret) => {
@@ -156,9 +183,16 @@
 				}
 				this.direction = '';
 			}
- 
 		},
 		computed:{	
+		},
+		onReachBottom () {
+			if(this.total > this.currentPage){
+				this.getCollectionList()
+			}else{
+				this.loadMoreText = "没有更多数据了"
+				this.showLoadMore = true
+			}
 		},
 		created() {
 			this.direction = ''

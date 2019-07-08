@@ -31,7 +31,7 @@
 </template>
 
 <script>
-	import { getProvider } from '@/lib/pay.js'
+	import { getProvider } from '@/lib/getProvider.js'
 	export default {
 		name: 'goldRecharge',
 		data() {
@@ -61,7 +61,10 @@
 						this.checkRadio = index
 					}
 				})
-				this.showBtn = true
+				if (this.pay > 0) {
+					console.log(4565)
+					this.showBtn = true
+				}
 			},
 			excharge () { // 确认兑换
 				if(this.showBtn){

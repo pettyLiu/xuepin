@@ -17,6 +17,11 @@
 </template>
 
 <script>
+	var graceChecker = require("../../lib/graceChecker.js");
+	var rule = [
+		{name:"tel", checkType : "phoneno", checkRule:"",  errorMsg:"请填写正确电话号码"},
+		{name:"code", checkType : "int", checkRule:"5",  errorMsg:"请输入六位数验证码"}
+	];
 	export default {
 		name: 'changeTel',
 		data() {
@@ -47,8 +52,15 @@
 					}
 				}, 1000)
 			},
-			comfirm () { // 确认更换
-				
+			comfirm () { // 确认更换				
+				//进行表单检查
+				var formData = { tel: this.tel,code: this.code }
+				var checkRes = graceChecker.check(formData, rule)
+				if(checkRes){
+					uni.showToast({title:"验证通过!", icon:"none"})	
+				}else{
+					uni.showToast({ title: graceChecker.error, icon: "none" })
+				}	
 			}
 		},
 		computed:{

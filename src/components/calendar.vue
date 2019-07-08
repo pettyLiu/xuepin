@@ -60,7 +60,7 @@
 		},
 		methods: {
 			signOn (selected) { // 签到
-				if(selected){
+				if(selected&&!this.checkIn){
 					this.checkIn = true
 					this.$emit('checkIn')
 				}	
@@ -155,8 +155,8 @@
 		margin: 20upx;
 		position:relative;
 		.gold{
-			width: 42upx;
-			height: 28upx;
+			width: 44upx;
+			height: 30upx;
 			position: absolute;
 			top: 16upx;
 			left: 9upx

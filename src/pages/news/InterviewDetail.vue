@@ -15,7 +15,7 @@
 			<view class="degree">
 				<!-- status:1已投递2被查看3不合适4邀面试5已接受 -->
 				<view class="steps row just_arw">
-					<view class="step column center" :class="{globelColor: status==1}">
+					<view class="step column ali_center just_btw" :class="{globelColor: status==1}">
 						<text class="iconfont icon-duigou1"></text>
 						<text>已投递</text>
 						<text class="time">6月15日 15:30</text>
@@ -41,7 +41,7 @@
 						<text class="iconfont icon-youjiantou"></text>
 						<text class="iconfont icon-youjiantou"></text>
 					</text>
-					<view class="step column center" :class="{globelColor: status==3}" v-if="status==3">
+					<view class="step column ali_center just_btw" :class="{globelColor: status==3}" v-if="status==3">
 						<text class="iconfont icon-delete"></text>
 						<text>不合适</text>
 						<text class="time">6月15日 15:30</text>

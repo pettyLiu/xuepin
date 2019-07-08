@@ -5,6 +5,7 @@
 			<view class="sliderBorder" :style="{left: sliderLeft + 'px'}"></view>
 		</view>
 		<postList :list="news" type="news"></postList>
+		<view class="loadmore" v-if="showLoadMore">{{loadMoreText}}</view>
 	</view>
 </template>
 
@@ -22,25 +23,39 @@
 			return{
 				tabs: ['全部','被查看','待面试','不合适'],
 				activeTab: 0,
-				slotNames: ['待处理','已被查看','待面试','不合适'],
-				slotName: '待处理',
 				news: [1,2,3,4],
 				sliderLeft: 0,
+				loadMoreText: "加载中...",
+				showLoadMore: false,
+				currentPage: 1,
+				total: 1
 			}
 		},
 		methods:{
 			changeTabs (e) {
-				console.log(e)
 				if(this.activeTab != e.target.id){
 					this.activeTab = e.target.id
-					this.slotName = this.slotNames[e.target.id]
-					this.sliderLeft = e.target.offsetLeft + this.tt
-					this.getPostList()
+					this.loadMoreText = "加载中..."
+					this.showLoadMore = false
+					this.getNewsList()
 				}
 			},
-			getPostList () {
-				
+			getNewsList () {
+				const that = this
+				that.$axios({ url: '', data: { currentPage: that.currentPage } }).then(res =>{
+					if(res.code == 1){
+						that.currentPage += that.currentPage
+					}
+				})
 			},
+		},
+		onReachBottom() {
+			if(this.total > this.currentPage){
+				this.getNewsList()
+			}else{
+				this.loadMoreText = "没有更多数据了"
+				this.showLoadMore = true
+			}
 		},
 		onLoad() {
 			var that = this

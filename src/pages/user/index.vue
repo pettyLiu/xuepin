@@ -2,7 +2,7 @@
 	<view class="user">
 		<section class="userDetail" :style="{paddingTop: statusBarHeight + 10 + 'px'}">
 			<image class="bg" src="/static/icon/bg.png" mode=""></image>
-			<text class="f_24 signOut">退出登录</text>
+			<text class="f_24 signOut" @click="signOut">退出登录</text>
 			<view class="row just_btw userTxt">
 				<view class="column">
 					<text class="nickName f_48">{{info.nickName}}</text>
@@ -68,6 +68,11 @@
 			toNext (url) {
 				uni.navigateTo({
 					url: url
+				})
+			},
+			signOut () { // 退出登录
+				uni.reLaunch({
+					url: '/pages/login/index'
 				})
 			}
 		},
