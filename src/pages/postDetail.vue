@@ -29,18 +29,24 @@
 			</view>
 		</view>
 		<button type="primary" class="btn" @click="sendingResume">投递简历</button>
+		<share :showMask="showMask" v-on:cancel="cancel"></share>
 	</view>
 </template>
 
 <script>
+	import share from '../components/share.vue'
 	export default {
 		name: 'postDetail',
 		data() {
 			return {
-				collect: false
+				collect: false,
+				showMask: false
 			};
 		},
 		methods:{
+			cancel () { // 显示遮罩层
+				this.showMask = false
+			},
 			toAddress () {
 				uni.openLocation({
 					latitude: 25.854021,
@@ -62,10 +68,17 @@
 				});
 			}
 		},
+		onBackPress() {
+			if(this.showMask){
+				this.showMask = false
+				return true
+			}
+		},
 		computed:{
 		},
 		onNavigationBarButtonTap (val){
 			if(val.index == 0){
+				this.showMask = true
 				console.log('点击了分享')
 			}else{
 				console.log('点击了收藏')
@@ -83,6 +96,9 @@
 				}
 			}
 		},
+		components:{
+			share
+		}
 	}
 </script>
 

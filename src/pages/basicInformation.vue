@@ -129,7 +129,7 @@
 			},
 			toNext (title) {
 				uni.navigateTo({
-					url:'/pages/resume/editList?title=' + title
+					url:'/pages/resume/editList?title=' + title + '&type=1'
 				})
 			},
 			bindPickerSex (e) { // 性别选择器			

@@ -1,9 +1,6 @@
 <template>
 	<view class="personal-company">
 		<!-- 公司列表 -->
-		<view class="" style="margin: 50upx;width: 100upx;height:100upx;box-shadow: -0upx -0upx 3px 0px #87CEEB;background: white;">
-			
-		</view>
 		<view class="companyLists">
 			<view class="companyList" v-for="(item, index) in 9" :key="index" @click="toCompanyDetail">
 				<view class="companyTxt row ali_center">

@@ -30,7 +30,6 @@
 						<map style="width: 100%; height: 220px;" :latitude="latitude" :longitude="longitude" :markers="covers"></map>
 					</view>
 				</view>
-				
 			</view>
 			<view class="second"  v-if="activeTab == 1">
 				<view class="postList" @click="toPostDetail()" v-for="(item, index) in post" :key="index">
@@ -53,23 +52,13 @@
 				</view>
 			</view>
 		</view>
-		<view class="masks" v-if="showMask">
-			<view class="mask column f_30">
-				<view class="row just_arw">
-					<view class="list column center" v-for="(item, index) in providerList" :key='index' @click="share(item)">
-						<text class="iconfont" :class="item.icon"></text>
-						<text class="">{{item.name}}</text>
-					</view>
-				</view>
-				<text class="btn" @click="cancel">取消</text>
-			</view>
-		</view>
+		<share :showMask="showMask" v-on:cancel="cancel"></share>
 	</view>
 </template>
 
 <script>
 	const sliderWidth = 20
-	import { getProvider } from '@/lib/getProvider.js'
+	import share from '../components/share.vue'
 	export default {
 		name: 'companyDetail',
 		data() {
@@ -92,25 +81,11 @@
 					callout: {content: '红旗大道86号江西理工大徐',display:'ALWAYS'}
 				}],
 				showMask: false,
-				providerList: '',
 			};
 		},
 		methods:{
 			cancel () { // 显示遮罩层
 				this.showMask = false
-			},
-			share (data, index) { // 分享
-				uni.share({
-					provider: data.name,
-					type: 1,
-					summary: "分享微信！",
-					success: function (res) {
-						console.log("success:" + JSON.stringify(res));
-					},
-					fail: function (err) {
-						console.log("fail:" + JSON.stringify(err));
-					}
-				});
 			},
 			changeTabs (e) {
 				if(this.activeTab != e.target.id){
@@ -136,6 +111,12 @@
 		},
 		computed:{
 		},
+		onBackPress() {
+			if(this.showMask){
+				this.showMask = false
+				return true
+			}
+		},
 		onNavigationBarButtonTap (val){			
 			if(val.index == 0){
 				console.log('点击了分享')
@@ -159,14 +140,30 @@
 					that.tt = (res.windowWidth/that.tabs.length - sliderWidth)/2
 			    }
 			})
-			this.providerList = getProvider()
-			this.providerList=[{name: '微信', id: 1, icon:'icon-weixin'},{name: 'QQ',id: 3, icon:'icon-qq'}] //测试用
+			uni.getLocation({
+				type: 'wgs84',
+				success: function (res) {
+					console.log('当前位置的经度：' + res.longitude);
+					console.log('当前位置的纬度：' + res.latitude);
+				},
+				fail(res) {
+					console.log(res)
+				}
+			})
 		}, 
 		components:{
+			share
 		}
 	}
 </script>
 
 <style lang="less">
 	@import '../style/personal/companyDetail';
+	img.csssprite{
+		display: none;
+		opacity: 0
+	}
+	.amap-logo{
+		display: none;
+	}
 </style>

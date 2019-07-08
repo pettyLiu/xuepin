@@ -11,27 +11,51 @@
 			return {
 				title: '',
 				txt: '',
-				placeholder: ''
+				placeholder: '',
+				type: ''
 			};
 		},
 		onLoad(options) {
-			this.title = options.title		
-			this.txt = this.$store.state.information.info[options.title]
-			if(this.title == 'nickName'){
-				uni.setNavigationBarTitle({
-					title: '姓名'
-				})
-				this.placeholder = '请输入姓名'
-			}else{
-				uni.setNavigationBarTitle({
-					title: '邮箱'
-				})
-				this.placeholder = '请输入邮箱'
+			this.title = options.title
+			this.type = options.type
+			switch (this.title){
+				case 'nickName':
+					uni.setNavigationBarTitle({
+						title: '姓名'
+					})
+					this.placeholder = '请输入姓名'
+					this.txt = this.$store.state.information.info[options.title]
+					break;
+				case 'email':
+					uni.setNavigationBarTitle({
+						title: '邮箱'
+					})
+					this.placeholder = '请输入邮箱'
+					this.txt = this.$store.state.information.info[options.title]
+					break;
+				case 'school':
+					uni.setNavigationBarTitle({
+						title: '学校'
+					})
+					this.placeholder = '请输入学校名称'
+					this.txt = this.$store.state.fullTime.education[options.title]
+					break;
+				case 'major':
+					uni.setNavigationBarTitle({
+						title: '专业'
+					})
+					this.placeholder = '请输入专业名称'
+					this.txt = this.$store.state.fullTime.education[options.title]
+					break;
 			}
 		},
 		// 保存信息
 		onNavigationBarButtonTap (val){
-			this.$store.commit('changeInfo',{ key:this.title, value: this.txt })
+			if(this.type == 1){
+				this.$store.commit('changeInfo',{ key:this.title, value: this.txt })
+			}else if(this.type == 2){
+				this.$store.commit('changeEducation',{ key:this.title, value: this.txt })
+			}
 			uni.navigateBack({
 				delta: 1
 			});

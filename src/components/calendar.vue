@@ -62,7 +62,7 @@
 			signOn (selected) { // 签到
 				if(selected&&!this.checkIn){
 					this.checkIn = true
-					this.$emit('checkIn')
+					this.$emit('checkIn')	
 				}	
 			},
 			getDate(e) {
@@ -93,7 +93,6 @@
 		font-family: 'imt-calendar';
 		src: url('//at.alicdn.com/t/font_1114123_r6yq558axt.ttf') format('truetype');
 	}
-
 	.imt-calendar {
 		width: 700upx;
 		margin: auto;
@@ -103,13 +102,11 @@
 		color: #333;
 		margin-left: -42upx;
 	}
-
 	.calendar-month-wrapper {
 		display: flex;
 		justify-content: space-between;
 		border-bottom: 2upx solid #e5e5e5;
 	}
-
 	.calendar-icon {
 		font-family: 'imt-calendar';
 		width: 100upx;
@@ -117,35 +114,28 @@
 		line-height: 100upx;
 		color: #ccc;
 	}
-
 	.calendar-month {
 		font-size: 32upx;
 		line-height: 100upx;
 	}
-
 	.calendar-icon-leftArrow {
 		transform: rotate(180deg);
 	}
-
 	.calendar-week-wrapper {
 		display: flex;
 	}
-
 	.calendar-week {
 		flex: 1;
 		font-size: 32upx;
 		line-height: 100upx;
 	}
-
 	.calendar-date-swiper {
 		height: 600upx;
 	}
-
 	.calendar-date-wrapper {
 		display: flex;
 		flex-wrap: wrap;
 	}
-
 	.calendar-date {
 		width: 60upx;
 		height: 60upx;
