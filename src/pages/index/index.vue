@@ -68,9 +68,9 @@
 			}
 		},
 		onLoad() {
-			this.$axios({url: 'api/dishes', method: 'post'}).then(res =>{
-				// console.log(res)
-			})
+			// this.$axios({url: 'api/dishes', method: 'post'}).then(res =>{
+			// 	// console.log(res)
+			// })
 			var that = this
 			uni.getSystemInfo({
 			    success: function (res) {

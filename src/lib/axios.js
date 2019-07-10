@@ -4,9 +4,8 @@ import store from '@/store/index'
 
 const Qs = require('qs')
 axios.defaults.baseURL = ''
-console.log(axios)
+
 axios.interceptors.request.use(config => {
-	console.log(config)
 	config.headers['valToken'] = '4542'
 	return config
 }, error => {
@@ -25,11 +24,12 @@ export default function (options) {
         options.headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-        options.data = Qs.stringify(options.data)
+        options.data = Qs.parse(options.data)
     }
     if (!/json/.test(options.url)) {
         options.url = config.baseUrl + options.url
     }
+	var tt = uni.getStorageSync('info')
     return new Promise((resolve, reject) => {		
         axios.request(options).then(res => {
 			console.log(res)
@@ -37,14 +37,20 @@ export default function (options) {
 				uni.redirectTo({
 					url: '/pages/login/index'
 				})
-                // store.state.currRouter.instance.push({ name: 'login' })
-            }else if(false){
+            }else if(res.data.data.type == 1 && res.data.msg == '注册成功'){
+				uni.showToast({ title: res.msg, icon: "none" })
+				setTimeout(function(){
+					uni.redirectTo({
+						url: '/pages/basicInformation'
+					})
+				}, 1500)
+			} else if(res.data.data.type == 0 && res.data.data.userinfo.base.username == null){
 				uni.redirectTo({
 					url: '/pages/basicInformation'
 				})
-			} else {
-                resolve(res.data)
-            }
+            } else{
+				resolve(res.data)
+			}
         }, error => {
             reject(error)
         })

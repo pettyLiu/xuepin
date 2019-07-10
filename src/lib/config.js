@@ -1,4 +1,4 @@
 export default{
-	// baseUrl: 'https://kuma.dev.0797i.cn/',
-	baseUrl: '',
+	baseUrl: 'https://arw.dev.intelgice.com/',
+	// baseUrl: '',
 }

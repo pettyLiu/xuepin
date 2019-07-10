@@ -99,7 +99,7 @@
 					{name:"nickName", checkType : "string", checkRule:"1,5",  errorMsg:"姓名应为1-5个字符"},
 					{name:"email", checkType : "email", checkRule:"",  errorMsg:"请输入email"}
 				];
-				//进行表单检查
+				// 进行表单检查
 				var formData = e.detail.value
 				formData.avatar = this.avatar
 				var checkRes = graceChecker.check(formData, rule)

@@ -121,19 +121,28 @@
 			if(val.index == 0){
 				console.log('点击了分享')
 				this.showMask = true
+				// const subNVue = uni.getSubNVueById('share');
+				// subNVue.show('slide-in-left',200,()=>{
+				// 	console.log('subNVue 原生子窗体显示成功');
+				// })
 			}else{
 				var webView = this.$mp.page.$getAppWebview()
-				if(collect){ // 更换收藏图标
+				this.collect = !this.collect
+				if(this.collect){ // 更换收藏图标
 					webView.setTitleNViewButtonStyle(1, {  text: '\ue657' })
 				}else{
 					webView.setTitleNViewButtonStyle(1, {  text: '\ue654' })
 				}
-				this.collect = !this.collect
 				uni.showToast({ title: this.collect ? '收藏成功' : '取消收藏', icon: "none" })
 			}
 		},
 		onLoad() {
 			var that = this
+			// const subNVue = uni.getSubNVueById('tgt');
+			// console.log(subNVue)
+			// uni.getSubNVueById('tgt').show('slide-in-left',200,()=>{
+			// 	console.log('subNVue 原生子窗体显示成功');
+			// })
 			uni.getSystemInfo({
 			    success: function (res) {
 					that.sliderLeft = (res.windowWidth/that.tabs.length - sliderWidth)/2,

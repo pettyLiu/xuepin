@@ -95,17 +95,7 @@
 			"path": "pages/signOn",
 			"style": {
 				"navigationBarTitleText": "签到",
-				"titleNView":false,
-				"subNVues":[{  
-                    "id": "popup", // 唯一标识  
-                    "path": "pages/subNVues/popUp", // 页面路径  
-                    "type": "popup",
-                    "style": {   
-                        "width": "100upx",  
-                        "height": "150upx",  
-                        "background": "transparent"  
-                    }  
-                }]  
+				"titleNView":false
 			}	
 		},{
 			"path": "pages/search/index",
@@ -139,7 +129,16 @@
 					"buttons": [ //原生标题栏按钮配置
 						{ "type": "share" },
 						{ "text": "\ue654","fontSrc": "/static/font/iconfont.ttf","fontSize":"24px","width":"32px"}
-					]
+					],
+					"subNVues":[{  
+					    "id": "tgt", // 唯一标识  
+					    "path": "pages/subNVues/popUp", // 页面路径  
+					    "style": {   
+					        "width": "100%",  
+					        "height": "100%"
+					        // "background": "transparent"  
+					    }  
+					}]  
 				}
 			}	
 		},

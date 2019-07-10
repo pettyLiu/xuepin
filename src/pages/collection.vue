@@ -6,7 +6,7 @@
 			<view class="sliderBorder"
 			:style="{transform: 12,left: sliderLeft + 'px'}"></view>
 		</view>	
-		<view class="message-list"  v-if="tabs==1">
+		<view class="message-list uni-swipe-action"  v-if="tabs==1">
 			<block v-for="(it,i) of resumeCollection" :key="i">
 				<view class="uni-swipe-action__container" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd"
 				 @touchcancel="touchEnd" :style="{'transform':messageIndex == i ? transformX : 'translateX(0px)','-webkit-transform':messageIndex == i ? transformX : 'translateX(0px)'}" :data-index="i" :data-disabled="it.disabled">
@@ -36,7 +36,7 @@
 				</view>
 			</block>
 		</view>
-		<view class="message-list"  v-if="tabs==2">
+		<view class="message-list uni-swipe-action"  v-if="tabs==2">
 			<block v-for="(it,i) of companyCollection" :key="i">
 				<view class="uni-swipe-action__container" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd"
 				 @touchcancel="touchEnd" :style="{'transform':messageIndex == i ? transformX : 'translateX(0px)','-webkit-transform':messageIndex == i ? transformX : 'translateX(0px)'}" :data-index="i" :data-disabled="it.disabled">
