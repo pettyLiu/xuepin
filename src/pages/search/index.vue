@@ -14,43 +14,46 @@
 			<view class="postLists" v-if="type == 1">
 				<view class="postList" @click="toPostDetail()" v-for="(item, index) in lists" :key="index">
 					<view class="row just_btw">
-						<text class="title">技术总监</text>
-						<text class="salary">10k-20k/月</text>
+						<text class="title">{{item.title}}</text>
+						<text class="salary">{{item.salary}}</text>
 					</view>
 					<view class="txt row just_btw">
-						<text class="company" @click.stop="toCompanyDetail"><i></i>章贡区<i></i>赣州公司</text>
-						<text class="date">6月15日</text>
+						<text class="company" @click.stop="toCompanyDetail">
+							{{item.district_name}} {{item.enterprise_name}}
+						</text>
+						<text class="date">{{item.updated_at}}</text>
 					</view>			
 					<view class="column" >
 						<view class="row tags">
-							<text class="tag">带薪休假</text>
-							<text class="tag">五险一金</text>
+							<text class="tag" v-for="tag in item.enterprise_tags" :key="tag">{{tag}}</text>
 						</view>
 						<text v-if="type == 'index'" class="address"><text class="iconfont icon-weizhi"></text>章贡区</text>	
 					</view>
 				</view>
 			</view>
 			<view class="companyLists"  v-if="type == 2">
-				<view class="companyList" v-for="(item, index) in 9" :key="index" @click="toCompanyDetail">
+				<view class="companyList" v-for="(item, index) in lists" :key="index" @click="toCompanyDetail">
 					<view class="companyTxt row ali_center">
 						<image class="companyAvatar" src="/static/image/banner2.png" mode=""></image>
 						<view class="column just_btw">
-							<text class="companyName">赣州公司</text>
-							<text class="address"><text class="iconfont icon-weizhi"></text>赣州市 章贡区</text>
+							<text class="companyName">{{item.name}}</text>
+							<text class="address"><text class="iconfont icon-weizhi">
+								</text>{{item.city_name}} {{item.district_name}}</text>
 						</view>
 					</view>
 					<view class="companyTypes">
-						<text class="companyType">互联网/电子商务</text>
+						<text class="companyType">{{item.category}}</text>
 					</view>
 				</view>
 			</view>
-			<text class="tips" v-if="lists.length >0 && keyword != ''">暂无搜索内容</text>
-			<view class="historyTitle row just_btw" v-if="lists.length == 0 && keyword =='' && history.length != 0">
+			<text class="tips" v-if="jobs.length == 0 && enterprise.length == 0 && keyword != ''">暂无搜索内容</text>
+			<view class="historyTitle row just_btw" 
+			v-if="jobs.length == 0 && enterprise.length == 0 && keyword =='' && history.length != 0">
 				<text>历史搜索</text>
 				<text class="iconfont icon-del1" @click="delSearch"></text>
 			</view>
-			<view class="lists row" v-if="lists.length == 0 && keyword ==''">
-				<text class="f_24 c_999 list" v-for="item in history" :key="item" @click="search(item)">{{item}}</text>
+			<view class="lists row" v-if="jobs.length == 0 && enterprise.length == 0 && keyword ==''">
+				<text class="f_24 c_999 list ellipsis" v-for="item in history" :key="item" @click="search(item)">{{item}}</text>
 			</view>
 			<view class="loadmore" v-if="showLoadMore">{{loadMoreText}}</view>
 		</view>
@@ -63,13 +66,15 @@
 			return{
 				statusBarHeight: getApp().globalData.statusBarHeight,
 				keyword: '',
-				lists: [],
+				jobs: [],
+				enterprise: [],
 				history: uni.getStorageSync('search') ? uni.getStorageSync('search') : [],
 				type: 1,
 				loadMoreText: "加载中...",
 				showLoadMore: false,
 				currentPage: 1,
-				total: 1
+				total: 1,
+				lists: []
 			}
 		},
 		mounted() {
@@ -89,13 +94,35 @@
 					}
 				}
 				const that = this
-				that.$axios({url: '',data: { currentPage: that.currentPage, keywords: keyword } }).then(res =>{
+				that.$axios({
+					url: 'api/job/allSearch',
+					method: 'post',
+					data: { 
+						// currentPage: that.currentPage,
+						Choosetext: keyword, 
+						areaName: '赣州市' 
+					}
+					}).then(res =>{
+					console.log(res)
 					if(res.code == 1){
-						that.lists = res.data
+						if(that.type == 1){
+							that.lists = res.data.original.data.job.data
+						}else if(that.type == 2){
+							that.lists = res.data.original.data.enterprise.data
+						}
+						// that.jobs = res.data.original.data.job
+						// that.enterprise = res.data.original.data.enterprise
+						// console.log(that.lists)
 						that.currentPage++
 						that.showLoadMore = false
 					}
 				})
+			},
+			toPostDetail () {
+
+			},
+			toCompanyDetail (){
+
 			},
 			back () { // 返回
 				uni.navigateBack()

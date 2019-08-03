@@ -6,7 +6,7 @@ const Qs = require('qs')
 axios.defaults.baseURL = ''
 
 axios.interceptors.request.use(config => {
-	config.headers['valToken'] = '4542'
+	config.headers['Authorization'] = store.state.Authorization
 	return config
 }, error => {
 	return Promise.reject(error)
@@ -32,19 +32,28 @@ export default function (options) {
 	var tt = uni.getStorageSync('info')
     return new Promise((resolve, reject) => {		
         axios.request(options).then(res => {
-			console.log(res)
-            if (res.data.code == 503 || res.data.msg == 'token过期') {
-				uni.redirectTo({
+            if (res.data.code == 0 && !res.data.msg.indexOf('token无效')) {
+				uni.reLaunch({
 					url: '/pages/login/index'
 				})
             }else if(res.data.data.type == 1 && res.data.msg == '注册成功'){
-				uni.showToast({ title: res.msg, icon: "none" })
+                uni.showToast({ title: res.msg, icon: "none" })
+                store.commit('loginIn', { 
+                    token : res.data.data.token, 
+                    Authorization: res.data.data.Authorization,
+                    userInfo: res.data.data.userInfo
+                })
 				setTimeout(function(){
-					uni.redirectTo({
+					uni.reLaunch({
 						url: '/pages/basicInformation'
 					})
 				}, 1500)
-			} else if(res.data.data.type == 0 && res.data.data.userinfo.base.username == null){
+			} else if(res.data.data.type == 0 && res.data.data.userinfo.email == null){
+                store.commit('loginIn', { 
+                    token : res.data.data.token, 
+                    Authorization: res.data.data.Authorization,
+                    userInfo: res.data.data.userInfo
+                })
 				uni.redirectTo({
 					url: '/pages/basicInformation'
 				})

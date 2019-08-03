@@ -1,17 +1,18 @@
 <template>
 	<view class="area row">
 		<scroll-view scroll-y="true" class="areaLeft column">
-			<view class="areaItem globelColor" >赣州</view>
+			<view class="areaItem globelColor">赣州</view>
 		</scroll-view>
 		<scroll-view scroll-y="true" class="areaCenter column">
-			<view class="areaItem" v-for="(item, index) in area" :key="index" @click="showNext(index)" :class="{active: activeArea == index}">{{item}}</view>
+			<view class="areaItem" v-for="(item, index) in area" :key="index" 
+			@click="showNext(index, item.id)" :class="{active: activeId == item.id}">{{item.name}}</view>
 		</scroll-view>
-		<scroll-view scroll-y="true" class="areaRight">
+		<!-- <scroll-view scroll-y="true" class="areaRight">
 			<view class="areaItem" @click="closeMask(subArea)">{{subArea}}</view>
-		</scroll-view>
+		</scroll-view> -->
 		<view class="btn row ali_center just_btw">
-			<text class="reset">重置</text>
-			<text class="comfirm">确定</text>
+			<text class="reset" @click="reset">重置</text>
+			<text class="comfirm" @click="confirm">确定</text>
 		</view>
 	</view>
 </template>
@@ -22,34 +23,56 @@
 		data () {
 			return{
 				area: 28,
-				subArea: '',
 				activeArea: 0,
-				statusBarHeight: 0,
-				thirActiveArea: 0
+				district: [],
+				activeId: ''
 			}
 		},
+		props:{
+			city: Object
+		},
 		mounted() {
+			if(this.$store.state.district){
+				this.activeId = this.$store.state.district.id
+			}
 			this.getArea()
-			console.log(getApp().globalData)
-			this.statusBarHeight = getApp().globalData.statusBarHeight
-			// console.log(statusBarHeight)
 		},
 		methods:{
 			moveHandle () {
 			},
 			// 关闭弹窗
 			closeMask (item) {
-				console.log(item)
 				this.$emit("closeMask", {name: item,type: 'area'})
 			},
 			getArea () {
-				this.area=['赣州','章贡区','瑞金','南康','赣州','章贡区','瑞金','南康','赣州','章贡区','瑞金','南康','赣州','章贡区','瑞金','南康']
+				const that = this
+				that.$axios({
+					url: 'api/base/ajaxDistrict',
+					methods: 'get',
+					data: {
+						id: that.city.id
+					}
+				}).then(res => {
+					that.area = res.data
+					that.district = res.data[0]
+					if(this.$store.state.district){
+						this.activeId = this.$store.state.district.id
+					}else{
+						that.activeId = res.data[0].id
+					}	
+				})
 			},
-			showNext (index) {
-				const tt = [['不限'],['章贡区'],['1瑞金','2瑞金','3瑞金'],['1南康'],['2难看']]
-				this.subArea = '全' + this.area[index]
+			showNext (index, id) {
 				this.activeArea = index
-				
+				this.district = this.area[index]
+				this.activeId = id
+			},
+			reset () {
+				this.activeArea = 0
+			},
+			confirm () {
+				this.$store.commit('changeDistrict', this.district)
+				uni.navigateBack()
 			}
 		}
 	}

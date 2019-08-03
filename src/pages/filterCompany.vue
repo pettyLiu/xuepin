@@ -3,15 +3,15 @@
 		<view class="">
 			<text class="f_32 title">行业分类</text>
 			<view class="content">
-				<view class="contentList" v-for="(item, index) in nature" :key="index" >
-					<text class="contentTxt" :class="{active: activeNature == index}" @click="changeNatureActive(index)">{{item}}</text>
+				<view class="contentList" v-for="(item, key, index) in nature"  :key="index">
+					<text class="contentTxt" :class="{active: activeNature == index}" @click="changeNatureActive(index)">{{key}}{{item}}</text>
 				</view>	
 			</view>
 		</view>
 		<view class="">
 			<text class="f_32 title">公司规模</text>
 			<view class="content">
-				<view class="contentList" v-for="(item, index) in scale" :key="index" >
+				<view class="contentList" v-for="(item, key, index) in scale" :key="index" >
 					<text class="contentTxt" :class="{active: activeScale == index}" @click="changeScaleActive(index)">{{item}}</text>
 				</view>
 			</view>
@@ -24,6 +24,7 @@
 </template>
 
 <script>
+    import { mapState } from 'vuex'
 	export default {
 		name: 'filterCompany',
 		data() {
@@ -35,7 +36,12 @@
 			};
 		},
 		onLoad() {
-			this.getNature()
+			// this.getNature()
+			console.log(this.$store.state.auth)
+			console.log(this.basicConfig)
+			this.scale = this.basicConfig.basicConfig.ent_scale
+			console.log(this.scale)
+			// this.nature = this.basicConfig.
 		},
 		methods:{
 			getNature () {
@@ -64,6 +70,7 @@
 			}
 		},
 		computed:{
+			...mapState(['basicConfig'])
 		},
 		components:{
 		}

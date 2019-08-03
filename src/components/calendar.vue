@@ -11,9 +11,9 @@
 		<swiper class="calendar-date-swiper" :current="current" @change="current = $event.detail.current">
 			<swiper-item class="calendar-date-wrapper" v-for="(item,index) in calendar" :key="index">
 				<view class="calendar-date" v-for="(value,key) in item" :key="key" 
-				:style="{color:value.selected&&'#5E57EB'}" @click="signOn(value.selected)">
+				:style="{color:value.selected&&'#5E57EB'}">
 				{{value.date}}
-				<image class="gold" src="/static/icon/gold.png" mode="" v-if="value.selected&&checkIn"></image>
+				<image class="gold" src="/static/icon/gold.png" mode="" v-if="value.coin"></image>
 				</view>
 			</swiper-item>
 		</swiper>
@@ -42,8 +42,15 @@
 			color: {
 				type: String,
 				default: '#e5373f'
+			},
+			credit_data: {
+				type: Array,
+				default () {
+
+				}
 			}
 		},
+
 		created() {
 			let year = new Date().getFullYear()
 			let month = new Date().getMonth()
@@ -56,15 +63,18 @@
 				this.calendar[time[1] - this.startMonth - 1 + (time[0] - this.startYear) * 12][time[2] - 1 + new Date(
 					`${time[0]}-${time[1]}`).getDay()].selected = true
 			})
+			this.credit_data.forEach(i => {
+				for(let j = 0; j < this.calendar[0].length; j++){
+					console.log(this.calendar[0][j].date)
+					if(i == this.calendar[0][j].date){
+						this.calendar[0][j].coin = true
+						break
+					}
+				}
+			})
 			this.current = this.calendar.length - 1
 		},
 		methods: {
-			signOn (selected) { // 签到
-				if(selected&&!this.checkIn){
-					this.checkIn = true
-					this.$emit('checkIn')	
-				}	
-			},
 			getDate(e) {
 				let time = e.split('-')
 				return [...Array(new Date(`${time[0]}-${time[1]}`).getDay())].map(i => ({
@@ -145,8 +155,8 @@
 		margin: 20upx;
 		position:relative;
 		.gold{
-			width: 44upx;
-			height: 30upx;
+			width: 50upx;
+			height: 34upx;
 			position: absolute;
 			top: 16upx;
 			left: 9upx

@@ -1,12 +1,11 @@
 <template>
 	<view class="filterArea">
-		<areas></areas>
+		<areas :city="city"></areas>
 	</view>
 </template>
 
 <script>
 	import areas from '@/components/area'
-	import posts from '@/components/post'
 	export default {
 		name: 'filterArea',
 		data() {
@@ -15,6 +14,9 @@
 			};
 		},
 		methods:{
+		},
+		onLoad (options) {
+			this.city = JSON.parse(options.city) 
 		},
 		computed:{
 		},

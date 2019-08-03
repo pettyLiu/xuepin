@@ -85,7 +85,6 @@
 				companyIndex: -1,
 				resumeCollection: [1,2,3],
 				companyCollection: [1,2,3,4],
-				messagesList:[1,2],
 				options: [{text:'取消收藏'}],
 				loadMoreText: "加载中...",
 				showLoadMore: false,
@@ -96,8 +95,22 @@
 		methods:{
 			getCollectionList () {
 				const that = this
-				that.$axios({ url: '', data: { currentPage: that.currentPage } }).then(res =>{
+				that.$axios({ 
+					url: 'api/user/collectBox', 
+					data: { 
+						// currentPage: that.currentPage,
+						pageno: 1,
+						status: that.tabs
+					} 
+				}).then(res =>{
 					if(res.code == 1){
+						console.log(res)
+						that.total = res.data.total
+						if (that.tabs == 1) {
+							that.resumeCollection = res.data.data
+						} else{
+							that.companyCollection = res.data.data
+						}
 						that.currentPage += that.currentPage
 					}
 				})
@@ -111,6 +124,7 @@
 					this.total = 1
 					this.loadMoreText = "加载中..."
 					this.showLoadMore = false
+					this.getCollectionList()
 				}	
 			},
 			toPostDetail () {
@@ -215,6 +229,7 @@
 					that.tt = (res.windowWidth/3 - sliderWidth)/2
 			    }
 			})
+			that.getCollectionList()
 		},
 	}
 </script>

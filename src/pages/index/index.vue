@@ -18,7 +18,7 @@
 					:style="{transform: 12,left: sliderLeft + 'px'}"></view>
 				</view>				
 				<view class="types row ali_center">
-					<text @click="chooseArea">{{area}}<text class="iconfont">&#xe65a;</text></text>
+					<text @click="chooseArea">{{district ? district.name : city.name}}<text class="iconfont">&#xe65a;</text></text>
 					<text @click="chooseType" v-if="tabs != 1">{{post}}<text class="iconfont">&#xe65a;</text></text>
 					<text class="border"></text>
 				</view>
@@ -34,6 +34,7 @@
 <script>
 	import pageTop from './components/top'
 	import postList from '@/components/postList'
+	import { mapState } from 'vuex'
 	const sliderWidth = 20;
 	export default {
 		data() {
@@ -42,14 +43,18 @@
 				top: '',
 				istop: false,
 				module: [{img: '/static/image/remen_icon.png',text: '热门职位'},{img: '/static/image/zuijin_icon.png',text: '离我最近'},{img: '/static/image/jizhao_icon.png',text: '急招岗位'},{img: '/static/image/zuixin_icon.png',text: '最新岗位'}],
-				postList: [1,2,2],
+				postList: [],
 				showArea: false,
 				showPost: false,
 				post: '职位类型',
-				area: '赣州',
 				sliderLeft: 0,
 				loadMoreText: "加载中...",
 				showLoadMore: false,
+				total: 1,
+				currentPage: 1,
+				area_id: '', // 区域code
+				alias: '',
+				category_id: '', // 职位id
 			}
 		},
 		computed: {
@@ -65,30 +70,49 @@
 			    })
 				getApp().globalData.statusBarHeight = height
 			    return height
+			},
+			...mapState(['userInfo', 'city', 'district', 'category'])
+		},
+		watch:{
+			district (val) { // 区域发生变化重新加载数据
+				this.area_id = val.code
+				this.currentPage = 1
+				this.postList = []
+				this.getPostLsit()
+			},
+			category (val) { // 区域发生变化重新加载数据
+				this.category_id = val.id ? val.idd : ''
+				this.currentPage = 1
+				this.postList = []
+				this.getPostLsit()
+				this.post = val.name ? val.name : '职位类型'
 			}
 		},
-		onLoad() {
-			// this.$axios({url: 'api/dishes', method: 'post'}).then(res =>{
-			// 	// console.log(res)
-			// })
+		onLoad () {
+			this.getPostLsit()
+			this.$store.dispatch('getBasicConfig')
 			var that = this
 			uni.getSystemInfo({
-			    success: function (res) {
+				success: function (res) {
 					that.sliderLeft = (res.windowWidth/3 - sliderWidth)/2,
 					that.tt = (res.windowWidth/3 - sliderWidth)/2
-			    }
-			})
+				}
+			}) 
+			console.log(this.city)
 		},
 		// 触底加载更多
 		onReachBottom() {
-			if (this.postList.length > 10) {
+			console.log(this.postList.length)
+			console.log(this.total)
+			if (this.postList.length >= this.total) {
 				this.loadMoreText = "没有更多数据了!"
 				return;
+			}else{
+				setTimeout(() => {
+					this.getPostLsit();
+				}, 300);
 			}
-			this.showLoadMore = true
-			setTimeout(() => {
-				this.getPostLsit();
-			}, 300);
+			this.showLoadMore = true	
 		},
 		components:{
 			pageTop,
@@ -113,12 +137,27 @@
 			moveHandle (){},			
 			getPostLsit () { // 获取新的职位列表
 				// 有三个参数，tab，area，post，
-				this.postList.push([1,2,3,3])
+				const that = this
+				that.$axios({
+					url: 'api/index',
+					method: 'post',
+					data: {
+						page: that.currentPage,
+						alias: that.alias,
+						area_id: that.area_id,
+						category_id: that.category_id
+					}
+				}).then(res => {
+					console.log(res)
+					that.postList = that.postList.concat(res.data.result.data)
+					that.currentPage = that.currentPage + 1
+					that.total = res.data.result.total
+				})
 			},
 			chooseArea () { // 点击地区
 				this.changePlace()
 				uni.navigateTo({
-					url:'/pages/filterArea'
+					url:'/pages/filterArea?city=' + JSON.stringify(this.city) 
 				})
 				const that = this
 				if(!that.showArea){
@@ -132,7 +171,7 @@
 				this.changePlace()
 				const that = this
 				uni.navigateTo({
-					url:'/pages/filterPost'
+					url:'/pages/filterPost?alias=' + this.alias
 				})
 				if(!that.showPost){
 					setTimeout(function(){
@@ -144,24 +183,20 @@
 			changeTabs (e) {
 				if(e.target.id != this.tabs){
 					this.tabs = e.target.id
+					if(this.tabs == 2){
+						this.alias = 'full_rec'
+						this.post = '职位类型'
+						this.$store.commit('resetCategory')
+					}else if (this.tabs == 3){
+						this.alias = 'part_rec'
+						this.post = '职位类型'
+						this.$store.commit('resetCategory')
+					}else{
+						this.alias = ''
+					}
 					this.sliderLeft = e.target.offsetLeft + this.tt					
 					this.getPostLsit()
-				}
-				
-			},
-			closeMasks (val) { //关闭弹窗
-				this.showArea = false
-				this.showPost = false
-				if(val.name){
-					if(val.type == 'area'){
-						this.area = val.name
-					}else{
-						this.post = val.name
-					}
-					this.getPostLsit()
-				}
-			},
-			changePlace () { // 改变位置
+				}	
 			},
 			toNext (title) {
 				uni.navigateTo({
@@ -170,7 +205,6 @@
 			}
 		},
 		onPageScroll(e){
-			// console.log(e.scrollTop)
 			if(e.scrollTop >= this.top && !this.istop){
 				this.istop = true
 			}

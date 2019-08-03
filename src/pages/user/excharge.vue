@@ -9,7 +9,7 @@
 			</view>
 			<view class="border row just_btw ali_center">
 				<text class="cir1"></text>
-				<text class="line" v-for="item in 8"></text>
+				<text class="line" v-for="item in 8" :key="item"></text>
 				<text class="cir"></text>
 			</view>
 			<view class="footer column">
@@ -28,15 +28,17 @@
 		data() {
 			return {
 				showBtn: false,
-				Beliel: 5000,
+				Beliel: 0,
 				payIntegral: 0,
-				integral: 60,
-				showTip: false
+				integral: 0,
+				showTip: false,
+				coin: 0
 			};
 		},
 		methods:{
 			changeNum (e) {
 				this.payIntegral = this.Beliel * e.detail.value
+				this.coin = e.detail.value
 				const resonable = this.payIntegral > this.integral ? false : true
 				this.showTip = !resonable
 				if(e.detail.value.length > 0 && resonable){
@@ -47,9 +49,40 @@
 			},
 			excharge () { // 确认兑换
 				if(this.showBtn){
-					
+					const that = this
+					that.$axios({
+						url: 'api/user/creditChangeToCoin',
+						method: 'post',
+						data: {
+							coin: that.coin
+						}
+					}).then(res => {
+						if(res.code == 1){
+							uni.showModal({
+								title: '提示',
+								content: res.msg,
+								success: function (res) {
+									that.payIntegral = ''
+									that.coin = 0
+								}
+							});
+						}
+					})
 				}
+			},
+			getBliel () {
+				const that = this
+				that.$axios({
+					url: 'api/user/creditChangeToCoin',
+					method: 'post'
+				}).then(res => {
+					that.Beliel = Number(res.data.creditToCoin)
+					that.integral = Number(res.data.points)
+				})
 			}
+		},
+		onLoad(){
+			this.getBliel()
 		},
 		computed:{
 		},

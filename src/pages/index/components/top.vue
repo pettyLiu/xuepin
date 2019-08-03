@@ -2,7 +2,7 @@
 	<view class="top">
 		<!-- 搜索栏 -->
 		<view class="search row just_btw" :style="{paddingTop:statusBarHeight + 10 + 'px'}">
-			<view class="address">赣州<text class="iconfont icon-sanjiao"></text></view>
+			<view class="address" @click="toChooseAddress">{{city.name}}<text class="iconfont icon-sanjiao"></text></view>
 			<view class="searchView">
 				<input class="searchInp" type="text" value="" placeholder="输入关键字" @focus="focusOn" placeholder-class="searchPlaceholder"/>
 				<text class="iconfont icon-sousuo"></text>
@@ -20,12 +20,13 @@
 			</view>
 		</view>
 		<view class="dots row center">
-			<text class="dot" v-for="item in dots" :class="{active: activeDots+1 == item }"></text>
+			<text class="dot" v-for="item in dots" :class="{active: activeDots+1 == item }" :key="item"></text>
 		</view>
 	</view>
 </template>
 
 <script>
+	import { mapState } from 'vuex'
 	export default{
 		data(){
 			return{
@@ -34,7 +35,7 @@
 				duration: 500,
 				banner: ['/static/image/banner1.png','/static/image/banner2.png','/static/image/banner3.png'],
 				dots: 1,
-				activeDots: 0
+				activeDots: 0,
 			}
 		},
 		props:['istop'],
@@ -50,9 +51,16 @@
 			        }
 			    })
 			    return height
+			},
+			city: {
+				get(){
+					return this.$store.state.city
+				},
+				set(val){
+					this.$store.state.city
+				}
 			}
-		},
-		
+		},		
 		methods:{
 			swiperMove (e) { // 轮播移动时
 				this.activeDots = e.detail.current
@@ -60,6 +68,11 @@
 			focusOn () { // 点击搜索框时
 				uni.navigateTo({
 					url:'../search/index?type=1'
+				})
+			},
+			toChooseAddress () {
+				uni.navigateTo({
+					url: '/pages/chooseAddress'
 				})
 			}
 		},
@@ -119,7 +132,7 @@
 		}
 		.icon-sanjiao{
 			position: absolute;
-			left: 56upx;
+			// left: 56upx;
 			z-index: 10;
 		}
 		.icon-sousuo{

@@ -1,5 +1,5 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+	"pages": [
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -17,6 +17,49 @@
 				}
 			}			
 		},
+		// #ifdef APP-PLUS
+		{
+			"path": "pages/subnvue/subnvue",
+			"style": {
+				"navigationBarTitleText": "SubNvue",
+				"app-plus": {
+					"titleNView": false,
+					"subNVues": [{
+						"id": "drawer",
+						"path": "pages/subnvue/subnvue/drawer",
+						"type": "popup",
+						"style": {
+							"width": "50%"
+						}
+					}, {
+						"id": "popup",
+						"path": "pages/subnvue/subnvue/popup",
+						"type": "popup",
+						"style": {
+							"margin": "auto",
+							"width": "80%",
+							"height": "300px"
+						}
+					}, {
+						"id": "video_mask",
+						"path": "pages/subnvue/subnvue/video-mask",
+						"style": {
+							"position": "absolute",
+							"bottom": "30px",
+							"left": "0",
+							"width": "230px",
+							"height": "110px",
+							"background": "transparent"
+						}
+					}, {
+						"id": "nav",
+						"path": "pages/subnvue/subnvue/nav",
+						"type": "navigationBar"
+					}]
+				}
+			}
+		},
+		// #endif
 		{
 			"path": "pages/filterArea",
 			"style": {
@@ -38,6 +81,14 @@
 			"style": {
 				"autoBackButton":"false",
 				"navigationBarTitleText": "筛选",
+				"animationType": "slide-in-bottom"
+			}	
+		},
+		{
+			"path": "pages/chooseAddress",
+			"style": {
+				"autoBackButton":"false",
+				"navigationBarTitleText": "选择城市",
 				"animationType": "slide-in-bottom"
 			}	
 		},
@@ -70,7 +121,7 @@
 			"style": {
 				"navigationBarTitleText": "企业",
 				"titleNView": {
-					"buttons": [ //原生标题栏按钮配置,
+					"buttons": [ 
 						{ "text": "\ue60d","fontSrc": "/static/font/iconfont.ttf","fontSize":"22px","width":"32px"},
 						{ "text": "\ue651","fontSrc": "/static/font/iconfont.ttf","fontSize":"19px","width":"32px"}
 					]
@@ -114,7 +165,7 @@
 			"style": {
 				"navigationBarTitleText": "职位详情",
 				"titleNView": {
-					"buttons": [ //原生标题栏按钮配置,
+					"buttons": [
 						{ "type": "share"},
 						{ "text": "\ue654","fontSrc": "/static/font/iconfont.ttf","fontSize":"24px","width":"32px"}
 					]
@@ -125,20 +176,13 @@
 			"path": "pages/companyDetail",
 			"style": {
 				"navigationBarTitleText": "公司详情",
-				"titleNView": {
-					"buttons": [ //原生标题栏按钮配置
-						{ "type": "share" },
-						{ "text": "\ue654","fontSrc": "/static/font/iconfont.ttf","fontSize":"24px","width":"32px"}
-					],
-					"subNVues":[{  
-					    "id": "tgt", // 唯一标识  
-					    "path": "pages/subNVues/popUp", // 页面路径  
-					    "style": {   
-					        "width": "100%",  
-					        "height": "100%"
-					        // "background": "transparent"  
-					    }  
-					}]  
+				"app-plus": {
+					"titleNView": {
+						"buttons": [ 
+							{ "type": "share" },
+							{ "text": "\ue654","fontSrc": "/static/font/iconfont.ttf","fontSize":"24px","width":"32px"}
+						]
+					}
 				}
 			}	
 		},
@@ -159,7 +203,7 @@
 			"style": {
 				"navigationBarTitleText": "金币",
 				"titleNView": {
-					"buttons": [ //原生标题栏按钮配置,
+					"buttons": [ 
 						{ "type": "none", "text": "金币明细","fontSize": "12" }
 					]
 				}
@@ -206,7 +250,7 @@
 			"style": {
 				"navigationBarTitleText": "基本信息",
 				"titleNView": {
-					"buttons": [ //原生标题栏按钮配置,
+					"buttons": [ 
 						{ "type": "none", "text": "保存", "fontSize": "16px" }
 					]
 				}
@@ -217,7 +261,7 @@
 			"style": {
 				"navigationBarTitleText": "信息",
 				"titleNView": {
-					"buttons": [ //原生标题栏按钮配置,
+					"buttons": [
 						{ "type": "none", "text": "保存", "fontSize": "16px" }
 					]
 				}
@@ -228,7 +272,7 @@
 			"style": {
 				"navigationBarTitleText": "求职意向",
 				"titleNView": {
-					"buttons": [ //原生标题栏按钮配置,
+					"buttons": [ 
 						{ "type": "none", "text": "保存", "fontSize": "16px" }
 					]
 				}
@@ -239,7 +283,7 @@
 			"style": {
 				"navigationBarTitleText": "期望职位",
 				"titleNView": {
-					"buttons": [ //原生标题栏按钮配置,
+					"buttons": [ 
 						{ "type": "none", "text": "保存", "fontSize": "16px" }
 					]
 				}
@@ -250,7 +294,7 @@
 			"style": {
 				"navigationBarTitleText": "教育经历",
 				"titleNView": {
-					"buttons": [ //原生标题栏按钮配置,
+					"buttons": [ 
 						{ "type": "none", "text": "保存", "fontSize": "16px" }
 					]
 				}
@@ -261,7 +305,7 @@
 			"style": {
 				"navigationBarTitleText": "工作经历",
 				"titleNView": {
-					"buttons": [ //原生标题栏按钮配置,
+					"buttons": [ 
 						{ "type": "none", "text": "保存", "fontSize": "16px" }
 					]
 				}
@@ -272,7 +316,7 @@
 			"style": {
 				"navigationBarTitleText": "自我评价",
 				"titleNView": {
-					"buttons": [ //原生标题栏按钮配置,
+					"buttons": [ 
 						{ "type": "none", "text": "保存", "fontSize": "16px" }
 					]
 				}

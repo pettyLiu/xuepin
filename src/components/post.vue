@@ -1,54 +1,101 @@
 <template>
 	<view class="area row">
 		<scroll-view scroll-y="true" class="areaLeft column">
-			<view class="areaItem globelColor" >服务业</view>
+			<view class="areaItem" v-for="(item, index) in topCategory" 
+			:key="index" :class="{active: categoryId == item.id}" @click="showNext(index, item.id)">{{item.name}}</view>
 		</scroll-view>
 		<scroll-view scroll-y="true" class="areaCenter column">
-			<view class="areaItem" v-for="(item, index) in area" :key="index" @click="showNext(index)" :class="{active: activeArea == index}">{{item}}</view>
-		</scroll-view>
-		<scroll-view scroll-y="true" class="areaRight">
-			<view class="areaItem" @click="closeMask(subArea)">{{subArea}}</view>
+			<view class="areaItem" v-for="(item, index) in area" :key="index" @click="changeTwo(index, item.id)" 
+			:class="{active: areaId == item.id}">{{item.name}}</view>
 		</scroll-view>
 		<view class="btn row ali_center just_btw">
-			<text class="reset">重置</text>
-			<text class="comfirm">确定</text>
+			<text class="reset" @click="reset">重置</text>
+			<text class="comfirm" @click="confirm">确定</text>
 		</view>
 	</view>
 </template>
 
 <script>
+import { Stream } from 'stream';
 	export default{
 		name: 'post',
 		data () {
 			return{
 				area: ['零售'],
-				subArea: '',
 				activeArea: 0,
-				statusBarHeight: 0,
-				thirActiveArea: 0
+				topCategory: '',
+				activeCategory: 0,
+				categoryId: '',
+				areaId: ''
 			}
 		},
+		props: {
+			alias: String
+		},
 		mounted() {
-			this.getArea()
-			console.log(getApp().globalData)
-			this.statusBarHeight = getApp().globalData.statusBarHeight
-			// console.log(statusBarHeight)
+			
+			this.getCategory()
 		},
 		methods:{
 			moveHandle () {
 			},
-			// 关闭弹窗
-			closeMask (item) {
-				console.log(item)
-				this.$emit("closeMask", {name: item,type: 'area'})
+			getCategory () {
+				const that = this
+				that.$axios({
+					url: 'api/base/oneJob',
+					data: {
+						type: that.alias == 'full_rec' ? 1 : 2
+					}
+				}).then(res => {
+					that.topCategory = res.data
+					const category = that.$store.state.category
+					if(category){
+						if (that.alias == 'full_rec'&& category.alias=='full_rec') { // 全职
+							that.categoryId = category.parent_id
+							that.areaId = category.id
+						}else{ // 兼职
+							that.areaId = category.id
+						}
+					}else{
+						that.categoryId = res.data[0].id
+					}	
+					that.showNext(0, that.categoryId)
+				})
 			},
-			getArea () {
-				this.area=['零售','家政','餐饮','酒店']
+			showNext (index, id) {
+				const that = this
+				that.activeArea = 0
+				that.$axios({
+					url: 'api/base/twoJob',
+					data: {
+						id: id
+					}
+				}).then(res => {
+					that.area = res.data
+					const category = that.$store.state.category
+					if(!category && that.alias == 'full_rec'){
+						that.areaId = res.data[0].id
+					}	
+				})
+				this.activeCategory = index
+				this.categoryId = id	
 			},
-			showNext (index) {
-				const tt = [['不限'],['章贡区'],['1瑞金','2瑞金','3瑞金'],['1南康'],['2难看']]
-				this.subArea = '全' + this.area[index]
-				this.activeArea = index	
+			changeTwo (index, id) {
+				this.activeArea = index
+				this.areaId = id
+			},
+			reset () {
+				this.activeArea = 0
+				this.activeCategory = 0
+			},
+			confirm () {
+				if(this.area != ''){
+					this.category = this.area[this.activeArea]
+				}else{
+					this.category = this.topCategory[this.activeCategory]
+				}
+				this.$store.commit('changeCategory', this.category)
+				uni.navigateBack()
 			}
 		}
 	}

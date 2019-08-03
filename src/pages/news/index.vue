@@ -23,28 +23,68 @@
 			return{
 				tabs: ['全部','被查看','待面试','不合适'],
 				activeTab: 0,
-				news: [1,2,3,4],
+				news: [],
 				sliderLeft: 0,
 				loadMoreText: "加载中...",
 				showLoadMore: false,
 				currentPage: 1,
-				total: 1
+				total: 1,
+				status: ''
 			}
 		},
 		methods:{
+			getNews () { // 获取消息列表
+				const that = this
+				that.$axios({
+					url: 'api/user/message',
+					methods: 'get',
+					data: {
+						status: that.status
+					}
+				}).then(res => {
+					console.log(res)
+					that.news= res.data
+				})
+
+			},
 			changeTabs (e) {
 				if(this.activeTab != e.target.id){
 					this.activeTab = e.target.id
 					this.loadMoreText = "加载中..."
 					this.showLoadMore = false
+					this.sliderLeft = e.target.offsetLeft + this.tt
+					this.currentPage = 1
+					switch(this.activeTab){
+						case '0':
+						this.status = ''
+						break;
+						case '1':
+						console.log(45354)
+						this.status = 1
+						break;
+						case '2':
+						this.status = 4
+						break;
+						case '3':
+						this.status = 2
+					}
 					this.getNewsList()
 				}
 			},
 			getNewsList () {
 				const that = this
-				that.$axios({ url: '', data: { currentPage: that.currentPage } }).then(res =>{
+				console.log(this.status)
+				that.$axios({ 
+					url: 'api/user/message', 
+					data: { 
+						currentPage: that.currentPage,
+						status: that.status
+					} 
+				}).then(res =>{
 					if(res.code == 1){
 						that.currentPage += that.currentPage
+						that.total = res.data.total
+						that.news = res.data.data
 					}
 				})
 			},
@@ -65,6 +105,7 @@
 					that.tt = (res.windowWidth/that.tabs.length - sliderWidth)/2
 			    }
 			})
+			that.getNewsList()
 		},
 	}
 </script>

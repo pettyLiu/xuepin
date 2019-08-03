@@ -14,8 +14,11 @@ const store = new Vuex.Store({
 		base_url:"https://cnodejs.org/api/v1",
 		list:[],
 		detail:'',
-		token:'',
-		JobIntension: {}
+		Authorization: uni.getStorageSync('Authorization') ? uni.getStorageSync('Authorization') : '',
+		JobIntension: {},
+		city: uni.getStorageSync('city') ? JSON.parse(uni.getStorageSync('city')) : {id: 1266,name: "赣州市",parent_id: 15},
+		district: '',
+		category: ''
 	},
 	mutations: {
 		switch_loading(state,status){
@@ -28,9 +31,29 @@ const store = new Vuex.Store({
 				}
 			}else{
 				state.loading = status;
-			}
-			
+			}	
 		},
+		loginIn(state, payload){
+			state.Authorization = payload.Authorization
+			uni.setStorageSync('Authorization', payload.Authorization)
+			uni.setStorageSync('userInfo', JSON.stringify(payload.userInfo))
+		},
+		loginOut(){
+			uni.removeStorageSync('Authorization')
+			uni.removeStorageSync('userInfo')
+		},
+		changeCity (state, payload){
+			state.city = payload
+		},
+		changeDistrict (state, payload) {
+			state.district = payload
+		},
+		changeCategory (state, payload){
+			state.category = payload
+		},
+		resetCategory (state) {
+			state.category = ''
+		}
 	},
 	actions: {
 		changeJobIntension(context, payload){

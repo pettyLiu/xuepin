@@ -1,0 +1,59 @@
+<template>
+    <div class="wrapper">
+		<text style="color: #8f8f94; margin-bottom: 40px;">左侧列表</text>
+		
+    </div>
+</template>
+
+<script>
+    export default {
+		data() {
+			return {
+				lists: [],
+			}
+		},
+		beforeCreate() {
+		},
+		created() {
+			
+		},
+        methods: {
+           
+        }
+    }
+</script>
+
+<style>
+	.wrapper {
+		display: flex;
+		flex-direction: column;
+		text-align: center;
+		padding: 60px 0px 0px 20px;
+		background-color: #F4F5F6;
+	}
+	.text-wrapper {
+		justify-content: center;
+		border-bottom-style: solid;
+		border-bottom-width: 1px;
+		border-bottom-color: rgba(0,0,0,.2);
+		margin-bottom: 35px;
+		padding-bottom: 15px;
+	}
+	.close-drawer {
+		background-color: #f8f8f8;
+		width: 300px;
+		padding: 15px;
+		border-radius: 20px;
+		border-style: solid;
+		border-width: 1px;
+		border-color: rgba(0,0,0,.2);
+	}
+	.icon {
+		position: absolute;
+		right: 10px;
+		color: #000000;
+		font-family: unibtn;
+		font-size: 30px;
+		font-weight: 400;
+	}
+</style>

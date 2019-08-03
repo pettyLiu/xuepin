@@ -3,12 +3,12 @@
 		<view class="form">
 			<view class="list" @click="toNext('nickName')">
 				<view class="title f_24 c_999 row just_btw"><text>姓名</text><text class="iconfont icon-youjiantou"></text></view>
-				<text class="f_30">{{info.nickName}}</text>
+				<text class="f_30">{{info.true_name}}</text>
 			</view>
 			<view class="list">
-				<picker @change="bindPickerSex" :value="info.sex" :range="sex" range-key="name">
+				<picker @change="bindPickerSex" :value="info.sex" :range="basic.sex" range-key="name">
                     <view class="title f_24 c_999 row just_btw"><text>性别</text><text class="iconfont icon-youjiantou"></text></view>
-                    <text class="f_30">{{sex[info.sex].name}}</text>
+                    <!-- <text class="f_30">{{sex[info.sex].name}}</text> -->
                 </picker>	
 			</view>
 			<view class="list">
@@ -140,7 +140,9 @@
 		},
 		onLoad() {
 			console.log(78)
-			
+			this.info = this.userInfo
+			console.log(this.info)
+			console.log(this.basic)
 		},
 		watch:{
 			info: { // 检查是否修改过内容
@@ -157,14 +159,17 @@
 			endDate() {
 				return getDate('end');
 			},
-			info(){
-				return this.$store.state.information.info
+			userInfo(){
+				return this.$store.state.information.userInfo
 			},
 			dateInterval(){
 				return getDateInterval('date')
 			},
 			indexInterval(){
 				return getDateInterval('index')
+			},
+			basic(){
+				return this.$store.state.basicConfig.basicConfig
 			}
 		},
 	}

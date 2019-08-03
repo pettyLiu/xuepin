@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { setTimeout } from 'timers';
 	var graceChecker = require("../../lib/graceChecker.js");
 	var rule = [
 		{name:"tel", checkType : "phoneno", checkRule:"",  errorMsg:"请填写正确电话号码"},
@@ -51,13 +52,45 @@
 						that.showSeconds = false
 					}
 				}, 1000)
+				that.$axios({
+					url: 'auth/phoneCode',
+					method: 'post',
+					data: {
+						mobile: that.tel
+					}
+				}).then(res => {
+					if(res.code == 1){
+						uni.showToast({
+							title: '验证码发送成功！',
+							icon: 'none'
+						})
+					}
+				})
 			},
 			comfirm () { // 确认更换				
 				//进行表单检查
 				var formData = { tel: this.tel,code: this.code }
 				var checkRes = graceChecker.check(formData, rule)
 				if(checkRes){
-					uni.showToast({title:"验证通过!", icon:"none"})	
+					const that = this
+					that.$axios({
+						url: 'api/user/untiedPhone',
+						method: 'post',
+						data: {
+							mobile: that.tel,
+							code: that.code
+						}
+					}).then(res => {
+						if(res.code == 1){
+							uni.showToast({
+								title: '成功更换手机号码！',
+								icon: 'none'
+							})
+							setTimeout(function(){
+								uni.navigateBack()
+							}, 1000)
+						}
+					})
 				}else{
 					uni.showToast({ title: graceChecker.error, icon: "none" })
 				}	

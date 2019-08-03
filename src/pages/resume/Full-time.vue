@@ -4,14 +4,14 @@
 			<view class="row">
 				<image class="avatar" src="/static/icon/moren.png" mode=""></image>
 				<view class="column just_btw">
-					<text class="f_32">人名 <text class="f_20 c_999">/先生</text></text>
-					<text class="c_666 f_24">27岁 男 非学生 本科</text>
+					<text class="f_32">{{userInfo.true_name}} <text class="f_20 c_999">/{{userInfo.sex=='男'?'先生':'女士'}}</text></text>
+					<text class="c_666 f_24">{{userInfo.age}}岁 {{userInfo.sex}} {{userInfo.identity}} {{userInfo.edu_level}}</text>
 				</view>
 			</view>
 			<view class="lists column f_24">
 				<text class="list">电话：15789562312</text>
-				<text class="list">邮箱：15789562@qq.com</text>
-				<text class="list">现居住城市：江西 赣州</text>
+				<text class="list">邮箱：{{userInfo.email}}</text>
+				<text class="list">现居住城市：{{userInfo.province}} {{userInfo.city}}</text>
 				<text class="list">户口所在地：赣州</text>
 			</view>
 			<text class="edit globelColor" @click="toEditInformation">编辑</text>
@@ -82,6 +82,7 @@
 </template>
 
 <script>
+	import { mapState } from 'vuex'
 	export default {
 		name: 'Full-time',
 		data() {
@@ -128,11 +129,13 @@
 		},
 		onLoad() {
 			console.log('onload')
+			this.userInfo = this.information.userInfo
 		},
 		onBackPress(e){
 			
 		},
 		computed:{
+			...mapState(['information'])
 		},
 	}
 </script>

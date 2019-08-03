@@ -21,7 +21,8 @@
 				</view>
 				<view class="column">
 					<text class="title">公司简介</text>
-					<text class="introduce">公司详情</text>
+					<text class="introduce" v-for="item in 5" :key="item">公司详情</text>
+					
 				</view>
 				<view class="address column">
 					<text class="title">公司地址</text>
@@ -52,13 +53,22 @@
 				</view>
 			</view>
 		</view>
-		<share :showMask="showMask" v-on:cancel="cancel"></share>
+		
+		<!-- <cover-image src="https://jjyh.dev.0797i.cn/addons/zjhj_mall/core/web/statics/images/home-page/icon-coupon-index.png"></cover-image> -->
+		<view class="masks" v-if="showMask"  @touchmove.stop.prevent="moveHandle"> <!-- 有map用cover-view，subvue报错无法使用,cover-view无法嵌套使用 -->
+			<cover-view class="bg" @click="notMove($event)"></cover-view>
+			<cover-view>
+				<cover-image class="maskLeft" src="/static/icon/bg1.png" style="height: 150px;width:150px;"></cover-image>
+				<cover-image class="maskRight" src="/static/icon/bg.png" style="height: 150px;width:150px;"></cover-image>
+			</cover-view>
+			<cover-view class="btn1" @click="cancel">取消</cover-view>
+		</view>
 	</view>
 </template>
 
 <script>
 	const sliderWidth = 20
-	import share from '../components/share.vue'
+	import { getProvider } from '@/lib/getProvider.js'
 	export default {
 		name: 'companyDetail',
 		data() {
@@ -80,10 +90,27 @@
 					anchor: {x: .5, y: 1},
 					callout: {content: '红旗大道86号江西理工大徐',display:'ALWAYS'}
 				}],
-				showMask: false,
+				showMask: false
 			};
 		},
 		methods:{
+			getCompanyInfo () { // 公司详情
+				const that = this
+				that.$axios({
+					url: 'api/enterprise/detail',
+					method: 'fet',
+					data: {
+						id: that.id
+					}
+				}).then(res => {
+					console.log(res)
+					that.companyInfo = res.data
+				})
+			},
+			notMove (e){
+				console.log(e)
+			},
+			moveHandle(){},
 			cancel () { // 显示遮罩层
 				this.showMask = false
 			},
@@ -119,12 +146,7 @@
 		},
 		onNavigationBarButtonTap (val){			
 			if(val.index == 0){
-				console.log('点击了分享')
 				this.showMask = true
-				// const subNVue = uni.getSubNVueById('share');
-				// subNVue.show('slide-in-left',200,()=>{
-				// 	console.log('subNVue 原生子窗体显示成功');
-				// })
 			}else{
 				var webView = this.$mp.page.$getAppWebview()
 				this.collect = !this.collect
@@ -136,13 +158,10 @@
 				uni.showToast({ title: this.collect ? '收藏成功' : '取消收藏', icon: "none" })
 			}
 		},
-		onLoad() {
+		onLoad(options) {
 			var that = this
-			// const subNVue = uni.getSubNVueById('tgt');
-			// console.log(subNVue)
-			// uni.getSubNVueById('tgt').show('slide-in-left',200,()=>{
-			// 	console.log('subNVue 原生子窗体显示成功');
-			// })
+			that.id = options.id
+			that.getCompanyInfo()
 			uni.getSystemInfo({
 			    success: function (res) {
 					that.sliderLeft = (res.windowWidth/that.tabs.length - sliderWidth)/2,
@@ -159,9 +178,11 @@
 					console.log(res)
 				}
 			})
+			this.providerList = getProvider()
+			this.providerList=[{name: '微信', id: 1, icon:'icon-weixin'},{name: 'QQ',id: 3, icon:'icon-qq'}] //测试用
 		}, 
 		components:{
-			share
+			// share
 		}
 	}
 </script>

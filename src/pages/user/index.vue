@@ -5,22 +5,28 @@
 			<text class="f_24 signOut" @click="signOut">退出登录</text>
 			<view class="row just_btw userTxt">
 				<view class="column">
-					<text class="nickName f_48">{{info.nickName}}</text>
+					<text class="nickName f_48">{{info.userName}}</text>
 					<text class="f_26 c_e4" @click="toNext('/pages/resume/index')">点击查看简历并编辑</text>
 				</view>
 				<image class="avatar" :src="info.avatar" mode="" @click="uploadAvatar"></image>
 			</view>
 			<view class="row just_btw">
 				<view class="row">
-					<text class="recharge" @click="toNext('/pages/user/integralRecord')">20</br>积分</text>
-					<text class="recharge" @click="toNext('/pages/user/goldRecord')">100</br>金币</text>
+					<view class="recharge column" @click="toNext('/pages/user/integralRecord')">
+						<text>{{info.credit}}</text>
+						<text>积分</text>
+					</view>
+					<view class="recharge column" @click="toNext('/pages/user/goldRecord')">
+						<text>{{info.coin}}</text>
+						<text>金币</text>
+					</view>
 				</view>
 				<text class="signOn globelColor f_24" @click="toNext('/pages/signOn')">去签到</text>
 			</view>		
 		</section>
 		<section class="row just_btw resume">
 			<view class="column just_arw">
-				<text class="f_48">30%</text>
+				<text class="f_48">{{info.count}}</text>
 				<text class="f_36">完善简历提高您的录取率</text>
 				<text class="btn" @click="toNext('/pages/resume/index')">去完善简历</text>
 			</view>
@@ -44,6 +50,7 @@
 </template>
 
 <script>
+	import config from '../../lib/config'
 	export default{
 		data(){
 			return{
@@ -54,6 +61,15 @@
 		components:{
 		},
 		methods:{
+			getUserInfo(){
+				const that = this
+				that.$axios({
+					url: 'api/user/index',
+					method: 'get'
+				}).then(res =>{
+					that.info = res.data
+				})
+			},
 			// 更换头像
 			uploadAvatar () {
 				const that = this
@@ -61,6 +77,15 @@
 					count: 1,
 					success: function(res){
 						that.avatar = res.tempFilePaths[0]
+						uni.uploadFile({
+							url: config.baseUrl + 'upload/ajaxUploads',
+							filePath: that.avatar,
+							name: 'fileUpload',
+							success: (uploadFileRes) => {
+								console.log(JSON.parse(uploadFileRes.data) );
+								that.info.avatar = config.imgUrl + JSON.parse(uploadFileRes.data).data
+							}
+						});
 					}
 				})
 			},
@@ -71,6 +96,7 @@
 				})
 			},
 			signOut () { // 退出登录
+				this.$store.commit('loginOut')
 				uni.reLaunch({
 					url: '/pages/login/index'
 				})
@@ -88,8 +114,7 @@
 			}
 		},
 		onLoad() {
-			this.info = uni.getStorageSync('info')
-			console.log(uni.getStorageSync('info'))
+			this.getUserInfo()
 		},
 		onReady() {
 			var context = uni.createCanvasContext('degree')

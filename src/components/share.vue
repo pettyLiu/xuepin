@@ -1,17 +1,16 @@
 <template>
-	<cover-view class="masks" v-if="showMask">
-		<cover-view class="bg" @touchmove.stop.prevent="moveHandle"></cover-view>
-		<cover-view class="mask column f_30">
-			1235
-			<cover-view class="row just_arw">
-				<!-- <cover-view class="list column center" v-for="(item, index) in providerList" :key='index' @click="share(item)"> -->
-					<!-- <cover-view class="iconfont" :class="item.icon"></cover-view> -->
-					<!-- <cover-view class="">{{item.name}}</cover-view> -->
-				<!-- </cover-view> -->
-			</cover-view>
-			<cover-view class="btn" @click="cancel">取消</cover-view>
-		</cover-view>
-	</cover-view>
+	<view class="masks" v-if="showMask">
+		<view class="bg" @touchmove.stop.prevent="moveHandle"></view>
+		<view class="mask column f_30 just_btw">
+			<view class="row just_arw">
+				<view class="list column center" v-for="(item, index) in providerList" :key='index' @click="share(item)">
+					<text class="iconfont" :class="item.icon"></text>
+					<text class="">{{item.name}}</text>
+				</view>
+			</view>
+			<view class="btn1" @click="cancel">取消</view>
+		</view>
+	</view>
 </template>
 
 <script>
@@ -85,7 +84,7 @@
 			image{
 				.wh(136upx,190upx);
 			}
-			.btn{
+			.btn1{
 				.wh(88upx,100%);
 				line-height: 88upx;
 				text-align: center;

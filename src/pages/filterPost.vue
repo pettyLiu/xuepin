@@ -1,6 +1,6 @@
 <template>
 	<view class="filterPost">
-		<posts></posts>
+		<posts :alias="alias"></posts>
 	</view>
 </template>
 
@@ -10,8 +10,11 @@
 		name: 'filterPost',
 		data() {
 			return {
-				
+				alias: ''
 			};
+		},
+		onLoad (options) {
+			this.alias = options.alias
 		},
 		methods:{
 		},

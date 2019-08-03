@@ -2,19 +2,20 @@
 	<view class="postLists">
 		<view class="postList" @click="toPostDetail()" v-for="(item, index) in list" :key="index">
 			<view class="row just_btw">
-				<text class="title">技术总监</text>
-				<text class="salary">10k-20k/月</text>
+				<text class="title">{{item.title}}</text>
+				<text class="salary">{{item.salary}}</text>
 			</view>
 			<view class="txt row just_btw">
-				<text class="company" @click.stop="toCompanyDetail"><i></i>章贡区<i></i>赣州公司</text>
-				<text class="date">6月15日</text>
+				<text class="company" @click.stop="toCompanyDetail">
+					<i></i><i></i>{{item.enterpriseName}}
+				</text>
+				<text class="date">{{item.updated_at}}</text>
 			</view>			
 			<view class="column" >
 				<view class="row tags">
-					<text class="tag">带薪休假</text>
-					<text class="tag">五险一金</text>
+					<text class="tag" v-for="tag in item.tags" :key="tag">{{tag}}</text>
 				</view>
-				<text v-if="type == 'index'" class="address"><text class="iconfont icon-weizhi"></text>章贡区</text>
+				<text v-if="type == 'index'" class="address"><text class="iconfont icon-weizhi"></text>{{item.district}}</text>
 				<view v-if="type == 'news'" class="newsTip row just_btw" @click.stop="toInterviewDetail(item)">
 					<text class="time">6月15日 12:00</text>
 					<text class="newstype" v-if="item==1">待查看<text class="iconfont icon-youjiantou"></text></text>
@@ -88,12 +89,14 @@
 			}
 			.tags{
 				margin-bottom: 16upx;
+				flex-wrap: wrap;
 				.tag{
 					padding: 6upx 10upx;
 					background: #f6f6f6;
 					color: #adadad;
 					margin-right: 24upx;
 					font-size: 20upx;
+					margin-bottom: 6upx;
 				}
 			}
 			.txt{

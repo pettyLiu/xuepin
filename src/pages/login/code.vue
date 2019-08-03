@@ -25,6 +25,7 @@
 
 		methods: {
 			next () {
+				const that = this
 				if (this.trueCode) {
 					this.$axios({ url: 'api/auth/regLogin', method: 'post', data: { account: this.tel, code: this.code } }).then(res =>{
 						uni.showToast({ title: res.msg, icon: "none" })
@@ -34,6 +35,11 @@
 									url: '/pages/index/index'
 								})
 							}, 1500)
+							that.$store.commit('loginIn', { 
+								token : res.data.token, 
+								Authorization: res.data.Authorization,
+								userInfo: res.data.userinfo
+							})
 						}
 					})	
 				}else{
@@ -41,7 +47,7 @@
 				}	
 			},
 			editCode (e) { // 输入验证码时
-				var reg = new RegExp('^(-[0-9]|[1-9])[0-9]{5}$');
+				var reg = new RegExp('^(-[0-9]|[0-9])[0-9]{5}$');
 				if((reg.test(e.detail.value))){
 					this.trueCode = true
 				}
