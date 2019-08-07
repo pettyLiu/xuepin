@@ -1,6 +1,9 @@
 @import '../../style/common/mixin.less';
+.page-search{
+	height: 100%;
+}
 .search{
-	height: 76upx;
+	height: 88upx;
 	background: @g_color;
 	color:white;
 	padding: 0 3%;
@@ -14,7 +17,7 @@
 	}
 	.icon-sanjiao{
 		position: absolute;
-		left: 56upx;
+		// left: 56upx;
 		z-index: 10;
 	}
 	.icon-sousuo{
@@ -27,7 +30,8 @@
 	.address{
 		text-align: center;
 		line-height: 56upx;
-		position: relative
+		position: relative;
+		width: 130upx;
 	}
 	.searchInp{
 		width: 400upx;
@@ -45,7 +49,7 @@
 	}
 }
 .history{
-	margin-top: 44px;
+	margin-top: 88upx;
 	.historyTitle{
 		padding: 0 32upx;
 	}
@@ -150,7 +154,8 @@
 			font-size: 20upx;
 		}
 	}
-	.tips{
-		text-align: center
-	}
+}
+.tips{
+	text-align: center;
+	display: block
 }

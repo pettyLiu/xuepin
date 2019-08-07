@@ -43,21 +43,22 @@
 					url: 'api/user/showCoinLog',
 					method: 'post',
 					data: { 
-						// currentPage: that.currentPage 
+						page: that.currentPage 
 					}
 				}).then(res =>{
 					// console.log(res)
 					if(res.code == 1){
-						that.record = res.data.data
+						that.record = that.record.concat(res.data.data.data)
 						that.showLoadMore = false
 						that.currentPage += 1
+						that.total = res.data.data.total
 						that.coin = res.data.coin
 					}
 				})
 			}
 		},
 		onReachBottom () {
-			if(this.total > this.currentPage){
+			if(this.total > this.record.length){
 				this.showLoadMore = true
 				this.getRecord()
 			}else{

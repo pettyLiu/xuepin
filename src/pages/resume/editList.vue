@@ -24,14 +24,14 @@
 						title: '姓名'
 					})
 					this.placeholder = '请输入姓名'
-					this.txt = this.$store.state.information.info[options.title]
+					this.txt = this.$store.state.information.userInfo[options.title]
 					break;
 				case 'email':
 					uni.setNavigationBarTitle({
 						title: '邮箱'
 					})
 					this.placeholder = '请输入邮箱'
-					this.txt = this.$store.state.information.info[options.title]
+					this.txt = this.$store.state.information.userInfo[options.title]
 					break;
 				case 'school':
 					uni.setNavigationBarTitle({

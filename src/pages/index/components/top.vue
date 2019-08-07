@@ -40,7 +40,7 @@
 		},
 		props:['istop'],
 		mounted() {
-			this.dots = this.banner.length
+			// this.getBanner()
 		},
 		computed:{
 			statusBarHeight() {
@@ -62,6 +62,18 @@
 			}
 		},		
 		methods:{
+			getBanner () {
+				const that = this
+				that.$axios({
+					url: 'api/showMap',
+					method: 'post'
+				}).then(res => {
+					if(res.code == 1){
+						that.banner = res.data.picList
+						that.dots = that.banner.length
+					}	
+				})
+			},
 			swiperMove (e) { // 轮播移动时
 				this.activeDots = e.detail.current
 			},

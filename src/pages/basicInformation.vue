@@ -15,7 +15,7 @@
 					</view>
 					<input name="true_name" type="text" value=""  placeholder="请输入姓名" 
 					placeholder-class="placeholder"/>
-				</view>
+				</view> 
 				<view class="list">
 					<picker @change="bindPickerSex" :value="sexIndex" :range="basicConfig.sex" range-key="key" name="sex">
 						<view class="title f_24 c_999 row just_btw"><text>性别</text><text class="iconfont icon-youjiantou"></text></view>
@@ -123,6 +123,7 @@
 				formData.edu_level = formData.edu_level + 1
 				formData.province_id = this.province_id
 				formData.city_id = this.city_id
+				formData.avatar = this.avatar
 				console.log(e.detail.value)
 				var checkRes = graceChecker.check(formData, rule)
 				if(checkRes){
@@ -218,6 +219,7 @@
 							filePath: that.avatar,
 							name: 'fileUpload',
 							success: (uploadFileRes) => {
+								that.avatar = config.imgUrl + JSON.parse(uploadFileRes.data).data
 								console.log(uploadFileRes.data);
 							}
 						});

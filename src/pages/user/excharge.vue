@@ -4,7 +4,7 @@
 		<view class="content">
 			<view class="top">
 				<text>兑换数量</text>
-				<input type="number" value="" placeholder="请输入兑换金币数量" placeholder-class="placeholder" @input="changeNum"/>
+				<input type="number" value="" v-model="coin" placeholder="请输入兑换金币数量" placeholder-class="placeholder" @input="changeNum"/>
 				<text class="tips f_20">金币和积分的比列是  1:{{Beliel}}</text>
 			</view>
 			<view class="border row just_btw ali_center">
@@ -63,7 +63,7 @@
 								content: res.msg,
 								success: function (res) {
 									that.payIntegral = ''
-									that.coin = 0
+									that.coin = ''
 								}
 							});
 						}

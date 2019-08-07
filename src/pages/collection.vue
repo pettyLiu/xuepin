@@ -35,6 +35,10 @@
 					</view>
 				</view>
 			</block>
+			<view class="nothing column center" v-if="resumeCollection.length == 0">
+				<image class="nothing_image" src="/static/image/bg.png" mode=""></image>
+				<text>暂无收藏的职位</text>
+			</view>
 		</view>
 		<view class="message-list uni-swipe-action"  v-if="tabs==2">
 			<block v-for="(it,i) of companyCollection" :key="i">
@@ -42,14 +46,14 @@
 				 @touchcancel="touchEnd" :style="{'transform':messageIndex == i ? transformX : 'translateX(0px)','-webkit-transform':messageIndex == i ? transformX : 'translateX(0px)'}" :data-index="i" :data-disabled="it.disabled">
 					<view class="uni-swipe-action__content" @click="toCompanyDetail">
 						<view class="companyTxt row ali_center">
-							<image class="companyAvatar" src="/static/image/banner2.png" mode=""></image>
+							<image class="companyAvatar" :src="imgUrl + it.logo" mode=""></image>
 							<view class="column just_btw">
-								<text class="companyName">赣州公司</text>
-								<text class="address"><text class="iconfont icon-weizhi"></text>赣州市 章贡区</text>
+								<text class="companyName">{{it.enterpriseName}}</text>
+								<text class="address"><text class="iconfont icon-weizhi"></text>{{it.city}} {{it.district}}</text>
 							</view>
 						</view>
 						<view class="companyTypes">
-							<text class="companyType">互联网/电子商务</text>
+							<text class="companyType">{{it.category}}</text>
 						</view>
 					</view> 
 					<view class="uni-swipe-action__btn-group" :id="elId">
@@ -60,6 +64,10 @@
 					</view>
 				</view>
 			</block>
+			<view class="nothing column center" v-if="companyCollection.length == 0">
+				<image class="nothing_image" src="/static/image/bg.png" mode=""></image>
+				<text>暂无收藏的公司</text>
+			</view>
 		</view>
 		<view class="loadmore" v-if="showLoadMore">{{loadMoreText}}</view>
 	</view>
@@ -67,6 +75,7 @@
 
 <script>
 	const sliderWidth = 20;
+	import config from '../lib/config'
 	export default {
 		name: 'collection',
 		data() {
@@ -84,12 +93,13 @@
 				resumeIndex: -1,
 				companyIndex: -1,
 				resumeCollection: [1,2,3],
-				companyCollection: [1,2,3,4],
+				companyCollection: [],
 				options: [{text:'取消收藏'}],
 				loadMoreText: "加载中...",
 				showLoadMore: false,
 				currentPage: 1,
 				total: 1,
+				imgUrl: config.imgUrl
 			};
 		},
 		methods:{
@@ -98,9 +108,8 @@
 				that.$axios({ 
 					url: 'api/user/collectBox', 
 					data: { 
-						// currentPage: that.currentPage,
-						pageno: 1,
-						status: that.tabs
+						page: that.currentPage,
+					  type: that.tabs
 					} 
 				}).then(res =>{
 					if(res.code == 1){
@@ -111,6 +120,7 @@
 						} else{
 							that.companyCollection = res.data.data
 						}
+						that.showLoadMore = false
 						that.currentPage += that.currentPage
 					}
 				})
@@ -143,10 +153,35 @@
 				});
 			},
 			bindClickBtn(item, index) {
+				const that = this
 				this.messageIndex = -1;
 				if(this.tabs == 1){
+					this.resumeCollection.splice(index, 1)
+					that.$axios({
+						url: 'api/user/cancelCollectJob',
+						method: 'post',
+						data: {
+							id: that.resumeCollection[index].id
+						}
+					}).then(res =>{
+						if(res.code == 1){
+							uni.showToast('取消成功')
+						}
+					})
 					console.log('删除职位收藏第' + index + '项')
 				}else if(this.tabs == 2){
+					this.companyCollection.splice(index, 1)
+					that.$axios({
+						url: 'api/user/cancelCollectEnt',
+						method: 'post',
+						data: {
+							id: that.companyCollection[index].id
+						}
+					}).then(res =>{
+						if(res.code == 1){
+							uni.showToast('取消成功')
+						}
+					})
 					console.log('删除企业收藏第' + index + '项')
 				}	
 			},
@@ -201,8 +236,10 @@
 		computed:{	
 		},
 		onReachBottom () {
-			if(this.total > this.currentPage){
+			const list = this.tabs == 1 ? this.resumeCollection : this.companyCollection
+			if(this.total >= list.length){
 				this.getCollectionList()
+				this.showLoadMore = true
 			}else{
 				this.loadMoreText = "没有更多数据了"
 				this.showLoadMore = true

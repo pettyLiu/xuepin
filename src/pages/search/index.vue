@@ -1,18 +1,18 @@
 <template>
-	<view class="">
+	<view class="page-search">
 		<view class="search row ali_center just_btw" :style="{paddingTop:statusBarHeight + 10 + 'px'}">
-			<view class="address">赣州<text class="iconfont icon-sanjiao"></text></view>
+			<view class="address ellipsis">{{city.name}}<text class="iconfont icon-sanjiao"></text></view>
 			<view class="searchView">
-				<input class="searchInp" type="text" value="" placeholder="输入关键字" @confirm="search(keyword)" placeholder-class="searchPlaceholder" v-model="keyword" />
+				<input class="searchInp" type="text" value="" placeholder="输入关键字" @input="change"
+				@confirm="search(keyword, 'reset')" placeholder-class="searchPlaceholder" v-model="keyword" />
 				<text class="iconfont icon-sousuo"></text>
 			</view>
 			<text  @click="back">取消</text>
 		</view>
-		
-		<view class="loadmore" v-if="showLoadMore">{{loadMoreText}}</view>
-		<view class="history" :style="{paddingTop:statusBarHeight + 10 + 'px'}">
+		<view class="history" :style="{paddingTop:statusBarHeight+10 + 'px'}">
 			<view class="postLists" v-if="type == 1">
-				<view class="postList" @click="toPostDetail()" v-for="(item, index) in lists" :key="index">
+				<view class="postList" @click="toPostDetail(item.id)" v-for="(item, index) in lists" 
+				:key="index">
 					<view class="row just_btw">
 						<text class="title">{{item.title}}</text>
 						<text class="salary">{{item.salary}}</text>
@@ -32,9 +32,10 @@
 				</view>
 			</view>
 			<view class="companyLists"  v-if="type == 2">
-				<view class="companyList" v-for="(item, index) in lists" :key="index" @click="toCompanyDetail">
+				<view class="companyList" v-for="(item, index) in lists" :key="index"
+				 @click="toCompanyDetail(item.id)">
 					<view class="companyTxt row ali_center">
-						<image class="companyAvatar" src="/static/image/banner2.png" mode=""></image>
+						<image class="companyAvatar" :src="url+item.logo" mode=""></image>
 						<view class="column just_btw">
 							<text class="companyName">{{item.name}}</text>
 							<text class="address"><text class="iconfont icon-weizhi">
@@ -46,13 +47,13 @@
 					</view>
 				</view>
 			</view>
-			<text class="tips" v-if="jobs.length == 0 && enterprise.length == 0 && keyword != ''">暂无搜索内容</text>
+			<text class="tips" v-if="showLists">暂无搜索内容</text>
 			<view class="historyTitle row just_btw" 
-			v-if="jobs.length == 0 && enterprise.length == 0 && keyword =='' && history.length != 0">
+			v-if="lists.length == 0 && keyword =='' && history.length != 0">
 				<text>历史搜索</text>
 				<text class="iconfont icon-del1" @click="delSearch"></text>
 			</view>
-			<view class="lists row" v-if="jobs.length == 0 && enterprise.length == 0 && keyword ==''">
+			<view class="lists row" v-if="lists.length == 0 && keyword ==''">
 				<text class="f_24 c_999 list ellipsis" v-for="item in history" :key="item" @click="search(item)">{{item}}</text>
 			</view>
 			<view class="loadmore" v-if="showLoadMore">{{loadMoreText}}</view>
@@ -61,6 +62,7 @@
 </template>
 
 <script>
+	import config from '../../lib/config'
 	export default{
 		data () {
 			return{
@@ -74,13 +76,19 @@
 				showLoadMore: false,
 				currentPage: 1,
 				total: 1,
-				lists: []
+				lists: [],
+				showLists: false,
+				url: config.imgUrl
 			}
 		},
 		mounted() {
 		},
 		methods:{
-			search (keyword) { // 搜索
+			search (keyword, reset) { // 搜索
+				this.keyword = keyword
+				if(reset){
+					this.currentPage = 1
+				}
 				if(this.history.length == 0){
 					this.history.push(keyword)
 					uni.setStorageSync('search', this.history)
@@ -98,31 +106,44 @@
 					url: 'api/job/allSearch',
 					method: 'post',
 					data: { 
-						// currentPage: that.currentPage,
+						page: that.currentPage,
 						Choosetext: keyword, 
-						areaName: '赣州市' 
+						areaName: that.city.name,
+						type: that.type
 					}
 					}).then(res =>{
 					console.log(res)
 					if(res.code == 1){
 						if(that.type == 1){
-							that.lists = res.data.original.data.job.data
+							that.lists = res.data.original.data.data
 						}else if(that.type == 2){
-							that.lists = res.data.original.data.enterprise.data
+							that.lists = res.data.original.data.data
 						}
-						// that.jobs = res.data.original.data.job
-						// that.enterprise = res.data.original.data.enterprise
-						// console.log(that.lists)
+						that.total = res.data.original.data.total
 						that.currentPage++
 						that.showLoadMore = false
+						if(that.lists.length){
+							that.showLists = false
+						}else{
+							that.showLists = true
+						}
 					}
 				})
 			},
-			toPostDetail () {
-
+			toPostDetail (id) {
+				uni.navigateTo({
+					url: '/pages/postDetail?id=' + id
+				})
 			},
-			toCompanyDetail (){
-
+			toCompanyDetail (id){
+				uni.navigateTo({
+					url: '/pages/companyDetail?id=' + id
+				})
+			},
+			change (e) {
+				if(e.detail.value==''){
+					that.showLists = false
+				}
 			},
 			back () { // 返回
 				uni.navigateBack()
@@ -133,7 +154,8 @@
 			}
 		},
 		onReachBottom () {
-			if(this.total > this.currentPage){
+			if(this.total > this.lists.length){
+				this.showLoadMore = true
 				this.search()
 			}else{
 				this.loadMoreText = "没有更多数据了"
@@ -142,6 +164,11 @@
 		},
 		onLoad(options) {
 			this.type = options.type
+		},
+		computed: {
+			city (){
+				return this.$store.state.city
+			}
 		}
 	}
 </script>

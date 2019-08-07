@@ -1,6 +1,6 @@
 <template>
 	<view class="postLists">
-		<view class="postList" @click="toPostDetail()" v-for="(item, index) in list" :key="index">
+		<view class="postList" @click="toPostDetail(item.id)" v-for="(item, index) in list" :key="index">
 			<view class="row just_btw">
 				<text class="title">{{item.title}}</text>
 				<text class="salary">{{item.salary}}</text>
@@ -42,15 +42,15 @@
 		props:['list', 'type'],
 		methods:{
 			// 职位详情
-			toPostDetail () {
+			toPostDetail (id) {
 				uni.navigateTo({
-					url: '/pages/postDetail'
+					url: '/pages/postDetail?id=' + id
 				})
 			},
 			// 公司详情
-			toCompanyDetail () {
+			toCompanyDetail (id) {
 				uni.navigateTo({
-					url: '/pages/companyDetail'
+					url: '/pages/companyDetail?id=' + id
 				})
 			},
 			// 面试详情

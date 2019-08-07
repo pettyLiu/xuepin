@@ -1,10 +1,10 @@
 <template>
 	<view class="companyDetail">
 		<view class="top row">
-			<image class="avatar" src="/static/image/banner3.png" mode=""></image>
+			<image class="avatar" :src="imgUrl + publicDetail.logo" mode=""></image>
 			<view class="column just_btw">
-				<text class="name">赣州公司</text>
-				<text class="nature">100-200人 互联网/电子商务</text>
+				<text class="name">{{publicDetail.enterpriseName}}</text>
+				<text class="nature">{{publicDetail.scale}} {{publicDetail.category}}</text>
 			</view>
 		</view>
 		<view class="content">
@@ -12,43 +12,42 @@
 				<text class="tab" :class="{active: activeTab==index}" v-for="(item, index) in tabs" :key="index" @click="changeTabs" :id="index">{{item}}</text>
 				<view class="sliderBorder" :style="{left: sliderLeft + 'px'}"></view>
 			</view>
-			<view class="first" v-if="activeTab == 0">
+			<view class="first" v-if="activeTab == 0 && companyInfo">
 				<view class="column">
 					<text class="title">公司福利</text>
 					<view class="welfares">
-						<text class="welfare" v-for="item in welfares" :key="item">{{item}}</text>
+						<text class="welfare" v-for="item in companyInfo.enterprise.tags" :key="item">{{item}}</text>
 					</view>
 				</view>
 				<view class="column">
 					<text class="title">公司简介</text>
-					<text class="introduce" v-for="item in 5" :key="item">公司详情</text>
-					
+					<rich-text class="introduce" :nodes="companyInfo.enterprise.content"></rich-text>
 				</view>
 				<view class="address column">
 					<text class="title">公司地址</text>
-					<text class="addressDetail" @click="toNext"><text class="iconfont icon-weizhi"></text>详细地址<text class="iconfont icon-youjiantou"></text></text>
+					<text class="addressDetail" @click="toNext"><text class="iconfont icon-weizhi">
+						</text>{{companyInfo.enterprise.address}}<text class="iconfont icon-youjiantou"></text></text>
 					<view class="map">
 						<map style="width: 100%; height: 220px;" :latitude="latitude" :longitude="longitude" :markers="covers"></map>
 					</view>
 				</view>
 			</view>
 			<view class="second"  v-if="activeTab == 1">
-				<view class="postList" @click="toPostDetail()" v-for="(item, index) in post" :key="index">
+				<view class="postList" @click="toPostDetail(item.id)" v-for="(item, index) in post" :key="index">
 					<view class="row just_btw">
-						<text class="postTitle">技术总监</text>
-						<text class="salary">10k-20k/月</text>
+						<text class="postTitle">{{item.title}}</text>
+						<text class="salary">{{item.salary}}</text>
 					</view>
 					<view class="txt row just_btw">
 						<view class="row tags">
-							<text class="tag">带薪休假</text>
-							<text class="tag">五险一金</text>
+							<text class="tag" v-for="item in item.tags" :key="item">{{item}}</text>
 						</view>
-						<text class="date">6月15日</text>
+						<text class="date">{{item.created_at}}</text>
 					</view>				
-					<text class="address"><text class="iconfont icon-weizhi"></text>章贡区</text>
+					<text class="address"><text class="iconfont icon-weizhi"></text>{{item.district}}</text>
 				</view>
 				<view class="nothing column center" v-if="post.length == 0">
-					<image src="" mode=""></image>
+					<image class="nothingImg" src="/static/image/bg.png" mode=""></image>
 					<text>暂无内容</text>
 				</view>
 			</view>
@@ -69,6 +68,7 @@
 <script>
 	const sliderWidth = 20
 	import { getProvider } from '@/lib/getProvider.js'
+	import config from '../lib/config'
 	export default {
 		name: 'companyDetail',
 		data() {
@@ -81,7 +81,7 @@
 				sliderLeft: 0,
 				latitude: 25.854021,
 				longitude: 114.928111,
-				post: [1,2,2,2,2,2,2,2,2],
+				post: '',
 				covers: [{
 					id: '1',
 					latitude: 25.854021,
@@ -90,7 +90,12 @@
 					anchor: {x: .5, y: 1},
 					callout: {content: '红旗大道86号江西理工大徐',display:'ALWAYS'}
 				}],
-				showMask: false
+				showMask: false,
+				publicDetail: '',
+				companyInfo: '',
+				imgUrl: config.imgUrl,
+				currentPage: 1,
+				total: 1
 			};
 		},
 		methods:{
@@ -98,13 +103,29 @@
 				const that = this
 				that.$axios({
 					url: 'api/enterprise/detail',
-					method: 'fet',
+					method: 'get',
 					data: {
-						id: that.id
+						id: that.id,
+						type: 1
 					}
 				}).then(res => {
-					console.log(res)
-					that.companyInfo = res.data
+					that.publicDetail = res.data.enterprisePublic
+					that.companyInfo = res.data	
+				})
+			},
+			getCompanyResume () { // 在招职位
+				const that = this
+				that.$axios({
+					url: 'api/enterprise/detail',
+					method: 'get',
+					data: {
+						id: that.id,
+						type: 2
+					}
+				}).then(res => {
+					that.post = res.data.jobInfo.data
+					that.currentPage = that.currentPage + 1
+					that.total = res.data.jobInfo.total
 				})
 			},
 			notMove (e){
@@ -118,6 +139,9 @@
 				if(this.activeTab != e.target.id){
 					this.activeTab = e.target.id
 					this.sliderLeft = e.target.offsetLeft + this.tt
+					if(this.activeTab == 1 && !this.post){
+						this.getCompanyResume()
+					}
 				}
 			},
 			toNext () {
@@ -130,9 +154,9 @@
 					}
 				});
 			},
-			toPostDetail () {
+			toPostDetail (id) {
 				uni.navigateTo({
-					url: '/pages/postDetail'
+					url: '/pages/postDetail?id=' + id
 				})
 			}
 		},
@@ -144,18 +168,32 @@
 				return true
 			}
 		},
-		onNavigationBarButtonTap (val){			
+		onNavigationBarButtonTap (val){	
+			const that = this	
 			if(val.index == 0){
 				this.showMask = true
 			}else{
 				var webView = this.$mp.page.$getAppWebview()
 				this.collect = !this.collect
+				var url = ''
 				if(this.collect){ // 更换收藏图标
 					webView.setTitleNViewButtonStyle(1, {  text: '\ue657' })
+					url = 'api/user/collectEnt'
 				}else{
 					webView.setTitleNViewButtonStyle(1, {  text: '\ue654' })
+					url = 'api/user/cancelCollectEnt'
 				}
-				uni.showToast({ title: this.collect ? '收藏成功' : '取消收藏', icon: "none" })
+				that.$axios({
+					url: url,
+					method: 'post',
+					data: {
+						id: that.id
+					}
+				}).then(res => {
+					if(res.code == 1){
+						uni.showToast({ title: that.collect ? '收藏成功' : '取消收藏', icon: "none" })
+					}
+				})	
 			}
 		},
 		onLoad(options) {
@@ -180,7 +218,12 @@
 			})
 			this.providerList = getProvider()
 			this.providerList=[{name: '微信', id: 1, icon:'icon-weixin'},{name: 'QQ',id: 3, icon:'icon-qq'}] //测试用
-		}, 
+		},
+		onReachBottom () {
+			if(this.activeTab==1 && this.total > this.post.length){
+				this.getCompanyResume()
+			}
+		},
 		components:{
 			// share
 		}

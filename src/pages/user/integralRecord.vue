@@ -12,6 +12,7 @@
 				</view>
 				<text class="f_30 globelColor">{{item.type==1?'+':'-'}}{{item.value}}积分</text>
 			</view>
+		    <view class="row center" v-if="showLoadMore">{{loadMoreText}}</view>
 			<view class="nothing column center" v-if="record.length == 0">
 				<image class="nothing_image" src="/static/image/bg.png" mode=""></image>
 				<text>暂无记录</text>
@@ -40,13 +41,13 @@
 					url: 'api/user/showCreditLog',
 					method: 'post', 
 					data: { 
-						// currentPage: that.currentPage 
+						page: that.currentPage 
 					}
 				}).then(res =>{
-					// console.log(res)
 					if(res.code == 1){
-						that.record = res.data.data
+						that.record = that.record.concat(res.data.data.data)
 						that.showLoadMore = false
+						that.total = res.data.data.total
 						that.currentPage += 1
 						that.point = res.data.points
 					}
@@ -54,7 +55,7 @@
 			}
 		},
 		onReachBottom () {
-			if(this.total > this.currentPage){
+			if(this.total > this.record.length){
 				this.showLoadMore = true
 				this.getRecord()
 			}else{

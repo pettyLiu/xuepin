@@ -51,6 +51,9 @@ const store = new Vuex.Store({
 		changeCategory (state, payload){
 			state.category = payload
 		},
+		resetDistrict (state) {
+			state.district = ''
+		},
 		resetCategory (state) {
 			state.category = ''
 		}

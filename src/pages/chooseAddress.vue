@@ -75,7 +75,8 @@
                 this.$store.commit('changeCity', this.city[this.cityIndex])
                 uni.switchTab({
                     url: '/pages/index/index'
-                })
+				})
+				this.$store.commit('resetDistrict')
 			},
 			change (column, index, id){
 				var that = this

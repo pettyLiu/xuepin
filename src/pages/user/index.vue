@@ -84,6 +84,15 @@
 							success: (uploadFileRes) => {
 								console.log(JSON.parse(uploadFileRes.data) );
 								that.info.avatar = config.imgUrl + JSON.parse(uploadFileRes.data).data
+								that.$axios({
+									url: 'api/user/ajaxEditUser',
+									method: 'post',
+									data:{
+										avatar: that.info.avatar
+									}
+								}).then(res => {
+									console.log(res)
+								})
 							}
 						});
 					}
@@ -113,10 +122,13 @@
 			    return height
 			}
 		},
-		onLoad() {
+		onLoad () {
 			this.getUserInfo()
 		},
-		onReady() {
+		onShow () {
+			this.getUserInfo()
+		},
+		onReady () {
 			var context = uni.createCanvasContext('degree')
 			context.arc(35, 35, 30, 0, 2 * Math.PI, true)
 			context.strokeStyle = 'red'

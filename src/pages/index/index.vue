@@ -23,7 +23,7 @@
 					<text class="border"></text>
 				</view>
 			</view>
-			<view  :class="{tt: istop}" :style="{marginTop: istop ? (statusBarHeight + 10 + 'px') : 0 }">
+			<view :class="{tt: istop}" :style="{marginTop: istop ? (statusBarHeight + 10 + 'px') : 0 }">
 				<postList :list="postList" type="index"></postList><!-- 职位列表 -->	
 			</view>					
 		</section>
@@ -75,12 +75,12 @@
 		},
 		watch:{
 			district (val) { // 区域发生变化重新加载数据
-				this.area_id = val.code
+				this.area_id = val.code ? val.code : ''
 				this.currentPage = 1
 				this.postList = []
 				this.getPostLsit()
 			},
-			category (val) { // 区域发生变化重新加载数据
+			category (val) { // 职位类型发生变化重新加载数据
 				this.category_id = val.id ? val.idd : ''
 				this.currentPage = 1
 				this.postList = []
@@ -106,6 +106,7 @@
 			console.log(this.total)
 			if (this.postList.length >= this.total) {
 				this.loadMoreText = "没有更多数据了!"
+				this.showLoadMore = true
 				return;
 			}else{
 				setTimeout(() => {
@@ -152,10 +153,11 @@
 					that.postList = that.postList.concat(res.data.result.data)
 					that.currentPage = that.currentPage + 1
 					that.total = res.data.result.total
+					this.showLoadMore = false
 				})
 			},
 			chooseArea () { // 点击地区
-				this.changePlace()
+				// this.changePlace()
 				uni.navigateTo({
 					url:'/pages/filterArea?city=' + JSON.stringify(this.city) 
 				})
@@ -168,7 +170,7 @@
 				}			
 			},	
 			chooseType () { // 点击职位类型
-				this.changePlace()
+				// this.changePlace()
 				const that = this
 				uni.navigateTo({
 					url:'/pages/filterPost?alias=' + this.alias
@@ -183,6 +185,8 @@
 			changeTabs (e) {
 				if(e.target.id != this.tabs){
 					this.tabs = e.target.id
+					this.currentPage = 1
+					this.postList = []
 					if(this.tabs == 2){
 						this.alias = 'full_rec'
 						this.post = '职位类型'

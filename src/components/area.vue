@@ -1,7 +1,7 @@
 <template>
 	<view class="area row">
 		<scroll-view scroll-y="true" class="areaLeft column">
-			<view class="areaItem globelColor">赣州</view>
+			<view class="areaItem globelColor">{{city.name}}</view>
 		</scroll-view>
 		<scroll-view scroll-y="true" class="areaCenter column">
 			<view class="areaItem" v-for="(item, index) in area" :key="index" 

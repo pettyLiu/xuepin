@@ -76,6 +76,9 @@
 				})
 			}
 		},
+		onShow () {
+			this.getSignInfo() 
+		},
 		onLoad() {
 			const tt = getNowFormatDate()
 			this.data = this.data.concat(tt.currentdate)
