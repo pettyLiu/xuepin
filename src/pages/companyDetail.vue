@@ -1,6 +1,6 @@
 <template>
 	<view class="companyDetail">
-		<view class="top row">
+		<view class="top row" v-if="publicDetail">
 			<image class="avatar" :src="imgUrl + publicDetail.logo" mode=""></image>
 			<view class="column just_btw">
 				<text class="name">{{publicDetail.enterpriseName}}</text>
@@ -28,7 +28,8 @@
 					<text class="addressDetail" @click="toNext"><text class="iconfont icon-weizhi">
 						</text>{{companyInfo.enterprise.address}}<text class="iconfont icon-youjiantou"></text></text>
 					<view class="map">
-						<map style="width: 100%; height: 220px;" :latitude="latitude" :longitude="longitude" :markers="covers"></map>
+						<map style="width: 100%; height: 220px;" v-if="covers" :latitude="covers[0].latitude" 
+						:longitude="covers[0].longitude" :markers="covers"></map>
 					</view>
 				</view>
 			</view>
@@ -73,23 +74,14 @@
 		name: 'companyDetail',
 		data() {
 			return {
-				welfares: ['带薪休假', '包吃', '包住', '餐补', '房补', '养老保险', '医疗保险', '加班补', '住房公积金', '话补'],
+				welfares: [],
 				title: 'map',
 				tabs: ['公司信息', '在招职位'],
 				collect: false,
 				activeTab: 0,
 				sliderLeft: 0,
-				latitude: 25.854021,
-				longitude: 114.928111,
 				post: '',
-				covers: [{
-					id: '1',
-					latitude: 25.854021,
-					longitude: 114.928111,
-					iconPath: '/static/image/biaoji @2x.png',
-					anchor: {x: .5, y: 1},
-					callout: {content: '红旗大道86号江西理工大徐',display:'ALWAYS'}
-				}],
+				covers: '',
 				showMask: false,
 				publicDetail: '',
 				companyInfo: '',
@@ -110,7 +102,31 @@
 					}
 				}).then(res => {
 					that.publicDetail = res.data.enterprisePublic
-					that.companyInfo = res.data	
+					that.companyInfo = res.data
+					that.collect = res.data.enterprisePublic.collection
+					// #ifdef APP-PLUS
+					var webView = that.$mp.page.$getAppWebview()
+					if(that.collect){ // 更换收藏图标
+						webView.setTitleNViewButtonStyle(1, {  text: '\ue657' })
+					}else{
+						webView.setTitleNViewButtonStyle(1, {  text: '\ue654' })
+					}
+					// #endif
+					let address = res.data.enterprise.addr_code.split(',')
+					let covers = [{
+						id: '1',
+						latitude: 25.854021,
+						longitude: 114.928111,
+						iconPath: '/static/image/biaoji @2x.png',
+						anchor: {x: .5, y: 1},
+						callout: {content: '红旗大道86号江西理工大学',display:'ALWAYS'}
+					}]
+					if(res.data.enterprise.addr_code){
+						covers[0].latitude = address[1]
+						covers[0].longitude = address[0]
+						covers[0].callout.content = res.data.enterprise.address
+					}							
+					that.covers = covers
 				})
 			},
 			getCompanyResume () { // 在招职位
@@ -145,11 +161,12 @@
 				}
 			},
 			toNext () {
+				const that = this
 				uni.openLocation({
-					latitude: 25.854021,
-					longitude: 114.928111,
-					name: '江西理工大学',
-					address: '红旗大道86号',
+					latitude: Number(that.covers[0].latitude),
+					longitude: Number(that.covers[0].longitude),
+					name: that.publicDetail.enterpriseName,
+					address: that.companyInfo.enterprise.address,
 					success: function (res) {
 					}
 				});

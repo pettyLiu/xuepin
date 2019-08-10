@@ -19,7 +19,6 @@ axios.interceptors.response.use(res => {
 })
 
 export default function (options) {
-	console.log(options)
     if (/post/i.test(options.method) && !options.headers) {
         options.headers = {
             'Content-Type': 'application/x-www-form-urlencoded'

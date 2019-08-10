@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { setTimeout } from 'timers';
 	export default {
 		name: 'selfAssessment',
 		data() {
@@ -34,6 +35,21 @@
 		},
 		
 		onNavigationBarButtonTap (val){ // 保存信息
+			const that = this
+			that.$axios({
+				url: 'api/resume/saveIntro',
+				method: 'post',
+				data: {
+					intro: that.content
+				}
+			}).then(res => {
+				if(res.code == 1){
+					
+					setTimeout(function(){
+						uni.navigateBack()
+					}, 1000)
+				}
+			})
 		},
 		computed:{
 		},

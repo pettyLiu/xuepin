@@ -18,7 +18,8 @@ const store = new Vuex.Store({
 		JobIntension: {},
 		city: uni.getStorageSync('city') ? JSON.parse(uni.getStorageSync('city')) : {id: 1266,name: "赣州市",parent_id: 15},
 		district: '',
-		category: ''
+		category: '',
+		roleType: uni.getStorageSync('roleType') ? uni.getStorageSync('roleType') : 2,
 	},
 	mutations: {
 		switch_loading(state,status){
@@ -56,12 +57,12 @@ const store = new Vuex.Store({
 		},
 		resetCategory (state) {
 			state.category = ''
+		},
+		changeRoleType (state, payload) {
+			state.roleType = payload
 		}
 	},
 	actions: {
-		changeJobIntension(context, payload){
-			
-		},	
 	},
 	modules:{
 		footer_store,

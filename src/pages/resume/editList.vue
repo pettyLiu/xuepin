@@ -19,7 +19,7 @@
 			this.title = options.title
 			this.type = options.type
 			switch (this.title){
-				case 'nickName':
+				case 'true_name':
 					uni.setNavigationBarTitle({
 						title: '姓名'
 					})

@@ -72,12 +72,11 @@
 		<view class="loadmore" v-if="showLoadMore">{{loadMoreText}}</view>
 	</view>
 </template>
-
 <script>
 	const sliderWidth = 20;
-	import config from '../lib/config'
+	import config from '../../lib/config'
 	export default {
-		name: 'collection',
+		name: 'companyCollection',
 		data() {
 			const elId = `Uni_${Math.ceil(Math.random() * 10e5).toString(36)}`
 			return {
@@ -253,7 +252,8 @@
 			this.isMoving = false
 		},
 		mounted() {
-			this.getSize()
+            this.getSize()
+            console.log(1212)
 		},
 		onReady() {
 			this.getSize()
@@ -272,5 +272,5 @@
 </script>
 
 <style lang="less">
-@import '../style/personal/collection';
+@import '../../style/personal/collection';
 </style>

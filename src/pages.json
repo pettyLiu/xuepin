@@ -323,7 +323,14 @@
 			}	
 		},
 		{
-			"path": "pages/collection",
+			"path": "pages/collection/personalCollect",
+			"style": {
+				"navigationBarTitleText": "我的收藏",
+				"bounce":"none"
+			}	
+		},
+		{
+			"path": "pages/collection/companyCollect",
 			"style": {
 				"navigationBarTitleText": "我的收藏",
 				"bounce":"none"
@@ -333,6 +340,24 @@
 			"path": "pages/setting/index",
 			"style": {
 				"navigationBarTitleText": "设置"
+			}	
+		},
+		{
+			"path": "pages/companySetting",
+			"style": {
+				"navigationBarTitleText": "企业设置"
+			}	
+		},
+		{
+			"path": "pages/user/c_wallet",
+			"style": {
+				"navigationBarTitleText": "我的钱包"
+			}	
+		},
+		{
+			"path": "pages/user/c_meal",
+			"style": {
+				"navigationBarTitleText": "企业套餐"
 			}	
 		},
 		{

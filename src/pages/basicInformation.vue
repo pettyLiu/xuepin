@@ -145,6 +145,7 @@
 								})
 							}, 1000)
 							uni.setStorageSync('userInfo', JSON.stringify(res.data.original.data))
+							that.$store.commit('resetInfo')
 						}
 					})
 				}else{

@@ -65,7 +65,6 @@
 			})
 			this.credit_data.forEach(i => {
 				for(let j = 0; j < this.calendar[0].length; j++){
-					console.log(this.calendar[0][j].date)
 					if(i == this.calendar[0][j].date){
 						this.calendar[0][j].coin = true
 						break

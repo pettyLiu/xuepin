@@ -7,7 +7,7 @@
 			</view>
 			<text class="other f_20">{{detail.job_type}} {{detail.work_exp}} {{detail.edu_level}}</text>
 			<view class="address" @click="toAddress">
-				<text><text class="iconfont icon-weizhi"></text>{{detail.work_address}} 1.5km</text>
+				<text><text class="iconfont icon-weizhi"></text>{{detail.work_address}} {{distance}}km</text>
 				<text class="iconfont icon-youjiantou"></text>
 			</view>
 		</view>
@@ -43,12 +43,28 @@
 				collect: false,
 				showMask: false,
 				detail: '',
-				imgUrl: config.imgUrl
+				imgUrl: config.imgUrl,
+				longitude: '',
+				latitude: '',
+				distance: ''
 			};
 		},
 		onLoad (options) {
 			this.id = options.id
 			this.getDdtail()
+			const that = this
+			uni.getLocation({
+				type: 'wgs84',
+				success: function (res) {
+					that.longitude = res.longitude
+					that.latitude = res.latitude
+					console.log('当前位置的经度：' + res.longitude);
+					console.log('当前位置的纬度：' + res.latitude);
+				},
+				fail(res) {
+					console.log(res)
+				}
+			})
 		},
 		methods:{
 			cancel () { // 显示遮罩层
@@ -63,14 +79,43 @@
 					}
 				}).then(res => {
 					that.detail = res.data
+					that.collect = res.data.collection
+					// #ifdef APP-PLUS
+					var webView = that.$mp.page.$getAppWebview()
+					if(that.collect){ // 更换收藏图标
+						webView.setTitleNViewButtonStyle(1, {  text: '\ue657' })
+					}else{
+						webView.setTitleNViewButtonStyle(1, {  text: '\ue654' })
+					}
+					// #endif
+					const address = res.data.addr_code.split(',')
+					that.distance = that.GetDistance(that.latitude, that.longitude, address[1], address[0])
 				})
 			},
+			GetDistance (lat1,lng1,lat2,lng2) {
+				var radLat1 = this.Rad(lat1);
+				var radLat2 = this.Rad(lat2);
+				var a = radLat1 - radLat2;
+				var  b = this.Rad(lng1) - this.Rad(lng2);
+				var s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a/2),2) +
+				Math.cos(radLat1)*Math.cos(radLat2)*Math.pow(Math.sin(b/2),2)));
+				s = s *6378.137 ;// EARTH_RADIUS;
+				s = Math.round(s * 10000) / 10000; //输出为公里
+				//s=s.toFixed(4);
+				console.log(s)
+				return s;
+			},
+			Rad(d){
+       			return d * Math.PI / 180.0;//经纬度转换成三角函数中度分表形式。
+    		},
 			toAddress () {
+				const that = this
+				const address = that.detail.addr_code.split(',')
 				uni.openLocation({
-					latitude: 25.854021,
-					longitude: 114.928111,
-					name: '江西理工大学',
-					address: '红旗大道86号',
+					latitude: Number(address[1]),
+					longitude: Number(address[0]),
+					name: that.detail.ent_name,
+					address: that.detail.work_address,
 					success: function (res) {
 					}
 				});

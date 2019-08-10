@@ -21,7 +21,9 @@
 			}
 		},
 		onNavigationBarButtonTap (val){ // 保存期望职位
+			console.log(this.choose)
 			this.$store.commit('changeIntentsion', this.choose)
+			uni.navigateBack()
 		},
 		computed:{
 		},

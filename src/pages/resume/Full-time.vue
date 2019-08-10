@@ -1,18 +1,18 @@
 <template>
-	<view class="FullTime">
+	<view class="FullTime" v-if="detail">
 		<view class="topDetail">
 			<view class="row">
-				<image class="avatar" src="/static/icon/moren.png" mode=""></image>
+				<image class="avatar" :src="detail.avatar" mode=""></image>
 				<view class="column just_btw">
-					<text class="f_32">{{userInfo.true_name}} <text class="f_20 c_999">/{{userInfo.sex=='男'?'先生':'女士'}}</text></text>
-					<text class="c_666 f_24">{{userInfo.age}}岁 {{userInfo.sex}} {{userInfo.identity}} {{userInfo.edu_level}}</text>
+					<text class="f_32">{{detail.name}} <text class="f_20 c_999">/{{detail.sex=='男'?'先生':'女士'}}</text></text>
+					<text class="c_666 f_24">{{detail.age}}岁 {{detail.identity}} {{detail.edu_level}}</text>
 				</view>
 			</view>
 			<view class="lists column f_24">
-				<text class="list">电话：15789562312</text>
-				<text class="list">邮箱：{{userInfo.email}}</text>
-				<text class="list">现居住城市：{{userInfo.province}} {{userInfo.city}}</text>
-				<text class="list">户口所在地：赣州</text>
+				<text class="list">电话：{{detail.contact_tel}}</text>
+				<text class="list">邮箱：{{detail.email}}</text>
+				<text class="list">现居住城市：{{detail.province}} {{detail.city}}</text>
+				<text class="list">户口所在地：{{detail.census_city!='null'?detail.census_city:'暂未填写'}}</text>
 			</view>
 			<text class="edit globelColor" @click="toEditInformation">编辑</text>
 		</view>
@@ -20,23 +20,23 @@
 			<view class="part">
 				<text class="title f_30">求职意向</text>
 				<view class="column center">
-					<navigator class="partTop column" url="/pages/resume/jobIntension">
-						<text>产品经理 10-20k<text class="iconfont icon-youjiantou"></text></text>
-						<text class="f_22 c_999 address">赣州 章贡区</text>
-					</navigator>
-					<text class="btn" @click="toNext('/pages/resume/jobIntension')">添加求职意向</text>
+					<view class="partTop column" @click="toJobIntension"
+						v-if="detail.expect_jobs[0]!=''">
+						<text>
+							<text class="expectItem" v-for="item in detail.expect_jobs" :key="item">{{item}} / </text>
+							 {{detail.expect_salary}}
+							<text class="iconfont icon-youjiantou"></text>
+						</text>
+						<text class="f_22 c_999 address" v-for="item in detail.desired_area" :key="item.code">{{item.name}}</text>
+					</view>
+					<text class="btn" @click="toNext('/pages/resume/jobIntension')" v-else>添加求职意向</text>
 				</view>	
 			</view>
 			<view class="part">
 				<text class="title f_30">教育经历</text>
 				<view class="column center">
-					<view class="partTop column">
-						<text>中国大学<text class="iconfont icon-youjiantou"></text></text>
-						<text class="time f_22 c_999">2017.06-2019.05</text>
-						<text class="f_22 c_999 address">服装设计专业</text>
-					</view>
-					<view class="partTop column">
-						<text>中国大学<text class="iconfont icon-youjiantou"></text></text>
+					<view class="partTop column" v-for="(item, index) in detail.eduLines" :key="index">
+						<text>{{item.finish_school}}<text class="iconfont icon-youjiantou"></text></text>
 						<text class="time f_22 c_999">2017.06-2019.05</text>
 						<text class="f_22 c_999 address">服装设计专业</text>
 					</view>
@@ -72,7 +72,7 @@
 				<view class="column center">
 					<view class="partTop f_26">
 						<text class="iconfont icon-youjiantou"></text>
-						本人是设计专业毕业生，熟练手绘，熟练cad,3dmax,vray,photoshop等设计软件，熟练办公软件。
+						{{detail.intro}}
 					</view>
 					<text class="btn" @click="toNext('/pages/resume/selfAssessment')">添加自我评价</text>
 				</view>	
@@ -87,13 +87,39 @@
 		name: 'Full-time',
 		data() {
 			return {
-				video: ''
+				video: '',
+				detail: ''
 			};
 		},
 		methods:{
+			getResumeDetail () {
+				const that = this
+				that.$axios({
+					url: 'api/user/showFullResume',
+					data: {
+						id: that.id
+					}
+				}).then(res => {
+					that.detail = res.data
+				})
+			},
 			toEditInformation () { //修改个人信息
 				uni.navigateTo({
 					url: '/pages/resume/editInformation'
+				})
+			},
+			toJobIntension () { // 跳转到职位详情
+				var intentsion = {}
+				// intentsion.expect_jobs = detail.expect_jobs
+				// intentsion.expect_salary = detail.expect_salary
+				// intentsion.e
+				const expect_jobs = this.detail.expect_jobs.map( item => ({name: item}))
+				console.log(expect_jobs)
+				this.$store.commit('changeIntentsion', expect_jobs)
+				uni.navigateTo({
+					url: '/pages/resume/jobIntension',
+					animationType: 'slide-in-bottom',
+					animationDuration: 200
 				})
 			},
 			toNext (url) { // 跳转到下一页
@@ -126,10 +152,13 @@
 		},
 		onShow(){
 			console.log('onshow')
+			this.getResumeDetail()
 		},
-		onLoad() {
-			console.log('onload')
+		onLoad(options) {
 			this.userInfo = this.information.userInfo
+			this.id = options.id
+			console.log(options)
+			this.getResumeDetail()
 		},
 		onBackPress(e){
 			

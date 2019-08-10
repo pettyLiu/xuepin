@@ -6,12 +6,15 @@
 			<view class="row just_btw userTxt">
 				<view class="column">
 					<text class="nickName f_48">{{info.userName}}</text>
-					<text class="f_26 c_e4" @click="toNext('/pages/resume/index')">点击查看简历并编辑</text>
+					<view class="column f_26 c_e4" v-if="roleType == 2">
+						<text>所属岗位：人事主管</text>
+						<text>所在公司：江西省赣州市赣州公司</text>
+					</view>	
 				</view>
 				<image class="avatar" :src="info.avatar" mode="" @click="uploadAvatar"></image>
 			</view>
 			<view class="row just_btw">
-				<view class="row">
+				<view class="row" v-if="roleType == 1">
 					<view class="recharge column" @click="toNext('/pages/user/integralRecord')">
 						<text>{{info.credit}}</text>
 						<text>积分</text>
@@ -25,19 +28,33 @@
 			</view>		
 		</section>
 		<section class="row just_btw resume">
-			<view class="column just_arw">
+			<view class="column just_arw" v-if="roleType == 1">
 				<text class="f_48">{{info.count}}</text>
 				<text class="f_36">完善简历提高您的录取率</text>
 				<text class="btn" @click="toNext('/pages/resume/index')">去完善简历</text>
 			</view>
+			<view class="column just_arw" v-if="roleType == 2">
+				<text class="f_36"><text class="f_46">70%</text>的求职者会查看主页</text>
+				<text class="f_28">剩余2步完成</text>
+				<text class="btn" @click="toNext('/pages/resume/index')">立即完善</text>
+			</view>
 			<!-- <canvas class="degree" canvas-id="degree"></canvas> -->
 		</section>
 		<section class="lists">
-			<view class="list" @click="toNext('/pages/user/goldRecharge')">
+			<view class="list" @click="toNext('/pages/user/goldRecharge')" v-if="roleType == 1">
 				<image class="icon" src="/static/icon/chongzhi_icon@2x.png" mode=""></image>充值<text class="iconfont icon-youjiantou"></text>
 			</view>
-			<view class="list" @click="toNext('/pages/collection')">
+			<view class="list" @click="toNext('/pages/collection/personalCollect')" v-if="roleType == 1">
 				<image class="icon" src="/static/icon/shoucang_icon@2x.png" mode=""></image>我的收藏<text class="iconfont icon-youjiantou"></text>
+			</view>
+			<view class="list" @click="toNext('/pages/companySetting')" v-if="roleType == 2">
+				<image class="icon" src="/static/icon/chongzhi_icon@2x.png" mode=""></image>企业设置<text class="iconfont icon-youjiantou"></text>
+			</view>
+			<view class="list" @click="toNext('/pages/user/c_wallet')" v-if="roleType == 2">
+				<image class="icon" src="/static/icon/shoucang_icon@2x.png" mode=""></image>我的钱包<text class="iconfont icon-youjiantou"></text>
+			</view>
+			<view class="list" v-if="roleType == 2" @click="toNext('/pages/collection/companyCollect')">
+				<image class="icon" src="/static/icon/qiehuangshe_icon@2x.png" mode=""></image>我的收藏<text class="iconfont icon-youjiantou"></text>
 			</view>
 			<view class="list">
 				<image class="icon" src="/static/icon/qiehuangshe_icon@2x.png" mode=""></image>切换为招聘者<text class="iconfont icon-youjiantou"></text>
@@ -51,6 +68,7 @@
 
 <script>
 	import config from '../../lib/config'
+	import { mapState } from 'vuex'
 	export default{
 		data(){
 			return{
@@ -64,7 +82,7 @@
 			getUserInfo(){
 				const that = this
 				that.$axios({
-					url: 'api/user/index',
+					url: that.$api.user_info,
 					method: 'get'
 				}).then(res =>{
 					that.info = res.data
@@ -120,7 +138,8 @@
 			        }
 			    })
 			    return height
-			}
+			},
+			...mapState(['roleType'])
 		},
 		onLoad () {
 			this.getUserInfo()

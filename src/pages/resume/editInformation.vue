@@ -1,7 +1,7 @@
 <template>
 	<view class="editInformation">		
 		<view class="form">
-			<view class="list" @click="toNext('nickName')">
+			<view class="list" @click="toNext('true_name')">
 				<view class="title f_24 c_999 row just_btw"><text>姓名</text><text class="iconfont icon-youjiantou"></text></view>
 				<text class="f_30">{{info.true_name}}</text>
 			</view>
@@ -24,9 +24,9 @@
 				</picker>
 			</view>
 			<view class="list">
-				<picker class="picker" mode="multiSelector" @change="bindBirthDateChange" :value="indexInterval" :range="dateInterval" >
+				<picker class="picker" mode="multiSelector" @change="bindBirthDateChange" :value="evalInterval" :range="dateInterval" >
 					<view class="title f_24 c_999 row just_btw"><text>出生年份</text><text class="iconfont icon-youjiantou"></text></view>
-					<text class="f_30">{{info.brithday}}</text>
+					<text class="f_30">{{info.brithday.substr(0,7)}}</text>
 				</picker>	
 			</view>
 			<!-- <view class="list">
@@ -36,9 +36,9 @@
 				</picker>	
 			</view> -->
 			<view class="list">
-				<picker class="picker" mode="multiSelector" @change="bindWorkDateChange" :value="indexInterval" :range="dateInterval" >
+				<picker class="picker" mode="multiSelector" @change="bindWorkDateChange" :value="evalInterval1" :range="dateInterval" >
 				    <view class="title f_24 c_999 row just_btw"><text>参加工作时间</text><text class="iconfont icon-youjiantou"></text></view>
-				    <text class="f_30">{{info.start_work_time}}</text>
+				    <text class="f_30">{{info.start_work_time.substr(0,7)}}</text>
 				</picker>
 			</view>
 			<view class="list">
@@ -61,7 +61,7 @@
 			<view class="list">
 				<picker mode="multiSelector" @change="regionChange1" :value="multiIndex1" :range="tt1" @columnchange="change1" range-key='name'>
 					<view class="title f_24 c_999 row just_btw">
-						<text>现居住城市</text>
+						<text>户口所在地</text>
 						<text class="iconfont icon-youjiantou"></text>
 					</view>
 					<text class="f_30">{{region1}}</text>
@@ -104,12 +104,36 @@
 			};
 		},
 		onNavigationBarButtonTap (val){
-			uni.showToast({ title: '保存成功', icon: 'none' })
-			setTimeout(function(){
-				uni.navigateBack({
-					delta:1
-				})
-			}, 1500)
+			const that = this
+			var data = {}
+			data.true_name = this.info.true_name
+			data.sex = this.info.sex_id
+			data.identity = this.info.identity_id
+			data.edu_level = this.info.edu_level_id
+			data.brithday = this.info.brithday + '-01'
+			data.start_work_time = this.info.start_work_time + '-01'
+			data.email = this.info.email
+			data.province_id = this.province_id
+			data.city_id = this.city_id
+			data.census_province_id = this.province_id1
+			data.census_city_id = this.city_id1
+			that.$axios({
+				url: 'api/user/ajaxEditUser',
+				method: 'post',
+				data: data
+			}).then( res =>{
+				if (res.code == 1) {
+					uni.showToast({ title: '保存成功', icon: 'none' })
+					setTimeout(function(){
+						uni.navigateBack({
+							delta:1
+						})
+					}, 1500)
+					uni.setStorageSync('userInfo', JSON.stringify(res.data.original.data))
+					that.$store.commit('resetInfo')
+				}
+			})
+			
 		},
 		mounted(){},		
 		methods:{
@@ -142,7 +166,6 @@
 								break
 							}
 						}
-						console.log(that.multiIndex)
 						that.region = res.data[that.multiIndex[0]].name + " " + res1.data[that.multiIndex[1]].name
 					})
 				})
@@ -176,7 +199,6 @@
 								break
 							}
 						}
-						console.log(that.multiIndex1)
 						that.region1 = res.data[that.multiIndex1[0]].name + " " + res1.data[that.multiIndex1[1]].name
 					})
 				})
@@ -259,21 +281,21 @@
 				})
 			},
 			bindPickerSex (e) { // 性别选择器
-				this.info.sex = e.detail.value
+				this.info.sex_id = e.detail.value + 1
 			},
 			bindPickerIdentity(e){ // 身份选择器
-				this.info.identity = e.detail.value
+				this.info.identity_id = e.detail.value + 1
 			},
 			bindPickerQualification (e) {// 学历选择器
-				
+				this.info.edu_level_id = e.detail.value + 1
 			},
 			bindBirthDateChange (e) { // 生日时间选择
 				const ind = e.detail.value
-				this.info.birthDate = this.dateInterval[0][ind[0]].replace('年','') + '-' + this.dateInterval[1][ind[1]].replace('月','')
+				this.info.brithday = this.dateInterval[0][ind[0]].replace('年','') + '-' + this.dateInterval[1][ind[1]].replace('月','')
 			},
 			bindWorkDateChange (e) { // 工作时间选择
 				const ind = e.detail.value
-				this.info.workDate = this.dateInterval[0][ind[0]].replace('年','') + '-' + this.dateInterval[1][ind[1]].replace('月','')
+				this.info.start_work_time = this.dateInterval[0][ind[0]].replace('年','') + '-' + this.dateInterval[1][ind[1]].replace('月','')
 			},
 		},
 		onBackPress(e){ // 返回提示是否取消修改
@@ -295,7 +317,6 @@
 		onLoad() {
 			this.info = this.userInfo
 			console.log(this.info)
-			console.log(this.basic)
 			this.getProvinces()
 			this.getProvinces1()
 		},
@@ -320,8 +341,11 @@
 			dateInterval(){
 				return getDateInterval('date')
 			},
-			indexInterval(){
-				return getDateInterval('index')
+			evalInterval(){
+				return getDateInterval('eval',this.info.brithday)
+			},
+			evalInterval1(){
+				return getDateInterval('eval', this.info.start_work_time)
 			},
 			basic(){
 				return this.$store.state.basicConfig.basicConfig

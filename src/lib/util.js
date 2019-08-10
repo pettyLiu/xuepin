@@ -34,25 +34,44 @@ export function getDate(type) {
 	day = day > 9 ? day : '0' + day;
 	return `${year}-${month}`;
 }
-export function getDateInterval(type) {
+function slic(val, val1){
+	return slice(val,val1)
+}
+export function getDateInterval(type, data) {
+	console.log(typeof data)
+	// console.log(data.slice(1,0))
 	const date = new Date();
 	let year = date.getFullYear();
 	let month = date.getMonth() + 1
 	let startYear = year - 60
-	let endYear = year + 2
 	let dateInterval = []
 	let indexInterval = []
+	let evalInterval = []
+	if(data){
+		var evalYear = data.substr(0,4)
+		var evalMonth = data.substr(5,2)
+	}	
 	let yearDate = []
 	let monthDate = []
 	for(let i = 0; i < 63; i++){
 		if(startYear + i == year){
 			indexInterval.push(i)
 		}
+		if(data){
+			if(startYear + i == evalYear){
+				evalInterval.push(i)
+			}
+		}
 		yearDate.push(startYear + i + '年')
 	}
 	for(let i = 1; i <= 12; i++){
 		if(i == month){
 			indexInterval.push(i - 1)
+		}
+		if(data){
+			if(('0'+i == evalMonth) || i == evalMonth){
+				evalInterval.push(i - 1)
+			}
 		}
 		i > 9 ? monthDate.push(i+'月') : monthDate.push('0' + i+'月')
 	}
@@ -62,6 +81,8 @@ export function getDateInterval(type) {
 		return dateInterval;
 	}else if(type == 'index'){
 		return indexInterval;
+	}else if(type == 'eval'){
+		return evalInterval
 	}
 	
 }
