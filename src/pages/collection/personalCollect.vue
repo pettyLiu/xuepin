@@ -84,7 +84,7 @@
 				collectionList: [1,2,2,5],
 				tabs:1,
 				sliderLeft: 0,
-				list: [1,2],
+				list: [],
 				startX: 0, //触摸位置
 				endX: 0, //结束位置
 				elId: elId,
@@ -92,7 +92,7 @@
 				messageIndex: -1,
 				resumeIndex: -1,
 				companyIndex: -1,
-				resumeCollection: [1,2,3],
+				resumeCollection: [],
 				companyCollection: [],
 				options: [{text:'取消收藏'}],
 				loadMoreText: "加载中...",
@@ -253,10 +253,14 @@
 			this.isMoving = false
 		},
 		mounted() {
-			this.getSize()
+			// this.getSize()
 		},
 		onReady() {
-			this.getSize()
+			console.log(this.companyCollection)
+			console.log(this.resumeCollection)
+			if((this.companyCollection.length > 0) && (this.resumeCollection.length > 0)){
+				this.getSize()
+			}
 		},
 		onLoad() {
 			var that = this

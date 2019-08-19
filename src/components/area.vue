@@ -58,7 +58,7 @@
 					if(this.$store.state.district){
 						this.activeId = this.$store.state.district.id
 					}else{
-						that.activeId = res.data[0].id
+						// that.activeId = res.data[0].id
 					}	
 				})
 			},
@@ -68,7 +68,9 @@
 				this.activeId = id
 			},
 			reset () {
-				this.activeArea = 0
+				this.activeId = ''
+				this.district = ''
+				this.$store.commit('changeDistrict', '')
 			},
 			confirm () {
 				this.$store.commit('changeDistrict', this.district)

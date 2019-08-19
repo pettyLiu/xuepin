@@ -85,10 +85,23 @@
 		name: 'interviewDetail',
 		data() {
 			return {
-				status: 1
+				status: 1,
+				info: ''
 			};
 		},
 		methods:{
+			getMessage () {
+				const that = this
+				that.$axios({
+					url: 'api/user/message',
+					data: {
+						id: that.id
+					}
+				}).then(res => {
+					console.log(res)
+					that.info = res.data
+				})
+			},
 			toMap () {
 				uni.openLocation({
 					latitude: 25.854021,
@@ -105,6 +118,8 @@
 		computed:{
 		},
 		onLoad(options) {
+			this.id = options.id
+			this.getMessage()
 			this.status = options.status
 		}
 	}

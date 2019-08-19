@@ -3,7 +3,7 @@
 		<view class="form">
 			<view class="list" @click="toNext('/pages/setting/changeTel')">
 				<view class="title f_24 c_999 row just_btw"><text>更换手机号码</text><text class="iconfont icon-youjiantou"></text></view>
-				<text class="f_30">15445</text>
+				<text class="f_30">{{tel}}</text>
 			</view>
 			<!-- <view class="list" @click="toNext('/pages/setting/changePassword')">
 				<view class="title f_24 c_999 row just_btw"><text>登录密码</text><text class="iconfont icon-youjiantou"></text></view>
@@ -22,7 +22,7 @@
 		name: 'setting-index',
 		data() {
 			return {
-				
+				tel: uni.getStorageSync('tel')
 			};
 		},
 		methods:{
@@ -31,6 +31,9 @@
 					url: url
 				})
 			}
+		},
+		onShow () {
+			this.tel = uni.getStorageSync('tel')
 		},
 		computed:{
 		},

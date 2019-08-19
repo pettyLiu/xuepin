@@ -1,31 +1,31 @@
 <template>
-	<view class="collection">
-		<view class="tabs row" id="tabs">
-			<text class="tab" id="1" @click="changeTabs" :class="{active:tabs==1}">收藏职位</text>
-			<text class="tab" id="2" @click="changeTabs" :class="{active:tabs==2}">收藏公司</text>
-			<view class="sliderBorder"
-			:style="{transform: 12,left: sliderLeft + 'px'}"></view>
-		</view>	
-		<view class="message-list uni-swipe-action"  v-if="tabs==1">
+	<view class="collection">	
+		<view class="message-list uni-swipe-action">
 			<block v-for="(it,i) of resumeCollection" :key="i">
 				<view class="uni-swipe-action__container" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd"
 				 @touchcancel="touchEnd" :style="{'transform':messageIndex == i ? transformX : 'translateX(0px)','-webkit-transform':messageIndex == i ? transformX : 'translateX(0px)'}" :data-index="i" :data-disabled="it.disabled">
-					<view class="uni-swipe-action__content" @click="toPostDetail">
-						<view class="row just_btw indent">
-							<text class="title">技术总监</text>
-							<text class="salary">10k-20k/月</text>
+					<view class="uni-swipe-action__content resumeList row" @click="toResumeDetail(item.id)">
+						<image class="resumeAvatar" src="/static/image/bg.png"></image>
+						<view class="flex1  f_22">
+								<view class="resumeTitle">
+										<text class="f_26 name">李晓丽</text>
+										<text class="f_20 c_666"><text class="borderRight">男</text>23岁</text>
+								</view>
+								<text class="borderRight">5-10年</text>
+								<text class="borderRight">本科</text>
+								<text>图像处理</text>
+								<view class="resumeVideo row just_btw ali_center f_24">
+										<view class="">
+												<text class="iconfont icon-video f_30"></text>
+												<text>视频简历</text>
+										</view>
+										<text class="iconfont icon-youjiantou"></text>
+								</view>
 						</view>
-						<view class="txt row just_btw">
-							<text class="company"><i></i>章贡区<i></i>赣州公司</text>
-							<text class="date">6月15日</text>
-						</view>			
-						<view class=" indent">
-							<view class="row tags">
-								<text class="tag">带薪休假</text>
-								<text class="tag">五险一金</text>
-							</view>
-							<text class="address"><text class="iconfont icon-weizhi"></text>章贡区</text>
-						</view>
+						<view class="resumeFocu column center">
+								<text class="bold">设计师</text>
+								<text class="eb8">查看</text>
+						</view>          
 					</view>
 					<view class="uni-swipe-action__btn-group" :id="elId">
 						<div v-for="(item,index) in options" :key="index" class="uni-swipe-action--btn" 
@@ -37,36 +37,7 @@
 			</block>
 			<view class="nothing column center" v-if="resumeCollection.length == 0">
 				<image class="nothing_image" src="/static/image/bg.png" mode=""></image>
-				<text>暂无收藏的职位</text>
-			</view>
-		</view>
-		<view class="message-list uni-swipe-action"  v-if="tabs==2">
-			<block v-for="(it,i) of companyCollection" :key="i">
-				<view class="uni-swipe-action__container" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd"
-				 @touchcancel="touchEnd" :style="{'transform':messageIndex == i ? transformX : 'translateX(0px)','-webkit-transform':messageIndex == i ? transformX : 'translateX(0px)'}" :data-index="i" :data-disabled="it.disabled">
-					<view class="uni-swipe-action__content" @click="toCompanyDetail">
-						<view class="companyTxt row ali_center">
-							<image class="companyAvatar" :src="imgUrl + it.logo" mode=""></image>
-							<view class="column just_btw">
-								<text class="companyName">{{it.enterpriseName}}</text>
-								<text class="address"><text class="iconfont icon-weizhi"></text>{{it.city}} {{it.district}}</text>
-							</view>
-						</view>
-						<view class="companyTypes">
-							<text class="companyType">{{it.category}}</text>
-						</view>
-					</view> 
-					<view class="uni-swipe-action__btn-group" :id="elId">
-						<div v-for="(item,index) in options" :key="index" class="uni-swipe-action--btn" 
-						 @click="bindClickBtn(item,i)">
-							{{item.text }}
-						</div>
-					</view>
-				</view>
-			</block>
-			<view class="nothing column center" v-if="companyCollection.length == 0">
-				<image class="nothing_image" src="/static/image/bg.png" mode=""></image>
-				<text>暂无收藏的公司</text>
+				<text>暂无收藏的简历</text>
 			</view>
 		</view>
 		<view class="loadmore" v-if="showLoadMore">{{loadMoreText}}</view>
@@ -80,19 +51,14 @@
 		data() {
 			const elId = `Uni_${Math.ceil(Math.random() * 10e5).toString(36)}`
 			return {
-				collectionList: [1,2,2,5],
-				tabs:1,
+				collectionList: [],
 				sliderLeft: 0,
-				list: [1,2],
 				startX: 0, //触摸位置
 				endX: 0, //结束位置
 				elId: elId,
 				transformX: 'translateX(0px)',
 				messageIndex: -1,
-				resumeIndex: -1,
-				companyIndex: -1,
-				resumeCollection: [1,2,3],
-				companyCollection: [],
+				resumeCollection: [1,2],
 				options: [{text:'取消收藏'}],
 				loadMoreText: "加载中...",
 				showLoadMore: false,
@@ -105,45 +71,24 @@
 			getCollectionList () {
 				const that = this
 				that.$axios({ 
-					url: 'api/user/collectBox', 
+					url: 'api/user/showResumeCollection', 
+					method: 'post',
 					data: { 
-						page: that.currentPage,
-					  type: that.tabs
+						// page: that.currentPage,
 					} 
 				}).then(res =>{
 					if(res.code == 1){
 						console.log(res)
 						that.total = res.data.total
-						if (that.tabs == 1) {
-							that.resumeCollection = res.data.data
-						} else{
-							that.companyCollection = res.data.data
-						}
+						that.resumeCollection = res.data.data
 						that.showLoadMore = false
 						that.currentPage += that.currentPage
 					}
 				})
 			},
-			changeTabs (e) {
-				if(e.target.id != this.tabs){
-					this.tabs = e.target.id
-					this.sliderLeft = e.target.offsetLeft + this.tt	
-					this.messageIndex = -1
-					this.currentPage = 1
-					this.total = 1
-					this.loadMoreText = "加载中..."
-					this.showLoadMore = false
-					this.getCollectionList()
-				}	
-			},
 			toPostDetail () {
 				uni.navigateTo({
 					url: '/pages/postDetail'
-				})
-			},
-			toCompanyDetail () {
-				uni.navigateTo({
-					url: '/pages/companyDetail'
 				})
 			},
 			getSize() {
@@ -154,35 +99,19 @@
 			bindClickBtn(item, index) {
 				const that = this
 				this.messageIndex = -1;
-				if(this.tabs == 1){
-					this.resumeCollection.splice(index, 1)
-					that.$axios({
-						url: 'api/user/cancelCollectJob',
-						method: 'post',
-						data: {
-							id: that.resumeCollection[index].id
-						}
-					}).then(res =>{
-						if(res.code == 1){
-							uni.showToast('取消成功')
-						}
-					})
-					console.log('删除职位收藏第' + index + '项')
-				}else if(this.tabs == 2){
-					this.companyCollection.splice(index, 1)
-					that.$axios({
-						url: 'api/user/cancelCollectEnt',
-						method: 'post',
-						data: {
-							id: that.companyCollection[index].id
-						}
-					}).then(res =>{
-						if(res.code == 1){
-							uni.showToast('取消成功')
-						}
-					})
-					console.log('删除企业收藏第' + index + '项')
-				}	
+				this.resumeCollection.splice(index, 1)
+				that.$axios({
+					url: 'api/user/deleteResumeCollection',
+					method: 'post',
+					data: {
+						id: that.resumeCollection[index].id
+					}
+				}).then(res =>{
+					if(res.code == 1){
+						uni.showToast('取消成功')
+					}
+				})
+				console.log('删除职位收藏第' + index + '项')
 			},
 			touchStart(event) {
 				if(event.currentTarget.dataset.disabled === true){
@@ -235,7 +164,7 @@
 		computed:{	
 		},
 		onReachBottom () {
-			const list = this.tabs == 1 ? this.resumeCollection : this.companyCollection
+			const list = this.resumeCollection
 			if(this.total >= list.length){
 				this.getCollectionList()
 				this.showLoadMore = true
@@ -266,11 +195,11 @@
 					that.tt = (res.windowWidth/3 - sliderWidth)/2
 			    }
 			})
-			that.getCollectionList()
+			// that.getCollectionList()
 		},
 	}
 </script>
 
 <style lang="less">
-@import '../../style/personal/collection';
+@import '../../style/company/collection';
 </style>

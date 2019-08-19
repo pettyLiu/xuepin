@@ -1,12 +1,12 @@
 <template>
 	<view class="resumeIndex">
-		<view class="resumeList" v-for="item in resume" :key="item.catogory_id"
+		<view class="resumeList" v-for="item in resume" :key="item.category_id"
 		@click="toResumeDetail(item.id,item.category_id)" >
 			<text class="resumeType f_30 globelColor">{{item.catogory}}</text>
 			<view class="resumeDetails row just_btw">
 				<view class="resumeLeft">
 					<view class="row">
-						<image class="avatar" :src="item.avatar" mode=""></image>
+						<image class="avatar" :src="imgUrl + item.avatar" mode=""></image>
 						<view class="column">
 							<text class="nickName f_32">{{item.name}}</text>
 							<text class="f_26 c_666">27岁 {{item.sex}} {{item.identity}} {{item.edu_level}}</text>
@@ -58,20 +58,30 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex'
+	import { mapState } from 'vuex'
+	import config from '../../lib/config'
 	export default {
 		name: 'resume-index',
 		data() {
 			return {
-				resume: []
+				resume: [],
+				imgUrl: config.imgUrl
 			};
 		},
 		methods:{
 			toResumeDetail(id, category_id){
-				const url = category_id == 1 ? '/pages/resume/Full-time?id=' + id : '/pages/resume/Part-time?id=' + id
-				uni.navigateTo({
-					url: url
-				})
+				console.log(id)
+				console.log(category_id)
+				if(category_id == 1){
+					uni.navigateTo({
+						url: '/pages/resume/Full-time?id=' + id
+					})
+				}else{
+					uni.navigateTo({
+						url: '/pages/resume/Part-time?id=' + id
+					})
+				}
+				
 			},
 			getResume () {
 				const that = this

@@ -1,30 +1,25 @@
 <template>
-	<view class="">
-		<view class="form">
-			<view class="list" @click="showIntension" >
-				<view class="title f_24 c_999 row just_btw"><text>期望职位</text><text class="iconfont icon-youjiantou"></text></view>
-				<text class="f_30 listJob" v-for="(item, index) in jobIntension" 
-				:key="index">{{item.name}}</text>
-			</view>
-			<view class="list">
-				<picker :range="basic.salary" :value="jobIntensionIndex" @change="bindPickerSalary">
-					<view class="title f_24 c_999 row just_btw"><text>期望薪资</text><text class="iconfont icon-youjiantou"></text></view>
-					<text class="f_30">{{basic.salary[jobIntensionIndex + 1]}}</text>
-				</picker>
-			</view>
-			<view class="list">
-				<picker mode="multiSelector" @change="regionChange" :value="multiIndex" :range="tt" @columnchange="change" range-key='name'>
-					<view class="title f_24 c_999 row just_btw">
-						<text>期望区域</text>
-						<text class="iconfont icon-youjiantou"></text>
-					</view>
-					<text class="f_30">{{region}}</text>
-				</picker>
-				<!-- <picker :range="areaIntension" :value="areaIntensionIndex" mode=multiSelector>
-					<view class="title f_24 c_999 row just_btw"><text>期望区域</text><text class="iconfont icon-youjiantou"></text></view>
-					<text class="f_30">赣州 章贡区</text>
-				</picker> -->
-			</view>
+	<view class="form">
+		<view class="list" @click="showIntension" >
+			<view class="title f_24 c_999 row just_btw"><text>期望职位</text><text class="iconfont icon-youjiantou"></text></view>
+			<text class="f_30 listJob" v-for="(item, index) in jobIntension" 
+			:key="index">{{item.name}}</text>
+			<text class="f_30 c_666" v-if="jobIntension.length == 0">请选择期望职位</text>
+		</view>
+		<view class="list">
+			<picker :range="basic.salary" :value="jobIntensionIndex" @change="bindPickerSalary">
+				<view class="title f_24 c_999 row just_btw"><text>期望薪资</text><text class="iconfont icon-youjiantou"></text></view>
+				<text class="f_30">{{basic.salary[jobIntensionIndex]}}</text>
+			</picker>
+		</view>
+		<view class="list">
+			<picker mode="multiSelector" @change="regionChange" :value="multiIndex" :range="tt" @columnchange="change" range-key='name'>
+				<view class="title f_24 c_999 row just_btw">
+					<text>期望区域</text>
+					<text class="iconfont icon-youjiantou"></text>
+				</view>
+				<text class="f_30">{{region}}</text>
+			</picker>
 		</view>
 	</view>
 </template>
@@ -82,6 +77,7 @@
 					}else{
 						for(let i = 0; i < res1.data.length; i++){
 							if(res1.data[i].name == that.info.city){
+								console.log(1212)
 								that.multiIndex.push(i)
 								that.city_id = res1.data[i].id
 								that.city_code = res1.data[i].code
@@ -107,13 +103,15 @@
 						that.code = res1.data[0].code
 					}else{
 						for(let i = 0; i < res1.data.length; i++){
-							if(res1.data[i].name == that.info.city){
+							if(res1.data[i].name == that.info.district){
 								that.multiIndex.push(i)
 								that.code = res1.data[i].code
 								break
 							}
 						}
 					}
+					console.log(that.tt)
+					console.log(that.multiIndex)
 					that.code = { code: that.tt[2][that.multiIndex[2]].code, name: that.tt[2][that.multiIndex[2]].name }
 					that.region = that.tt[1][that.multiIndex[1]].name + " " + res1.data[that.multiIndex[2]].name
 				})
@@ -176,9 +174,17 @@
 				}
 			},
 			showIntension () {
-				uni.navigateTo({
-					url: '/pages/common/chooseIntension'
-				})
+				console.log(this.alias)
+				if(this.alias){
+					uni.navigateTo({
+						url: '/pages/common/choosePartIntension'
+					})
+				}else{
+					uni.navigateTo({
+						url: '/pages/common/chooseIntension'
+					})
+				}
+				
 			},
 			bindPickerSalary (e) { // 薪资选择器
 				this.jobIntensionIndex = e.detail.value
@@ -194,24 +200,65 @@
 				expect_jobs.push(that.jobIntension[i].id)
 			}
 			console.log(expect_jobs)
-			that.$axios({
-				url: 'api/resume/saveJobAim',
-				method: 'post',
-				data: {
-					expect_jobs: expect_jobs.join(','),
-					expect_salary: that.jobIntensionIndex + 1,
-					desired_area: JSON.stringify([that.code]) 
-				}
-			}).then(res =>{
-				if(res.code == 1){
-					uni.navigateBack()
-				}
-			})
+			if(this.alias){
+				that.$axios({
+					url: 'api/resume/saveJobAim',
+					method: 'post',
+					data: {
+						id: that.id,
+						expect_jobs: expect_jobs.join(','),
+						expect_salary: that.jobIntensionIndex + 1,
+						desired_area: JSON.stringify([that.code]) 
+					}
+				}).then(res =>{
+					if(res.code == 1){
+						uni.navigateBack()	
+					}
+				})
+			}else{
+				that.$axios({
+					url: 'api/resume/saveJobAim',
+					method: 'post',
+					data: {
+						id: that.id,
+						expect_jobs: expect_jobs.join(','),
+						expect_salary: that.jobIntensionIndex + 1,
+						desired_area: JSON.stringify([that.code]) 
+					}
+				}).then(res =>{
+					if(res.code == 1){
+						uni.navigateBack()	
+					}
+				})
+			}
+			
 		},
 		onBackPress() { // 返回时，重置store的期望职位
 			console.log('back')
+			this.$store.commit('resetIntentsion')
 		},
-		onLoad (){
+		onLoad (options){
+			console.log(options.desired_area)
+			this.id = options.id
+			if(options.alias){ // 区分全职还是兼职简历
+				this.alias = options.alias
+			}
+			if(options.salary){
+				this.jobIntensionIndex = options.salary - 1
+			}
+			if(options.type){
+				this.type = options.type
+			}
+			if(options.desired_area){
+				this.info = JSON.parse(options.desired_area)
+				this.info.province = this.info.ifrstAreaName
+				this.info.city = this.info.twoAreaName
+				this.info.district = this.info.name
+				delete this.info.ifrstAreaName
+				delete this.info.twoAreaName
+				delete this.info.name
+				console.log(this.info)
+			}
 			this.getProvinces()
 			console.log(this.$store.state.fullTime.intentsion)
 		},

@@ -86,6 +86,7 @@ import { setTimeout } from 'timers';
 								title: '成功更换手机号码！',
 								icon: 'none'
 							})
+							uni.setStorageSync('tel', that.tel)
 							setTimeout(function(){
 								uni.navigateBack()
 							}, 1000)

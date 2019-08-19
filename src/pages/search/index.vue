@@ -142,7 +142,7 @@
 			},
 			change (e) {
 				if(e.detail.value==''){
-					that.showLists = false
+					this.showLists = false
 				}
 			},
 			back () { // 返回

@@ -1,0 +1,55 @@
+@import '../../style/common/mixin.less';
+.form{
+    margin: 24upx 0 0;
+    background: white;
+    padding: 0 32upx 20upx 44upx;
+    .list{
+        border-bottom: @g_border;
+        padding-bottom: 22upx;
+        .title{
+            .h(63upx, 63upx, none)
+        }
+        .listJob{
+            margin-right: 10upx
+        }
+    }
+}
+.formBtn{
+    color: white;
+    background: #5E57EB;
+    margin-top: 60upx
+}
+.checkboxs{
+    flex-wrap: wrap;
+    .checkLabel{
+        width: 33.33%;
+        margin-bottom: 20upx;
+    }
+}
+table {
+    line-height: 1.5;
+    // border: 1px 1px 0 1px solid #b5b8c2
+    border-top: 1px solid #b5b8c2;
+    border-left: 1px solid #b5b8c2;
+    text{
+        border-bottom: 1px solid #b5b8c2;
+        height: 50upx;
+        line-height: 50upx
+    }
+}
+tr {
+    border-bottom: 1px solid #666;
+    display: flex;
+}
+.td {
+    flex:1;
+    text-align: center;
+    border-right: 1px solid #b5b8c2;
+}
+th {
+    flex: 1;
+    border-right: 1px solid #b5b8c2;
+}
+.white{
+    color:white
+}

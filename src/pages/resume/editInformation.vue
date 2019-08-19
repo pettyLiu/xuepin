@@ -1,26 +1,26 @@
 <template>
 	<view class="editInformation">		
-		<view class="form">
+		<view class="form" v-if="info">
 			<view class="list" @click="toNext('true_name')">
 				<view class="title f_24 c_999 row just_btw"><text>姓名</text><text class="iconfont icon-youjiantou"></text></view>
 				<text class="f_30">{{info.true_name}}</text>
 			</view>
 			<view class="list">
-				<picker @change="bindPickerSex" :value="info.sex_id - 1" :range="basic.sex" range-key="name">
+				<picker @change="bindPickerSex" :value="info.sex_id - 1" :range="basic.sex">
                     <view class="title f_24 c_999 row just_btw"><text>性别</text><text class="iconfont icon-youjiantou"></text></view>
-                    <text class="f_30">{{basic.sex[info.sex_id]}}</text>
+                    <text class="f_30">{{basic.sex[info.sex_id - 1]}}</text>
                 </picker>	
 			</view>
 			<view class="list">
 				<picker @change="bindPickerIdentity" :value="info.identity_id - 1" :range="basic.identity">
 					<view class="title f_24 c_999 row just_btw"><text>身份</text><text class="iconfont icon-youjiantou"></text></view>
-					<text class="f_30">{{basic.identity[info.identity_id]}}</text>
+					<text class="f_30">{{basic.identity[info.identity_id - 1]}}</text>
 				</picker>	
 			</view>
 			<view class="list">
 				<picker @change="bindPickerQualification" :value="info.edu_level_id - 1" :range="basic.edu_level">
 					<view class="title f_24 c_999 row just_btw"><text>学历</text><text class="iconfont icon-youjiantou"></text></view>
-					<text class="f_30">{{basic.edu_level[info.edu_level_id]}}</text>
+					<text class="f_30">{{basic.edu_level[info.edu_level_id - 1]}}</text>
 				</picker>
 			</view>
 			<view class="list">
@@ -100,7 +100,8 @@
 				region1: '', // 户口所在地
 				multiIndex1: [],
 				province_id1: '',
-				city_id1: ''
+				city_id1: '',
+				info: ''
 			};
 		},
 		onNavigationBarButtonTap (val){
@@ -177,13 +178,18 @@
 					method: 'get',
 				}).then(function(res){
 					that.tt1[0] = (res.data)
-					for(let i = 0; i < res.data.length; i++){
-						if(res.data[i].name == that.info.census_province){
-							that.multiIndex1.push(i)
-							that.province_id1 = res.data[i].id
-							break
+					if(that.info.census_province != 'null'){
+						for(let i = 0; i < res.data.length; i++){
+							if(res.data[i].name == that.info.census_province){
+								that.multiIndex1.push(i)
+								that.province_id1 = res.data[i].id
+								break
+							}
 						}
-					}
+					}else{
+						that.multiIndex1.push(0)
+						that.province_id1 = res.data[0].id
+					}					
 					that.$axios({
 						url: 'api/base/ajaxCity',
 						method: 'get',
@@ -192,13 +198,18 @@
 						}
 					}).then(function(res1){
 						that.tt1.splice(1, 1, res1.data)
-						for(let i = 0; i < res1.data.length; i++){
-							if(res1.data[i].name == that.info.census_city){
-								that.multiIndex1.push(i)
-								that.city_id1 = res1.data[i].id
-								break
+						if(that.info.census_city != 'null'){
+							for(let i = 0; i < res1.data.length; i++){
+								if(res1.data[i].name == that.info.census_city){
+									that.multiIndex1.push(i)
+									that.city_id1 = res1.data[i].id
+									break
+								}
 							}
-						}
+						}else{
+							that.multiIndex1.push(0)
+							that.city_id1 = res1.data[0].id
+						}	
 						that.region1 = res.data[that.multiIndex1[0]].name + " " + res1.data[that.multiIndex1[1]].name
 					})
 				})
@@ -300,25 +311,35 @@
 		},
 		onBackPress(e){ // 返回提示是否取消修改
 			const that = this
-			if(that.edit){
-				uni.showModal({
-					content: '确定取消修改内容？',
-					success(res) {
-						if(res.confirm){
-							that.edit = false
-							uni.navigateBack()
-							that.$store.commit('resetInfo')
-						}
-					}
-				})
-				return true
-			}
+			// if(that.edit){
+			// 	uni.showModal({
+			// 		content: '确定取消修改内容？',
+			// 		success(res) {
+			// 			if(res.confirm){
+			// 				that.edit = false
+			// 				uni.navigateBack()
+			// 				that.$store.commit('resetInfo')
+			// 			}
+			// 		}
+			// 	})
+			// 	return true
+			// }
 		},
 		onLoad() {
-			this.info = this.userInfo
-			console.log(this.info)
-			this.getProvinces()
-			this.getProvinces1()
+			const that = this
+			this.$axios({
+				url: 'api/user/ajaxEditUser',
+				method: 'post'
+			}).then(res=>{
+				console.log(res)
+				that.info = res.data.original.data
+				console.log(that.info)
+				that.getProvinces()
+			that.getProvinces1()
+			})
+			// this.info = this.userInfo
+			// console.log(this.info)
+			
 		},
 		watch:{
 			info: { // 检查是否修改过内容

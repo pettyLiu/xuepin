@@ -3,11 +3,11 @@
 		<view class="walletTop row f_24 just_btw">
             <view class="column">
                 <text>账号余额</text>
-                <text><text class="f_60">5555</text>金币</text>
+                <text><text class="f_60">{{info.coin}}</text>金币</text>
             </view>
             <view class="column">
                 <text>您的积分</text>
-                <text><text class="f_60">5555</text>积分</text>
+                <text><text class="f_60">{{info.credit}}</text>积分</text>
             </view>
         </view>
         <section class="lists">
@@ -35,21 +35,28 @@
 		name: 'wallet',
 		data() {
 			return {
-				
+				info: ''
 			};
 		},
 		methods:{
-			toExcharge () {
-				uni.navigateTo({
-					url:'/pages/user/excharge'
+			getData () {
+				const that = this
+				that.$axios({
+					url: 'api/user/myPackage',
+					method: 'post'
+				}).then(res => {
+					this.info = res.data
 				})
-            },
+			},
             // 到下一页
 			toNext (url) {
 				uni.navigateTo({
 					url: url
 				})
 			},
+		},
+		onLoad (){
+			this.getData()
 		},
 		computed:{
 		},

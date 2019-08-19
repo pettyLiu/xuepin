@@ -86,7 +86,8 @@ import { Stream } from 'stream';
 			},
 			reset () {
 				this.activeArea = 0
-				this.activeCategory = 0
+				this.areaId = ''
+				this.$store.commit('changeCategory', '')
 			},
 			confirm () {
 				if(this.area != ''){

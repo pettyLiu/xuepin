@@ -3,7 +3,7 @@
 		<text class="iconfont icon-jiantou3" :style="{top: statusBarHeight + 'px'}" @click="back" v-if="showBack"></text>
 		<text class="bigTitle f_46">完善信息</text>
 		<view class="avatarList" @click="chooseImg">
-			<image class="avatar" :src="avatar" mode=""></image>
+			<image class="avatar" :src="imgUrl + avatar" mode=""></image>
 			<text class="iconfont icon-xiangji"></text>
 		</view>		
 		<view class="form">
@@ -19,19 +19,19 @@
 				<view class="list">
 					<picker @change="bindPickerSex" :value="sexIndex" :range="basicConfig.sex" range-key="key" name="sex">
 						<view class="title f_24 c_999 row just_btw"><text>性别</text><text class="iconfont icon-youjiantou"></text></view>
-						<text class="f_30">{{basicConfig.sex[sexIndex+1]}}</text>
+						<text class="f_30">{{basicConfig.sex[sexIndex]}}</text>
 					</picker>	
 				</view>
 				<view class="list">
 					<picker @change="bindPickerIdentity" :value="identityIndex" :range="basicConfig.identity" name="identity">
 						<view class="title f_24 c_999 row just_btw"><text>身份</text><text class="iconfont icon-youjiantou"></text></view>
-						<text class="f_30">{{basicConfig.identity[identityIndex+1]}}</text>
+						<text class="f_30">{{basicConfig.identity[identityIndex]}}</text>
 					</picker>	
 				</view>
 				<view class="list">
 					<picker @change="bindPickerQualification" :value="qualificationIndex" :range="basicConfig.edu_level" name="edu_level">
 						<view class="title f_24 c_999 row just_btw"><text>学历</text><text class="iconfont icon-youjiantou"></text></view>
-						<text class="f_30">{{basicConfig.edu_level[qualificationIndex+1]}}</text>
+						<text class="f_30">{{basicConfig.edu_level[qualificationIndex]}}</text>
 					</picker>	
 				</view>
 				<view class="list">
@@ -79,6 +79,7 @@
 			return {
 				statusBarHeight: getApp().globalData.statusBarHeight,
 				info: {},
+				imgUrl: config.imgUrl,
 				avatar: '/static/icon/moren.png',
 				sex: [{name: '男',id:' 1'}, {name: '女',id: '2'}],
 				identity: ['学生', '非学生'],
@@ -108,8 +109,7 @@
 		},
 		
 		methods:{
-			formSubmit (e) {
-				
+			formSubmit (e) {				
 				var rule = [
 					{name:"true_name", checkType : "string", checkRule:"1,5",  errorMsg:"姓名应为1-5个字符"},
 					{name:"email", checkType : "email", checkRule:"",  errorMsg:"请输入email"}
@@ -220,7 +220,7 @@
 							filePath: that.avatar,
 							name: 'fileUpload',
 							success: (uploadFileRes) => {
-								that.avatar = config.imgUrl + JSON.parse(uploadFileRes.data).data
+								that.avatar = JSON.parse(uploadFileRes.data).data
 								console.log(uploadFileRes.data);
 							}
 						});

@@ -123,7 +123,8 @@
 				"titleNView": {
 					"buttons": [ 
 						{ "text": "\ue60d","fontSrc": "/static/font/iconfont.ttf","fontSize":"22px","width":"32px"},
-						{ "text": "\ue651","fontSrc": "/static/font/iconfont.ttf","fontSize":"19px","width":"32px"}
+						{ "text": "\ue651","fontSrc": "/static/font/iconfont.ttf","fontSize":"19px","width":"32px"},
+						{ "text": "\ue64d","fontSrc": "/static/font/iconfont.ttf","fontSize":"19px","width":"32px"}
 					]
 				}
 			}	
@@ -187,6 +188,24 @@
 			}	
 		},
 		{
+			"path": "pages/post/index",
+			"style": {
+				"navigationBarTitleText": "新增职位"
+			}	
+		},
+		{
+			"path": "pages/post/fullPost",
+			"style": {
+				"navigationBarTitleText": "新增全职职位"
+			}	
+		},
+		{
+			"path": "pages/post/partPost",
+			"style": {
+				"navigationBarTitleText": "新增兼职职位"
+			}	
+		},
+		{
 			"path": "pages/news/InterviewDetail",
 			"style": {
 				"navigationBarTitleText": "面试详情"
@@ -231,6 +250,19 @@
 			"path": "pages/resume/index",
 			"style": {
 				"navigationBarTitleText": "我的简历"
+			}	
+		},
+		{
+			"path": "pages/resumeDetail",
+			"style": {
+				"navigationBarTitleText": "简历详情",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [ 
+							{ "text": "\ue654","fontSrc": "/static/font/iconfont.ttf","fontSize":"24px","width":"32px"}
+						]
+					}
+				}
 			}	
 		},
 		{
@@ -287,6 +319,12 @@
 						{ "type": "none", "text": "保存", "fontSize": "16px" }
 					]
 				}
+			}	
+		},
+		{
+			"path": "pages/common/choosePartIntension",
+			"style": {
+				"navigationBarTitleText": "期望职位"
 			}	
 		},
 		{
@@ -349,6 +387,12 @@
 			}	
 		},
 		{
+			"path": "pages/resume/delivery",
+			"style": {
+				"navigationBarTitleText": "已投递简历的职位"
+			}	
+		},
+		{
 			"path": "pages/user/c_wallet",
 			"style": {
 				"navigationBarTitleText": "我的钱包"
@@ -376,6 +420,17 @@
 			"path": "pages/setting/authorize",
 			"style": {
 				"navigationBarTitleText": "社交账号绑定"
+			}	
+		},
+		{
+			"path": "pages/setting/bindAccount",
+			"style": {
+				"navigationBarTitleText": "账号绑定",
+				"titleNView": {
+					"buttons": [ 
+						{ "type": "none", "text": "绑定", "fontSize": "16px" }
+					]
+				}
 			}	
 		}
 	],

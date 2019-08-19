@@ -1,55 +1,49 @@
 <template>
-	<view class="walletPage">
-		<view class="walletTop row f_24 just_btw">
-            <view class="column">
-                <text>账号余额</text>
-                <text><text class="f_60">5555</text>金币</text>
-            </view>
-            <view class="column">
-                <text>您的积分</text>
-                <text><text class="f_60">5555</text>积分</text>
-            </view>
-        </view>
-        <section class="lists">
-			<view class="list" @click="toNext('/pages/user/goldRecharge')">
-				<image class="icon" src="/static/icon/chongzhi_icon@2x.png" mode=""></image>金币充值<text class="iconfont icon-youjiantou"></text>
+	<view class="mealPage">
+		<view class="lists" :class="activeIndex == index?'active':''" v-for="(item, index) in lists" 
+		:key="index" @click="chooseMeal(index)">
+			<text class="name">{{item.name}}</text>
+			<view class="f_24 c_666">
+				<rich-text :nodes="item.desc"></rich-text>
 			</view>
-			<view class="list" @click="toNext('/pages/collection/personalCollect')">
-				<image class="icon" src="/static/icon/shoucang_icon@2x.png" mode=""></image>企业套餐<text class="iconfont icon-youjiantou"></text>
-			</view>
-			<view class="list" @click="toNext('/pages/user/integralRecord')">
-				<image class="icon" src="/static/icon/chongzhi_icon@2x.png" mode=""></image>积分记录<text class="iconfont icon-youjiantou"></text>
-			</view>
-            <view class="list" @click="toNext('/pages/user/goldRecord')">
-				<image class="icon" src="/static/icon/chongzhi_icon@2x.png" mode=""></image>金币记录<text class="iconfont icon-youjiantou"></text>
-			</view>
-			<view class="list" @click="toNext('/pages/user/c_wallet')">
-				<image class="icon" src="/static/icon/shoucang_icon@2x.png" mode=""></image>如何获取积分<text class="iconfont icon-youjiantou"></text>
-			</view>
-		</section>
+			<text class="price globelColor f_52">{{item.price}}<text class="f_26">元</text></text>
+		</view>
+		<view class="btns row just_btw ali_center">
+			<text>共计：<text class="globelColor f_30">{{money}}元</text></text>
+			<text class="btn">立即购买</text>
+		</view>
 	</view>
 </template>
 
 <script>
 	export default {
-		name: 'wallet',
+		name: 'meal',
 		data() {
 			return {
-				
+				activeIndex: 0,
+				lists: [],
+				money: 0
 			};
 		},
 		methods:{
-			toExcharge () {
-				uni.navigateTo({
-					url:'/pages/user/excharge'
-				})
-            },
-            // 到下一页
-			toNext (url) {
-				uni.navigateTo({
-					url: url
+			getList () {
+				const that = this
+				that.$axios({
+					url: 'api/user/showVipService',
+					method: 'post',
+				}).then(res => {
+					that.lists = res.data
+					that.money = res.data[0].price
 				})
 			},
+			chooseMeal (index) {
+				this.activeIndex = index
+				this.money = this.lists[index].price
+			},
+
+		},
+		onLoad () {
+			this.getList()
 		},
 		computed:{
 		},
@@ -57,5 +51,5 @@
 </script>
 
 <style lang="less">
-@import url("../../style/company/wallet.less");
+@import url("../../style/company/meal.less");
 </style>

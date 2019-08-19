@@ -27,6 +27,11 @@
 		},
 		computed:{
 		},
+		onLoad(options){
+			if(options.limit){
+				this.limit = options.limit
+			}
+		},
 		components:{
 			multiPost
 		}

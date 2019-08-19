@@ -1,8 +1,8 @@
 export default {
 	state:{
 		filter: {
-			nature: '全部',
-			scale: '全部',
+			nature: '',
+			scale: '',
 		}
 	},
 	mutations:{
@@ -10,7 +10,7 @@ export default {
 			state.filter = data
 		},
 		reset_filter(state,index){
-			state.filter = {nature:'全部',scale:'全部'}
+			state.filter = {nature:'', scale:''}
 		}
 	},
 	actions:{

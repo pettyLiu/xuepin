@@ -26,30 +26,41 @@ import { setTimeout } from 'timers';
 			}
 		},
 		onLoad (options) {
-			if(options.title){
+			this.id = options.id
+			if(options.title == 'work_desc'){
+				this.title = 'work_desc'
 				uni.setNavigationBarTitle({
 					title: '工作描述'
 				})
 				this.placeholder = '请描述工作职位，最多输入500字'
+				this.content = this.$store.state.fullTime.work.work_desc
+			}else{
+				this.content = options.info
 			}
 		},
 		
 		onNavigationBarButtonTap (val){ // 保存信息
 			const that = this
-			that.$axios({
-				url: 'api/resume/saveIntro',
-				method: 'post',
-				data: {
-					intro: that.content
-				}
-			}).then(res => {
-				if(res.code == 1){
-					
-					setTimeout(function(){
-						uni.navigateBack()
-					}, 1000)
-				}
-			})
+			if(this.title == 'work_desc'){
+				this.$store.commit('changeWork',{ key:this.title, value: this.content })
+				uni.navigateBack()
+			}
+			else{
+				that.$axios({
+					url: 'api/resume/saveIntro',
+					method: 'post',
+					data: {
+						id: that.id,
+						intro: that.content
+					}
+				}).then(res => {
+					if(res.code == 1){					
+						setTimeout(function(){
+							uni.navigateBack()
+						}, 1000)
+					}
+				})
+			}	
 		},
 		computed:{
 		},

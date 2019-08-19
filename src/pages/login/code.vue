@@ -38,7 +38,8 @@
 							that.$store.commit('loginIn', { 
 								token : res.data.token, 
 								Authorization: res.data.Authorization,
-								userInfo: res.data.userinfo
+								userInfo: res.data.userinfo,
+								tel: that.tel
 							})
 						}
 					})	

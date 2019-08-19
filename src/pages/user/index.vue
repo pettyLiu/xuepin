@@ -5,13 +5,14 @@
 			<text class="f_24 signOut" @click="signOut">退出登录</text>
 			<view class="row just_btw userTxt">
 				<view class="column">
-					<text class="nickName f_48">{{info.userName}}</text>
+					<text class="nickName f_48" v-if="roleType == 1">{{info.userName}}</text>
+					<text class="nickName f_48" v-else>{{info.name}}</text>
 					<view class="column f_26 c_e4" v-if="roleType == 2">
 						<text>所属岗位：人事主管</text>
 						<text>所在公司：江西省赣州市赣州公司</text>
 					</view>	
 				</view>
-				<image class="avatar" :src="info.avatar" mode="" @click="uploadAvatar"></image>
+				<image class="avatar" :src="imgUrl + info.avatar" mode="" @click="uploadAvatar"></image>
 			</view>
 			<view class="row just_btw">
 				<view class="row" v-if="roleType == 1">
@@ -44,6 +45,9 @@
 			<view class="list" @click="toNext('/pages/user/goldRecharge')" v-if="roleType == 1">
 				<image class="icon" src="/static/icon/chongzhi_icon@2x.png" mode=""></image>充值<text class="iconfont icon-youjiantou"></text>
 			</view>
+			<view class="list" @click="toNext('/pages/resume/delivery')" v-if="roleType == 1">
+				<image class="icon" src="/static/icon/shoucang_icon@2x.png" mode=""></image>已投递简历<text class="iconfont icon-youjiantou"></text>
+			</view>
 			<view class="list" @click="toNext('/pages/collection/personalCollect')" v-if="roleType == 1">
 				<image class="icon" src="/static/icon/shoucang_icon@2x.png" mode=""></image>我的收藏<text class="iconfont icon-youjiantou"></text>
 			</view>
@@ -54,9 +58,10 @@
 				<image class="icon" src="/static/icon/shoucang_icon@2x.png" mode=""></image>我的钱包<text class="iconfont icon-youjiantou"></text>
 			</view>
 			<view class="list" v-if="roleType == 2" @click="toNext('/pages/collection/companyCollect')">
+				<!-- 企业收藏 -->
 				<image class="icon" src="/static/icon/qiehuangshe_icon@2x.png" mode=""></image>我的收藏<text class="iconfont icon-youjiantou"></text>
 			</view>
-			<view class="list">
+			<view class="list" @click="changeRole">
 				<image class="icon" src="/static/icon/qiehuangshe_icon@2x.png" mode=""></image>切换为招聘者<text class="iconfont icon-youjiantou"></text>
 			</view>
 			<view class="list" @click="toNext('/pages/setting/index')">
@@ -69,21 +74,54 @@
 <script>
 	import config from '../../lib/config'
 	import { mapState } from 'vuex'
+	import {api} from '../../lib/api'
 	export default{
 		data(){
 			return{
 				avatar: '../../static/icon/moren.png',
-				info: {}
+				info: {},
+				imgUrl: config.imgUrl
 			}
 		},
 		components:{
 		},
 		methods:{
-			getUserInfo(){
+			// 切换角色
+			changeRole () {
+				const that = this
+				const role = this.$store.state.roleType
+				// that.$axios({
+				// 	url: 'api/user/changeRole',
+				// 	method: 'post',
+				// 	data: {
+				// 		type: role
+				// 	}
+				// }).then( res=> {
+				// 	if(res.data.type == 1){ // 个人切换企业
+				// 		if(res.data.enterpriseFlag){ // 填写了企业资料
+				// 			this.$store.commit('changeRoleType', role == 1 ? 2 : 1)
+				// 		}else{
+				// 			uni.navigateTo({
+				// 				url: '/pages/companySetting'
+				// 			})
+				// 		}
+				// 	}else if(res.data.type == 2){ // 企业切换个人
+				// 		if(res.data.enterpriseFlag){ // 填写了个人资料
+				// 			this.$store.commit('changeRoleType', role == 1 ? 2 : 1)
+				// 		}else{
+				// 			uni.navigateTo({
+				// 				url: '/page/basicInformation'
+				// 			})
+				// 		}
+				// 	}
+				// })
+				this.$store.commit('changeRoleType', role == 1 ? 2 : 1)			
+			},
+			getUserInfo () {
 				const that = this
 				that.$axios({
-					url: that.$api.user_info,
-					method: 'get'
+					url: api().user_info,
+					method: 'post'
 				}).then(res =>{
 					that.info = res.data
 				})
@@ -106,7 +144,7 @@
 									url: 'api/user/ajaxEditUser',
 									method: 'post',
 									data:{
-										avatar: that.info.avatar
+										avatar: JSON.parse(uploadFileRes.data).data
 									}
 								}).then(res => {
 									console.log(res)
@@ -140,6 +178,12 @@
 			    return height
 			},
 			...mapState(['roleType'])
+		},
+		watch: {
+			roleType(){
+				console.log(api(1))
+				this.getUserInfo()
+			}
 		},
 		onLoad () {
 			this.getUserInfo()

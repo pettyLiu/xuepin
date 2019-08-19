@@ -1,0 +1,89 @@
+@import '../common/mixin.less';
+.collection{
+	.resumeList{
+        margin-bottom: @g_bottom;
+        background: white;
+        padding: 22upx @g_margin 10upx;
+        position: relative;
+        .resumeAvatar{
+            height: 86upx;
+            width: 86upx;
+            border-radius: 50%;
+            margin-right: 26upx;
+        }
+        .resumeTitle{
+            margin-bottom: 20upx;
+            .name{
+                padding-right: 48upx;
+            }   
+        }
+        .borderRight{
+            padding-right: 16upx;
+            border-right: 1px solid #dedede;
+            margin-right: 16upx;
+        }
+        .resumeVideo{
+            margin-top: 16upx;
+            border-top: 1px solid #dedede;
+            padding: 22upx 0 12upx
+        }
+        .resumeFocu{
+            position: absolute;
+            top: 22upx;
+            right: @g_margin;
+            line-height: 32upx;
+        }
+    }
+    .nothing{
+		color: #adadad;
+		margin-top: 100upx;
+		image{
+			height: 320upx;
+			width: 370upx;
+			margin-bottom: 72upx;
+		}
+    }
+    .flex1{
+        flex: 1
+    }
+    .icon-video{
+        margin-right: 20upx;
+    }
+    .eb8{
+        color: #EB8557
+    }
+	.uni-swipe-action {
+		width: 100%;
+		overflow: hidden;
+		&__container {
+			background-color: #FFFFFF;
+			width: 200%;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			transition: transform 350ms cubic-bezier(.165, .84, .44, 1);
+			margin: 30upx 0;	
+		}
+		&__content {
+			width: 50%;
+			padding: 30upx 0
+		}
+		&__btn-group {
+			display: flex;
+			flex-direction: row;
+		}
+		&--btn {
+			padding: 0 32upx;
+			color: #FFFFFF;
+			background-color: red;
+			font-size: 28upx;
+			display: inline-flex;
+			text-align: center;
+			flex-direction: row;
+			align-items: center;
+		}
+	}
+	.indent{
+		padding: 0upx 30upx 0
+	}
+}

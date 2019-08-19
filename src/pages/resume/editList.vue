@@ -16,6 +16,7 @@
 			};
 		},
 		onLoad(options) {
+			console.log(options)
 			this.title = options.title
 			this.type = options.type
 			switch (this.title){
@@ -47,6 +48,20 @@
 					this.placeholder = '请输入专业名称'
 					this.txt = this.$store.state.fullTime.education[options.title]
 					break;
+				case 'company':
+					uni.setNavigationBarTitle({
+						title: '公司名称'
+					})
+					this.placeholder = '请输入公司名称'
+					this.txt = this.$store.state.fullTime.work[options.title]
+					break;
+				case 'do_work':
+					uni.setNavigationBarTitle({
+						title: '岗位'
+					})
+					this.placeholder = '请输入岗位名称'
+					this.txt = this.$store.state.fullTime.work[options.title]
+					break;
 			}
 		},
 		// 保存信息
@@ -55,6 +70,8 @@
 				this.$store.commit('changeInfo',{ key:this.title, value: this.txt })
 			}else if(this.type == 2){
 				this.$store.commit('changeEducation',{ key:this.title, value: this.txt })
+			}else if(this.type == 3){
+				this.$store.commit('changeWork',{ key:this.title, value: this.txt })
 			}
 			uni.navigateBack({
 				delta: 1

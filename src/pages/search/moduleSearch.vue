@@ -11,7 +11,7 @@
 		name: 'moduleSearch',
 		data () {
 			return{
-				list: [1,2,2,2,2,2],
+				list: [],
 				currentPage: 1,
 				total: 1,
 				loadMoreText: "加载中...",
@@ -22,9 +22,11 @@
 			uni.setNavigationBarTitle({
 				title: options.title
 			})
+			this.getList()
 		},
 		onReachBottom() { // 触底加载更多
-			if(this.total > this.currentPage){
+			if(this.total > this.list.length){
+				this.showLoadMore = true
 				this.getList()
 			}else{
 				this.showLoadMore = true
@@ -37,11 +39,17 @@
 			getList () {
 				const that = this
 				that.showLoadMore = true
-				that.$axios({ url: '', data: { currentPage: that.currentPage } }).then(res =>{
+				that.$axios({ 
+					url: 'api/index/latestPosition', 
+					data: { 
+						page: that.currentPage 
+					} 
+				}).then(res =>{
 					console.log(res)
 					if(res.code == 1){
 						that.currentPage += that.currentPage
-						that.list = res.data
+						that.total = res.data.total
+						that.list = that.list.concat(res.data.data)
 						that.showLoadMore = false
 					}
 				})

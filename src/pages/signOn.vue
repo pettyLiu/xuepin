@@ -83,7 +83,7 @@
 			const tt = getNowFormatDate()
 			this.data = this.data.concat(tt.currentdate)
 			this.currentMonth = tt.currentMonth
-			this.getSignInfo()
+			// this.getSignInfo()
 		},
 		computed:{
 		},

@@ -90,6 +90,19 @@ module.exports = {
 				case 'notnull':
 					if(data[rule[i].name] == null || data[rule[i].name].length < 1){this.error = rule[i].errorMsg; return false;}
 				break;
+				case 'notcheck':
+					var tt = data[rule[i].name].Fri.concat(data[rule[i].name].Mon).concat(data[rule[i].name].Sat).concat(data[rule[i].name].Sun).concat(data[rule[i].name].Thu).concat(data[rule[i].name].Tue).concat(data[rule[i].name].Wed)
+					this.error = rule[i].errorMsg
+					var ttt = false
+					for(var i=0 ;i<tt.length;i++){
+						if(tt[i]){
+							ttt = true							
+						}
+					}
+					if(!ttt){				
+						return false;
+					}					
+				break;
 				case 'password':
 					var str = data[rule[i].name];
 					console.log(str)
