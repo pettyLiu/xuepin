@@ -12,7 +12,7 @@
 			<swiper-item class="calendar-date-wrapper" v-for="(item,index) in calendar" :key="index">
 				<view class="calendar-date" v-for="(value,key) in item" :key="key" 
 				:style="{color:value.selected&&'#5E57EB'}">
-				{{value.date}}
+				<text>{{value.date}}</text>
 				<image class="gold" src="/static/icon/gold.png" mode="" v-if="value.coin"></image>
 				</view>
 			</swiper-item>
@@ -46,7 +46,6 @@
 			credit_data: {
 				type: Array,
 				default () {
-
 				}
 			}
 		},
@@ -148,17 +147,17 @@
 	.calendar-date {
 		width: 60upx;
 		height: 60upx;
-		font-size: 32upx;
+		font-size: 30upx;
 		line-height: 60upx;
 		border-radius: 50%;
 		margin: 20upx;
 		position:relative;
 		.gold{
-			width: 50upx;
-			height: 34upx;
+			width: 56upx;
+			height: 36upx;
 			position: absolute;
 			top: 16upx;
-			left: 9upx
+			left: 2upx
 		}
 	}
 </style>

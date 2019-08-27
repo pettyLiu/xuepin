@@ -31,11 +31,12 @@ export default function (options) {
 	var tt = uni.getStorageSync('info')
     return new Promise((resolve, reject) => {		
         axios.request(options).then(res => {
+            console.log(res.data)
             if (res.data.code == 0 && !res.data.msg.indexOf('token无效')) {
 				uni.reLaunch({
 					url: '/pages/login/index'
 				})
-            }else if(res.data.data.type == 1 && res.data.msg == '注册成功'){
+            }else if(res.data.data && res.data.data.type == 1 && res.data.msg == '注册成功'){
                 uni.showToast({ title: res.msg, icon: "none" })
                 store.commit('loginIn', { 
                     token : res.data.data.token, 
@@ -47,7 +48,7 @@ export default function (options) {
 						url: '/pages/basicInformation'
 					})
 				}, 1500)
-			} else if(res.data.data.type == 0 && res.data.data.userinfo.email == null){
+			} else if(res.data.data && res.data.data.type == 0 && res.data.data.userinfo.email == null){
                 store.commit('loginIn', { 
                     token : res.data.data.token, 
                     Authorization: res.data.data.Authorization,
@@ -57,6 +58,7 @@ export default function (options) {
 					url: '/pages/basicInformation'
 				})
             } else{
+                console.log(1111)
 				resolve(res.data)
 			}
         }, error => {

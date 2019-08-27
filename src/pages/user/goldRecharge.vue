@@ -9,7 +9,7 @@
 			</view>
 			<view class="border row just_btw ali_center">
 				<text class="cir1"></text>
-				<text class="line" v-for="item in 8"></text>
+				<text class="line" v-for="item in 8" :key="item"></text>
 				<text class="cir"></text>
 			</view>
 			<view class="footer column">
@@ -17,8 +17,9 @@
 				<text class="f_48 num">{{pay}}（元）</text>
 			</view>
 			<view class="types">
-				<text class="f_24">选择支付方式</text>
+				<text class="f_24">选择支付方式</text>{{providerList}}
 				<radio-group name="radio" class="column" @change="radioChange">
+					
 					<label class="row just_btw type" v-for="(item,index) in providerList" :key="index">
 						<text><text class="iconfont " :class="item.name=='支付宝' ? 'icon-z-alipay' : 'icon-weixin2'"></text>{{item.name}}</text>
 						<radio :value="item.name"  color="#5E57EB"/>
@@ -31,7 +32,7 @@
 </template>
 
 <script>
-	import { getProvider } from '@/lib/getProvider.js'
+	import { getProvider } from '@/lib/getProvider'
 	export default {
 		name: 'goldRecharge',
 		data() {
@@ -78,7 +79,11 @@
 			    if (orderInfo.statusCode !== 200) {
 			        console.log("获得订单信息失败", orderInfo);
 			        uni.showModal({
-			            content: "获得订单信息失败",
+			            content: orderInfo,
+			            showCancel: false
+					})
+					 uni.showModal({
+			            content: this.providerList,
 			            showCancel: false
 			        })
 			        return;
@@ -108,20 +113,64 @@
 			    let appid = "";
 			    // #ifdef APP-PLUS
 			    appid = plus.runtime.appid;
-			    // #endif
+				// #endif
+				console.log(appid)
 			    return new Promise((res) => {
 					this.$axios({url:'https://arw.dev.intelgice.com/ucenter/ajaxUserInfo'}).then(result => {
 						res(result)
 					})
 			    })
 			},
+			getProvider(){ // 支付
+	var providerList = [];
+	uni.getProvider({
+	    service: "payment",
+	    success: (e) => {
+	        console.log("payment success:" + JSON.stringify(e));
+	        
+	        e.provider.map((value) => {
+				console.log(value)
+	            switch (value) {
+	                case 'alipay':
+	                    providerList.push({
+	                        name: '支付宝',
+	                        id: value
+	                    });
+	                    break;
+	                case 'wxpay':
+	                    providerList.push({
+	                        name: '微信',
+	                        id: value
+	                    });
+	                    break;
+	                default:
+	                    break;
+	            }
+			})
+			console.log(providerList)
+			this.providerList = providerList
+			console.log(this.providerList[0])
+			this.$forceUpdate()
+	    },
+	    fail: (e) => {
+	        console.log("获取支付通道失败：", e);
+	    }
+	});
+	
+}
 		},
 		onLoad() {
-			this.providerList = getProvider()
-			this.providerList=[{name: '支付宝',id: 1},{name: '微信',id: 3}] //测试用
+			// this.providerList = getProvider()
+			// console.log(this.providerList)
+			this.getProvider()
+			// this.providerList=[{name: '支付宝',id: 1},{name: '微信',id: 3}] //测试用
 		},
-		computed: {
-		},
+		// computed: {
+		// 	providerList(){
+		// 		console.log(this.getProvider())
+		// 		return  getProvider()
+		// 	}
+		// },
 	}
 </script>
 

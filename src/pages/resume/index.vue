@@ -1,7 +1,7 @@
 <template>
 	<view class="resumeIndex">
 		<view class="resumeList" v-for="item in resume" :key="item.category_id"
-		@click="toResumeDetail(item.id,item.category_id)" >
+		@click="toResumeDetail(item.id,item.category_id,item.checked)" >
 			<text class="resumeType f_30 globelColor">{{item.catogory}}</text>
 			<view class="resumeDetails row just_btw">
 				<view class="resumeLeft">
@@ -69,16 +69,16 @@
 			};
 		},
 		methods:{
-			toResumeDetail(id, category_id){
+			toResumeDetail(id, category_id, checked){
 				console.log(id)
 				console.log(category_id)
 				if(category_id == 1){
 					uni.navigateTo({
-						url: '/pages/resume/Full-time?id=' + id
+						url: '/pages/resume/Full-time?id=' + id + '&checked=' + checked
 					})
 				}else{
 					uni.navigateTo({
-						url: '/pages/resume/Part-time?id=' + id
+						url: '/pages/resume/Part-time?id=' + id + '&checked=' + checked
 					})
 				}
 				
@@ -91,6 +91,19 @@
 				}).then(res => {
 					console.log(res)
 					that.resume = res.data.data
+				})
+			},
+			setLocal (id){
+				const that = this
+				that.$axios({
+					url: 'api/resume/setDefaultResume',
+					method: 'get',
+					data: {
+						resume_id: id
+					}
+				}).then( res => {
+					uni.showToast({ title: '设置成功' })
+					this.detail.check = true
 				})
 			}
 		},

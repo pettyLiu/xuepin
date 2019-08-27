@@ -24,6 +24,12 @@
 				</picker>
 			</view>
 			<view class="list">
+				<picker @change="bindPickerwork_exp" :value="info.work_exp_id - 1" :range="basic.work_exp">
+					<view class="title f_24 c_999 row just_btw"><text>工作经验 </text><text class="iconfont icon-youjiantou"></text></view>
+					<text class="f_30">{{basic.work_exp[info.work_exp_id - 1]}}</text>
+				</picker>
+			</view>
+			<view class="list">
 				<picker class="picker" mode="multiSelector" @change="bindBirthDateChange" :value="evalInterval" :range="dateInterval" >
 					<view class="title f_24 c_999 row just_btw"><text>出生年份</text><text class="iconfont icon-youjiantou"></text></view>
 					<text class="f_30">{{info.brithday.substr(0,7)}}</text>
@@ -43,7 +49,7 @@
 			</view>
 			<view class="list">
 				<view class="title f_24 c_999 row just_btw"><text>手机</text><text class="iconfont icon-youjiantou"></text></view>
-				<text class="f_30">157895</text>
+				<text class="f_30">{{tel}}</text>
 			</view>
 			<view class="list" @click="toNext('email')">
 				<view class="title f_24 c_999 row just_btw"><text>邮箱</text><text class="iconfont icon-youjiantou"></text></view>
@@ -101,7 +107,8 @@
 				multiIndex1: [],
 				province_id1: '',
 				city_id1: '',
-				info: ''
+				info: '',
+				tel: uni.getStorageSync('tel')
 			};
 		},
 		onNavigationBarButtonTap (val){
@@ -118,6 +125,7 @@
 			data.city_id = this.city_id
 			data.census_province_id = this.province_id1
 			data.census_city_id = this.city_id1
+			data.work_experience = this.info.work_exp_id
 			that.$axios({
 				url: 'api/user/ajaxEditUser',
 				method: 'post',
@@ -300,6 +308,12 @@
 			bindPickerQualification (e) {// 学历选择器
 				this.info.edu_level_id = e.detail.value + 1
 			},
+			bindPickerwork_exp (e) {
+				this.info.work_exp_id = e.detail.value + 1
+				console.log(this.info.work_exp_id)
+				console.log(this.basic.work_exp[this.info.work_exp_id - 1])
+				this.$forceUpdate()
+			},
 			bindBirthDateChange (e) { // 生日时间选择
 				const ind = e.detail.value
 				this.info.brithday = this.dateInterval[0][ind[0]].replace('年','') + '-' + this.dateInterval[1][ind[1]].replace('月','')
@@ -335,8 +349,11 @@
 				that.info = res.data.original.data
 				console.log(that.info)
 				that.getProvinces()
-			that.getProvinces1()
+				that.getProvinces1()
 			})
+			// uni.showModal({
+			// 	content: this.basic.edu_level[0]
+			// })
 			// this.info = this.userInfo
 			// console.log(this.info)
 			

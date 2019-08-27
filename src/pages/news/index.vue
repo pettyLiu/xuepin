@@ -16,7 +16,7 @@
 						<i></i><i></i>{{item.enterprise.name}}
 					</text>
 				</view>			
-				<view class="column" >
+				<view class="column">
 					<view class="row tags">
 						<text class="tag" v-for="tag in item.job.tags" :key="tag">{{tag}}</text>
 					</view>
@@ -25,6 +25,10 @@
 						<text class="newstype">{{item.status}}<text class="iconfont icon-youjiantou"></text></text>	
 					</view>	
 				</view>
+			</view>
+			<view class="nothing column center" v-if="news.length == 0">
+				<image class="nothing_image" src="/static/image/bg.png" mode=""></image>
+				<text>暂无此类消息</text>
 			</view>
 		</view>
 		<resumeList :list="news" type="news" v-if="roleType == 2"></resumeList>
@@ -55,23 +59,24 @@
 				showLoadMore: false,
 				currentPage: 1,
 				total: 1,
-				status: ''
+				status: '',
+				messageId: 0
 			}
 		},
 		methods:{
-			getNews () { // 获取消息列表
-				const that = this
-				that.$axios({
-					url: api().message_data,
-					methods: 'get',
-					data: {
-						status: that.status
-					}
-				}).then(res => {
-					console.log(res)
-					that.news= res.data
-				})
-			},
+			// getNews () { // 获取消息列表
+			// 	const that = this
+			// 	that.$axios({
+			// 		url: api().message_data,
+			// 		methods: 'post',
+			// 		data: {
+			// 			status: that.status
+			// 		}
+			// 	}).then(res => {
+			// 		console.log(res)
+			// 		that.news= res.data
+			// 	})
+			// },
 			// 职位详情
 			toPostDetail (id) {
 				uni.navigateTo({
@@ -93,6 +98,7 @@
 					this.showLoadMore = false
 					this.sliderLeft = e.target.offsetLeft + this.tt
 					this.currentPage = 1
+					this.news = []
 					switch(this.activeTab){
 						case '0':
 						this.status = ''
@@ -116,22 +122,23 @@
 			getNewsList () {
 				const that = this
 				console.log(this.status)
-				const data = this.roleType == 1 ? { currentPage: that.currentPage, status: that.status} : { page: that.currentPage, messageId: that.messageId}
+				const data = this.roleType == 1 ? { page: that.currentPage, status: that.status} : { page: that.currentPage, messageId: that.messageId}
 				that.$axios({  
 					url: api().message_data, 
-					method: 'get',
+					method: 'post',
 					data: data
 				}).then(res =>{
 					if(res.code == 1){
 						that.currentPage += that.currentPage
 						that.total = this.roleType == 1 ? res.data.total : res.data.receiveRes.total
-						that.news = this.roleType == 1 ? res.data.data : res.data.receiveRes.data
+						that.news = this.roleType == 1 ? that.news.concat(res.data.data) : that.news.concat(res.data.receiveRes.data)
+						console.log(that.news)
 					}
 				})
 			},
 		},
 		onReachBottom() {
-			if(this.total > this.currentPage){
+			if(this.total > this.news.length){
 				this.getNewsList()
 			}else{
 				this.loadMoreText = "没有更多数据了"

@@ -15,8 +15,8 @@
 					<text class="tab" id="1" @click="changeTabs" :class="{active:tabs==1}">全部职位</text>
 					<text class="tab" id="2" @click="changeTabs" :class="{active:tabs==2}">只看全职</text>
 					<text class="tab" id="3" @click="changeTabs" :class="{active:tabs==3}">只看兼职</text>
-					<view class="sliderBorder"
-					:style="{transform: 12,left: sliderLeft + 'px'}"></view>
+					<!-- <view class="sliderBorder"
+					:style="{transform: 12,left: sliderLeft + 'px'}"></view> -->
 				</view>				
 				<view class="types row ali_center">
 					<text @click="chooseArea">{{district ? district.name : city.name}}<text class="iconfont">&#xe65a;</text></text>
@@ -25,7 +25,7 @@
 				</view>
 			</view>
 			<view :class="{mounting: istop}" @touchmove.stop.prevent="moveHandle" 
-			:style="{top: statusBarHeight + 10 + 'px'}" v-if="roleType == 2">
+			:style="{top: statusBarHeight + 10 + 'px'}" v-if="roleType == 2 && basic">
 				<view class="tabs row" id="tabs">
 					<text class="tab1" id="2" @click="changeTabs" :class="{active:tabs==2}">全职简历</text>
 					<text class="tab1" id="3" @click="changeTabs" :class="{active:tabs==3}">兼职简历</text>
@@ -33,17 +33,17 @@
 				<view class="types1 row ali_center just_arw">
 					<text @click="chooseType">{{post}}<text class="iconfont">&#xe65a;</text></text>
 					<picker @change="bindPickerEdu" :value="eduIndex" :range="basic.edu_level">
-						<text v-if="eduIndex == ''">学历要求</text>
+						<text v-if="eduIndex === ''">学历要求</text>
 						<text>{{basic.edu_level[eduIndex]}}</text>	
 						<text class="iconfont">&#xe65a;</text>
 					</picker>
 					<picker @change="bindPickerWork" :value="workIndex" :range="basic.work_exp">
-						<text v-if="workIndex == ''">工作经验</text>
+						<text v-if="workIndex === ''">工作经验</text>
 						<text>{{basic.work_exp[workIndex]}}</text>
 						<text class="iconfont">&#xe65a;</text>
 					</picker>
 					<picker @change="bindPickerSalary" :value="salaryIndex" :range="basic.salary">
-						<text v-if="salaryIndex == ''">薪资待遇</text>
+						<text v-if="salaryIndex === ''">薪资待遇</text>
 						<text>{{basic.salary[salaryIndex]}}</text>
 						<text class="iconfont">&#xe65a;</text>
 					</picker>
@@ -89,7 +89,8 @@
 				work: '工作经验',
 				workIndex: '',
 				salary: '薪资待遇',
-				salaryIndex: ''
+				salaryIndex: '',
+				basic: ''
 			}
 		},
 		computed: {
@@ -103,9 +104,6 @@
 				getApp().globalData.statusBarHeight = height
 			    return height
 			},
-			basic (){
-				return this.$store.state.basicConfig.basicConfig
-			},
 			...mapState(['userInfo', 'city', 'district', 'category', 'roleType'])
 		},
 		watch:{
@@ -116,37 +114,38 @@
 				this.getPostList()
 			},
 			category (val) { // 职位类型发生变化重新加载数据
-			console.log(val)
 				this.category_id = val.id ? val.id : ''
 				this.currentPage = 1
 				this.postList = []
 				this.getPostList()
 				this.post = val.name ? val.name : '职位类型'
 			},
-			roleType (val) {
-				this.resetData()
-				if(val == 2){
-					this.tabs = 2
-					this.alias = 'full_rec'
-				}
-			}
+			// roleType (val) {
+			// 	this.resetData()
+			// 	if(val == 2){
+			// 		this.tabs = 2
+			// 		this.alias = 'full_rec'
+			// 	}
+			// }
 		},
 		onLoad () {
 			this.getPostList()
-			this.$store.dispatch('getBasicConfig')
 			var that = this
+			this.getbasic()		
 			uni.getSystemInfo({
 				success: function (res) {
 					that.sliderLeft = (res.windowWidth/3 - sliderWidth)/2,
 					that.tt = (res.windowWidth/3 - sliderWidth)/2
 				}
-			}) 
-			console.log(this.city)
+			})
+			console.log(1111222222222222)
+			if(this.roleType == 2){
+				this.tabs = 2
+				this.alias = 'full_rec'
+			}
 		},
 		// 触底加载更多
 		onReachBottom() {
-			console.log(this.postList.length)
-			console.log(this.total)
 			if (this.postList.length >= this.total) {
 				this.loadMoreText = "没有更多数据了!"
 				this.showLoadMore = true
@@ -163,13 +162,16 @@
 			postList,
 			resumeList
 		},
-		mounted(){
+		onReady(){
 			const that = this
-			that.$nextTick(() => {
-				uni.createSelectorQuery().in(this).select('#tabs').boundingClientRect(function(rect){
-					that.top = rect.top
-				}).exec()
-			})
+			setTimeout(function(){
+				that.$nextTick(() => {
+					uni.createSelectorQuery().in(this).select('#tabs').boundingClientRect(function(rect){
+						console.log(rect)
+						that.top = rect.top
+					}).exec()
+				})
+			},500)	
 		},
 		onPullDownRefresh() {
 			var that = this
@@ -179,6 +181,21 @@
 			}, 200);
 		},
 		methods: {
+			getbasic(){ // 获取基础配置
+				this.$axios({
+					url: 'api/base/selectConfig',
+					method: 'get'
+				}).then(res => {
+					const tt = {}
+					tt.bill_way = Object.values(res.data.bill_way)
+					tt.edu_level = Object.values(res.data.edu_level)
+					tt.bill_way = Object.values(res.data.bill_way)					
+					tt.salary = Object.values(res.data.salary)
+					tt.work_exp = Object.values(res.data.work_exp)
+					tt.salary.unshift('全部')
+					this.basic = tt					
+				})
+			},
 			bindPickerEdu (e) { // 学历选择器
 				this.eduIndex = e.detail.value
 				this.resetData()
@@ -226,15 +243,14 @@
 							page: that.currentPage,
 							alias: that.alias,
 							expect_jobs: that.category_id,
-							edu_level: that.eduIndex + 1,
-							work_experience: that.workIndex + 1,
-							expect_salary: that.salaryIndex + 1
+							edu_level: that.eduIndex != '' ? that.eduIndex + 1 : '',
+							work_experience: that.workIndex == '' ? '' : that.workIndex + 1,
+							expect_salary: that.salaryIndex != '' ? that.salaryIndex : ''
 						}
 					}).then(res => {
-						console.log(res)
-						that.postList = that.postList.concat(res.data.resumeList)
+						that.postList = that.postList.concat(res.data.data)
 						that.currentPage = that.currentPage + 1
-						// that.total = res.data.result.total
+						that.total = res.data.total
 						this.showLoadMore = false
 					})
 				}

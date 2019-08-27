@@ -15,7 +15,7 @@
 				<text class="list">户口所在地：{{detail.census_city!='null'?detail.census_city:'暂未填写'}}</text>
 			</view>
 			<text class="edit globelColor" @click="toEditInformation">编辑</text>
-			<text class="edit1 globelColor" @click="setLocal" v-if="!detail.check">设为默认简历</text>
+			<text class="edit1 globelColor" @click="setLocal" v-if="checked == 'null'">设为默认简历</text>
 			<text class="edit1 globelColor" v-else>默认简历</text>
 		</view>
 		<view class="content">
@@ -39,9 +39,10 @@
 				<view class="column center">
 					<view class="partTop column" v-for="(item, index) in detail.eduLines" :key="index"
 					@click="toEducation(2, index)">
-						<text>{{item.finish_school}}<text class="iconfont icon-youjiantou"></text></text>
-						<text class="time f_22 c_999">{{item.edu_levelName}} {{item.text7}}</text>
-						<text class="f_22 c_999 address">{{item.major}}</text>
+						<text class="partTopTit">{{item.finish_school}}</text>
+						<text class="iconfont icon-youjiantou"></text>
+						<text class="time f_22 c_999">{{item.text7}}</text>
+						<text class="f_22 c_999 address">{{item.edu_levelName}} {{item.major}}</text>
 					</view>
 					<text class="btn" @click="toEducation(1)">添加教育经历</text>
 				</view>	
@@ -51,7 +52,8 @@
 				<view class="column center">
 					<view class="partTop column" v-for="(item, index) in detail.workLines" 
 					:key="index" @click="toWorkExperience(2, index)">
-						<text>{{item.company}}<text class="iconfont icon-youjiantou"></text></text>
+						<text  class="partTopTit">{{item.company}}</text>
+						<text class="iconfont icon-youjiantou"></text>
 						<text class="time f_22 c_999">{{item.project_exp}}</text>
 						<text class="f_22 c_999 address">{{item.do_work}}</text>
 						<view class="f_22 c_666">
@@ -88,6 +90,7 @@
 <script>
 	import { mapState } from 'vuex'
 	import config from '../../lib/config'
+import { setTimeout } from 'timers';
 	export default {
 		name: 'Full-time',
 		data() {
@@ -116,6 +119,7 @@
 			},
 			toJobIntension () { // 跳转到职位详情
 				const expect_jobs = this.detail.expect_jobs
+				console.log(expect_jobs)
 				this.$store.commit('changeIntentsion', expect_jobs)
 				console.log(this.detail.desired_area[0])
 				uni.navigateTo({
@@ -171,29 +175,59 @@
 					success(res) {
 						console.log(res)
 						that.video = res.tempFilePath
-						console.log(res.tempFilePath)
-						// that.$axios({
-						// 	url: 'aetherupload/preprocess',
-						// 	method: 'post',
-						// 	data:{
-						// 		file_name: '5c7a0ad4c35d3b3dcd6e054c31ed4211.mp4',
-						// 		file_size: 2242053,
-						// 		file_hash: '3dd1dd30ecd6da452444ef53529eb8cb',
-						// 		group: 'file',
-						// 	}
-						// }).then(res => {
-						// 	console.log(res)
-						// })
-						uni.uploadFile({
-							url: config.baseUrl + 'aetherupload/uploading',
-							filePath: that.video,
-							name: 'file',
-							fileType: 'video',
-							success: (uploadFileRes) => {
-								console.log(JSON.parse(uploadFileRes.data) );
-
+						console.log(res.tempFilePath)						
+						that.$axios({
+							url: 'aetherupload/preprocess',
+							method: 'post',
+							data:{
+								file_name: '5c7a0ad4c35d3b3dcd6e054c31ed4211.mp4',
+								file_size: 2242053,
+								file_hash: '3dd1dd30ecd6da452444ef53529eb8cb',
+								locale: 'zh',
+								group: 'file'
 							}
-						});
+						}).then(res => {
+							console.log(res)
+						})
+						setTimeout(function(){
+							uni.uploadFile({
+							url: config.baseUrl + 'aetherupload/uploading',
+							name: 'file',
+							filePath:'res.tempFilePath',
+							formData:{
+								upload_ext: 'mp4',
+								chunk_total: 1,
+								chunk_index: 1,
+								upload_basename: 1566783137594,
+								group: 'file',
+								sub_dir: 201908,
+								locale: 'zh',
+							},
+							success: (res) =>{
+								console.log(res)
+							}
+						})
+						},100)
+
+						// uni.uploadFile({
+						// 	url: config.baseUrl + 'aetherupload/uploading',
+						// 	filePath: that.video,
+						// 	name: 'file',
+						// 	fileType: 'video',
+						// 	formData: {
+						// 		upload_ext: 'mp4',
+						// 		chunk_total: '3',
+						// 		chunk_index: 3,
+						// 		upload_basename: '1566182607228',
+						// 		group: 'file',
+						// 		sub_dir: '201908',
+						// 		locale: 'zh'
+						// 	},
+						// 	success: (uploadFileRes) => {
+						// 		console.log(JSON.parse(uploadFileRes.data) );
+
+						// 	}
+						// });
 					}
 				})
 			},
@@ -211,14 +245,14 @@
 			setLocal (){
 				const that = this
 				that.$axios({
-					url: 'ucenter/checked',
-					method: 'post',
+					url: 'api/resume/setDefaultResume',
+					method: 'get',
 					data: {
-						id: this.id
+						resume_id: this.id
 					}
 				}).then( res => {
 					uni.showToast({ title: '设置成功' })
-					this.detail.check = true
+					checked = true
 				})
 			}
 		},
@@ -229,8 +263,12 @@
 		onLoad(options) {
 			this.userInfo = this.information.userInfo
 			this.id = options.id
+			this.checked = options.checked
 			console.log(options)
 			this.getResumeDetail()
+			uni.showModal({
+				content: this.userInfo.salary
+			})
 		},
 		onBackPress(e){
 			

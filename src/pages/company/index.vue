@@ -22,19 +22,21 @@
 		<view class="companyLists" v-if="roleType == 2">
 			<view class="companyList postList" v-for="(item, index) in lists" :key="index">
 				<view class="row just_btw">
-					<text class="f_30">JAVA架构师</text>
-					<text>全职职位</text>
+					<text class="f_30">{{item.title}}</text>
+					<text>{{item.job_type}}职位</text>
 				</view>
 				<view class="postDetail f_22">
-                    <text class="borderRight">23岁</text>
-					<text class="borderRight">5-10年</text>
-                    <text class="borderRight">本科</text>
-					<text>图像处理</text>
+                    <text class="borderRight">{{item.age}}</text>
+					<text class="borderRight">{{item.work_exp}}</text>
+                    <text >{{item.edu_level}}</text>
+					<!-- <text>图像处理</text> -->
 				</view>
-				<text class="ee">职位详情：负责系统及产品需求分析及架构设计负责系统及产品需求分析及架构设计负责系统及产品需求分析及架构设计；负责系统及产品需求分析及架构设计；</text>
+				<text class="ee">职位描述: </text>
+				<rich-text :nodes="item.content"></rich-text>
 				<view class="btns ">
-					<text class="btn" @click="toEdit">修改</text>
-					<text class="btn" @click="toTop(item.category_id)">置顶</text>
+					<text class="btn" @click="toEdit(item.job_type, item.id)">修改</text>
+					<text class="btn" v-if="item.ontop_status == 1">置顶中</text>
+					<text class="btn" @click="toTop(item.id)" v-else>置顶</text>
 				</view>
 			</view>
 		</view>
@@ -66,17 +68,36 @@
 		},
 		onLoad () {
 			this.getCompanyList()
+			this.showIcon()
 		},
 		methods:{
+			showIcon () {
+				// #ifdef APP-PLUS
+				var webView = this.$mp.page.$getAppWebview()
+				if(this.roleType == 1){ // 更换收藏图标
+					webView.setTitleNViewButtonStyle(0, {  fontSize: '24px',"width":"32px" })
+					webView.setTitleNViewButtonStyle(1, {  fontSize: '19px',"width":"32px" })
+					webView.setTitleNViewButtonStyle(2, {  fontSize: '0', width: '0' })
+				}else{
+					webView.setTitleNViewButtonStyle(0, {  fontSize: '0', width: '0' })
+					webView.setTitleNViewButtonStyle(1, {  fontSize: '0', width: '0' })
+					webView.setTitleNViewButtonStyle(2, {  fontSize: '20px', width: '32px' })
+				}
+				// #endif
+			},
 			getCompanyList () {
 				const that = this
+				var data = {}
+				data.page = that.currentPage
+				if(that.roleType == 1){
+					data.scale = that.filter.scale,
+					data.category_id = that.filter.nature
+				}
 				that.$axios({ 
 					url: api().company_data,
-					method: 'get',
+					method: 'post',
 					data: { 
-						page: that.currentPage,
-						scale: that.filter.scale,
-						category_id: that.filter.nature
+						...data
 					} 
 				}).then(res =>{
 					if(res.code == 1){
@@ -108,15 +129,21 @@
 					url: '../companyDetail?id=' + id
 				})
 			},
-			toEdit () { // 修改招聘简章
-				uni.navigateTo({
-					url: ''
-				})
+			toEdit (types, id) { // 修改招聘简章
+				if(types == '全职'){
+					uni.navigateTo({ // 全职跳转
+						url: '/pages/post/fullPost?type=2' + '&id=' + id
+					})
+				}else{
+					uni.navigateTo({ // 兼职跳转
+						url: '/pages/post/partPost?type=2' + '&id=' + id
+					})
+				}	
 			},
 			toTop (id) { // 置顶职位
 				const that = this
 				that.$axios({
-					url: '',
+					url: 'api/job/top',
 					method: 'post',
 					data: {
 						id: id

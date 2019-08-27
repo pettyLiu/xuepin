@@ -6,7 +6,7 @@
 				<text class="salary">{{item.salary}}</text>
 			</view>
 			<view class="txt row just_btw">
-				<text class="company" @click.stop="toCompanyDetail">
+				<text class="company" @click.stop="toCompanyDetail(item.enterprise_id)">
 					<i></i><i></i>{{item.enterpriseName}}
 				</text>
 				<text class="date">{{item.updated_at}}</text>

@@ -172,4 +172,7 @@
 			border-left: 1px solid #ccc
 		}
 	}
+	.searchPlaceholder{
+		padding-left: 30upx
+	}
 </style>

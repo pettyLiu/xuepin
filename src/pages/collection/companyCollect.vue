@@ -68,13 +68,13 @@
 			};
 		},
 		methods:{
-			getCollectionList () {
+			getCollectionList () { // 简历列表
 				const that = this
 				that.$axios({ 
 					url: 'api/user/showResumeCollection', 
 					method: 'post',
 					data: { 
-						// page: that.currentPage,
+						page: that.currentPage,
 					} 
 				}).then(res =>{
 					if(res.code == 1){
@@ -86,9 +86,9 @@
 					}
 				})
 			},
-			toPostDetail () {
+			toResumeDetail (id) { // 跳转简历详情
 				uni.navigateTo({
-					url: '/pages/postDetail'
+					url: '/pages/resumeDetail?id=' + id
 				})
 			},
 			getSize() {
@@ -99,7 +99,7 @@
 			bindClickBtn(item, index) {
 				const that = this
 				this.messageIndex = -1;
-				this.resumeCollection.splice(index, 1)
+			
 				that.$axios({
 					url: 'api/user/deleteResumeCollection',
 					method: 'post',
@@ -109,6 +109,7 @@
 				}).then(res =>{
 					if(res.code == 1){
 						uni.showToast('取消成功')
+						that.resumeCollection.splice(index, 1)
 					}
 				})
 				console.log('删除职位收藏第' + index + '项')
@@ -195,7 +196,7 @@
 					that.tt = (res.windowWidth/3 - sliderWidth)/2
 			    }
 			})
-			// that.getCollectionList()
+			that.getCollectionList()
 		},
 	}
 </script>

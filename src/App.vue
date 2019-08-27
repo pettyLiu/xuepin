@@ -4,11 +4,28 @@
             statusBarHeight: 0
         }, 
 		onLaunch: function() {
-			// this.$store.dispatch('getBasicConfig')
+			this.$store.dispatch('getBasicConfig')
 			console.log(this.$store.state)
 		},
 		onShow: function() {
+			// this.$store.dispatch('getBasicConfig')
+			// console.log(this.$store.dispatch('getBasicConfig'))
 			console.log(222)
+			if(this.$store.state.roleType == 1){
+				uni.setTabBarItem({
+					index: 1,
+					text: '公司',
+					iconPath: 'static/image/company_nor.png',
+					selectedIconPath: 'static/image/company_hov.png'
+				})
+			}else{
+				uni.setTabBarItem({
+					index: 1,
+					text: '职位',
+					iconPath: 'static/image/post_nor.png',
+					selectedIconPath: 'static/image/post_hov.png'
+				})
+			}
 		},
 		onHide: function() {
 			console.log('App Hide')

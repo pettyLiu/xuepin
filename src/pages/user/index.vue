@@ -7,10 +7,6 @@
 				<view class="column">
 					<text class="nickName f_48" v-if="roleType == 1">{{info.userName}}</text>
 					<text class="nickName f_48" v-else>{{info.name}}</text>
-					<view class="column f_26 c_e4" v-if="roleType == 2">
-						<text>所属岗位：人事主管</text>
-						<text>所在公司：江西省赣州市赣州公司</text>
-					</view>	
 				</view>
 				<image class="avatar" :src="imgUrl + info.avatar" mode="" @click="uploadAvatar"></image>
 			</view>
@@ -25,6 +21,10 @@
 						<text>金币</text>
 					</view>
 				</view>
+				<view class="column f_26 c_e4" v-if="roleType == 2" @click="toCompanyRole">
+					<text>所属岗位：{{info.post}}</text>
+					<text>所在公司：{{info.enterprise}}</text>
+				</view>	
 				<text class="signOn globelColor f_24" @click="toNext('/pages/signOn')">去签到</text>
 			</view>		
 		</section>
@@ -75,6 +75,7 @@
 	import config from '../../lib/config'
 	import { mapState } from 'vuex'
 	import {api} from '../../lib/api'
+import { setTimeout } from 'timers';
 	export default{
 		data(){
 			return{
@@ -90,32 +91,46 @@
 			changeRole () {
 				const that = this
 				const role = this.$store.state.roleType
-				// that.$axios({
-				// 	url: 'api/user/changeRole',
-				// 	method: 'post',
-				// 	data: {
-				// 		type: role
-				// 	}
-				// }).then( res=> {
-				// 	if(res.data.type == 1){ // 个人切换企业
-				// 		if(res.data.enterpriseFlag){ // 填写了企业资料
-				// 			this.$store.commit('changeRoleType', role == 1 ? 2 : 1)
-				// 		}else{
-				// 			uni.navigateTo({
-				// 				url: '/pages/companySetting'
-				// 			})
-				// 		}
-				// 	}else if(res.data.type == 2){ // 企业切换个人
-				// 		if(res.data.enterpriseFlag){ // 填写了个人资料
-				// 			this.$store.commit('changeRoleType', role == 1 ? 2 : 1)
-				// 		}else{
-				// 			uni.navigateTo({
-				// 				url: '/page/basicInformation'
-				// 			})
-				// 		}
-				// 	}
-				// })
-				this.$store.commit('changeRoleType', role == 1 ? 2 : 1)			
+				that.$axios({
+					url: 'api/user/changeRole',
+					method: 'post',
+					data: {
+						type: role
+					}
+				}).then( res=> {
+					if(res.data.type == 1){ // 个人切换企业
+						if(res.data.enterpriseFlag){ // 填写了企业资料
+							this.$store.commit('changeRoleType', role == 1 ? 2 : 1)
+							setTimeout(function(){
+								uni.reLaunch({
+									url: '/pages/index/index'
+								})	
+							},300)
+						}else{
+							uni.navigateTo({ // 先去填写企业职务资料
+								url: '/pages/user/personalSetting?type=1'
+							})
+						}
+					}else if(res.data.type == 2){ // 企业切换个人
+						if(res.data.personalFlag){ // 填写了个人资料
+							this.$store.commit('changeRoleType', role == 1 ? 2 : 1)
+							setTimeout(function(){
+								uni.reLaunch({
+									url: '/pages/index/index'
+								})	
+							},300)
+						}else{
+							uni.navigateTo({
+								url: '/page/basicInformation'
+							})
+						}
+					}
+				})	
+			},
+			toCompanyRole () { // 个人账号设置
+				uni.navigateTo({
+					url: '/pages/user/personalSetting'
+				})
 			},
 			getUserInfo () {
 				const that = this
@@ -138,7 +153,6 @@
 							filePath: that.avatar,
 							name: 'fileUpload',
 							success: (uploadFileRes) => {
-								console.log(JSON.parse(uploadFileRes.data) );
 								that.info.avatar = config.imgUrl + JSON.parse(uploadFileRes.data).data
 								that.$axios({
 									url: 'api/user/ajaxEditUser',
@@ -147,7 +161,9 @@
 										avatar: JSON.parse(uploadFileRes.data).data
 									}
 								}).then(res => {
-									console.log(res)
+									if(res.code == 1){
+										uni.showToast({ title: '修改头像成功', icon: 'none' })
+									}
 								})
 							}
 						});
@@ -181,7 +197,6 @@
 		},
 		watch: {
 			roleType(){
-				console.log(api(1))
 				this.getUserInfo()
 			}
 		},

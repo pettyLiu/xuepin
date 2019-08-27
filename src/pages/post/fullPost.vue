@@ -6,7 +6,7 @@
 					<view class="title f_24 c_999 row just_btw">
 						<text>职位标题</text>
 					</view>
-					<input name="title" type="text" value=""  placeholder="请输入职位标题" 
+					<input name="title" type="text" :value="detail.title"  placeholder="请输入职位标题" 
 					placeholder-class="placeholder"/>
 				</view>
                 <view class="list" @click="showIntension">
@@ -60,8 +60,8 @@
 					<view class="title f_24 c_999 row just_btw">
 						<text>招聘人数</text>
 					</view>
-					<input name="recruiting_numbers" type="number" value=""  placeholder="请输入招聘人数" 
-					placeholder-class="placeholder"/>
+					<input name="recruiting_numbers" type="number" :value="detail.recruiting_numbers"  
+                    placeholder="请输入招聘人数" placeholder-class="placeholder"/>
 				</view>
                 <view class="list">
 					<view class="title f_24 c_999 row just_btw">
@@ -71,9 +71,9 @@
                         <label class="row checkLabel" v-for="(item, key, index) in basicConfig.job_benefits"
                         :key="index">
                             <view>
-                                <checkbox :value="item" :checked="item.checked" />
+                                <checkbox :value="item.name" :checked="item.checked" />
                             </view>
-                            <view>{{item}}</view>
+                            <view>{{item.name}}</view>
                         </label>
                     </checkbox-group>
 				</view>
@@ -89,28 +89,28 @@
 					<view class="title f_24 c_999 row just_btw">
 						<text>详细地址</text>
 					</view>
-					<input name="work_address" type="text" value=""  placeholder="请输入详细地址" 
+					<input name="work_address" type="text" :value="detail.work_address"  placeholder="请输入详细地址" 
 					placeholder-class="placeholder"/>
 				</view>             
                 <view class="list">
 					<view class="title f_24 c_999 row just_btw">
 						<text>联系人</text>
 					</view>
-					<input name="contact_name" type="text" value=""  placeholder="请输入联系人" 
+					<input name="contact_name" type="text" :value="detail.contact_name"  placeholder="请输入联系人" 
 					placeholder-class="placeholder"/>
 				</view>
                 <view class="list">
 					<view class="title f_24 c_999 row just_btw">
 						<text>联系电话</text>
 					</view>
-					<input name="contact_tel" type="text" value=""  placeholder="请输入联系电话" 
+					<input name="contact_tel" type="text" :value="detail.contact_tel"  placeholder="请输入联系电话" 
 					placeholder-class="placeholder"/>
 				</view>
                 <view class="list">
 					<view class="title f_24 c_999 row just_btw">
 						<text>联系邮箱</text>
 					</view>
-					<input name="contact_email" type="text" value=""  placeholder="请输入联系邮箱" 
+					<input name="contact_email" type="text" :value="detail.contact_email"  placeholder="请输入联系邮箱" 
 					placeholder-class="placeholder"/>
 				</view>
 				<button class="formBtn" formType="submit">保存</button>
@@ -132,19 +132,38 @@ export default {
             work_expIndex: 0,
             sexIndex: 0,
             tt: [[], [], []],
-            multiIndex: [],
+            multiIndex: [0,0,0],
             region: '',
             type: 1, // 1:新建，2：修改,
             welfare: [],
-            content: ''
+            content: '',
+            detail: {
+                title: '',
+                contact_name: '',
+                contact_tel: '',
+                recruiting_numbers: '',
+                work_address: '',
+                contact_email: ''
+            },
+            info: {}
         }
     },
-    onLoad () {
-        this.getProvinces()
+    onLoad (options) {
+        if(options.type){
+            this.type = 2
+            uni.setNavigationBarTitle({
+                title: '修改职位内容'
+            })
+            this.jobId = options.id
+            this.getPostDetail(options.id)
+        }else{
+            this.getProvinces()
+        }    
     },
     computed: {
         basicConfig: {
             get(){
+                console.log(this.$store.state.basicConfig.basicConfig)
                 return this.$store.state.basicConfig.basicConfig
             },
             set(val){
@@ -157,7 +176,7 @@ export default {
     },
 
     methods: {
-        formSubmit (e){
+        formSubmit (e) {
             var rule = [
                 {name:"title", checkType : "notnull", checkRule:"",  errorMsg:"请输入职位标题"},
                 {name:"recruiting_numbers", checkType : "notnull", checkRule:"",  errorMsg:"请输入招聘人数"},
@@ -168,7 +187,20 @@ export default {
             var formData = e.detail.value
             formData.category_id = this.jobIntension.length > 0 ? this.jobIntension[0].id : ''
             formData.welfare = JSON.stringify(this.welfare)
-            formData.content = this.content
+            formData.content = '121212'
+            formData.salary = this.salaryIndex + 1
+            formData.age = this.ageIndex + 1
+            formData.edu_level = this.edu_levelIndex + 1
+            formData.work_exp = this.work_expIndex + 1
+            formData.sex = this.sexIndex + 1
+            formData.job_type = 1
+            formData.CompanyNatrue = 1
+            formData.province_id = this.province_id
+            formData.city_id = this.city_id
+            formData.district_id = this.district_id
+            if(this.type == 2){
+                formData.jobId = this.jobId
+            }
             var checkRes = graceChecker.check(formData, rule)
             if (checkRes) {
                 const that = this
@@ -176,19 +208,66 @@ export default {
                     url: 'api/job/fullPost',
                     method: 'post',
                     data:{
-                        param: JSON.stringify(formData) 
+                        ...formData
                     }
                 }).then(res => {
-                    if(res.result){
-                        uni.showToast({ title: '成功新建职位', icon: 'none' })
+                    console.log(res)
+                    if(res.code == 1){
+                        const title = that.type == 2 ? '修改成功' : '成功新建职位'
+                        uni.showToast({ title: title, icon: 'none' })
                         setTimeout(function(){
-                            uni.navigateBack()
+                            uni.reLaunch({
+                                url: '/pages/company/index'
+                            })
                         }, 1000)
                     }
                 })
             }else{
                 uni.showToast({ title: graceChecker.error, icon: "none" })
             }
+        },
+        getPostDetail (id) {
+            const that = this
+            that.$axios({
+                url: 'api/job/fullPost',
+                data: {
+                    id: id
+                }
+            }).then(res => {
+                if(res.code == 1){
+                    const data = res.data
+                    that.salaryIndex = data.salary - 1
+                    that.ageIndex = data.age - 1
+                    that.edu_levelIndex = data.edu_level - 1
+                    that.work_expIndex = data.work_exp - 1
+                    that.salaryIndex = data.sex - 1
+                    that.detail = data
+                    that.region = data.province_name + '-' + data.city_name + '-' + data.district_name
+                    let expect_jobs = []
+                    expect_jobs.push({id: data.category_id, name: data.category_name})
+                    this.$store.commit('changeIntentsion', expect_jobs)
+                    if(that.editorCtx){
+                        that.editorCtx.setContents({
+                            html: that.content,
+                        })
+                    }
+                    that.info.province = data.province_name
+                    that.info.city = data.city_name
+                    that.info.district = data.district_name
+                    data.tags = JSON.parse(data.tags)
+                    if(data.tags){
+                        for(var i = 0; i < data.tags.length; i++){
+                            for(let j= 0; j<that.basicConfig.job_benefits.length; j++){
+                                if(data.tags[i] == that.basicConfig.job_benefits[j].name){
+                                    that.$set(that.basicConfig.job_benefits[j], 'checked', true)
+                                    break;
+                                }
+                            }
+                        }
+                    } 
+                    this.getProvinces()   
+                }
+            })
         },
         showIntension () { // 职位选择
             uni.navigateTo({
@@ -203,12 +282,12 @@ export default {
             }).then(function(res){
                 that.tt[0] = (res.data)
                 if(that.type == 1){
-                    that.multiIndex.push(0)
+                    that.multiIndex[0]= 0
                     that.province_id = res.data[0].id
                 }else{
                     for(let i = 0; i < res.data.length; i++){
                         if(res.data[i].name == that.info.province){
-                            that.multiIndex.push(i)
+                            that.multiIndex[0] = i
                             that.province_id = res.data[i].id
                             break
                         }
@@ -228,13 +307,13 @@ export default {
             }).then(function(res1){
                 that.tt.splice(1, 1, res1.data)
                 if(that.type == 1){
-                    that.multiIndex.push(0)
+                    that.multiIndex[1] = 0
                     that.city_id = res1.data[0].id
                     that.city_code = res1.data[0].code
                 }else{
                     for(let i = 0; i < res1.data.length; i++){
                         if(res1.data[i].name == that.info.city){
-                            that.multiIndex.push(i)
+                            that.multiIndex[1] = i
                             that.city_id = res1.data[i].id
                             that.city_code = res1.data[i].code
                             break
@@ -255,38 +334,44 @@ export default {
             }).then(function(res1){
                 that.tt.splice(2, 1, res1.data)
                 if(that.type == 1){
-                    that.multiIndex.push(0)
-                    that.code = res1.data[0].code
+                    that.multiIndex[2] = 0
+                    that.district_id = res1.data[0].id
                 }else{
                     for(let i = 0; i < res1.data.length; i++){
-                        if(res1.data[i].name == that.info.city){
-                            that.multiIndex.push(i)
-                            that.code = res1.data[i].code
+                        if(res1.data[i].name == that.info.district){
+                            that.multiIndex[2] = i
+                            that.district_id = res1.data[i].id
                             break
                         }
                     }
                 }
-                that.code = { code: that.tt[2][that.multiIndex[2]].code, name: that.tt[2][that.multiIndex[2]].name }
+                console.log(that.multiIndex)
+                // that.code = { code: that.tt[2][that.multiIndex[2]].code, name: that.tt[2][that.multiIndex[2]].name }
                 that.region = that.tt[0][that.multiIndex[0]].name + "-"+that.tt[1][that.multiIndex[1]].name + "-" + res1.data[that.multiIndex[2]].name
             })
         },
         regionChange(e) {
             var indexArray = e.detail.value
+            console.log(e)
             var region = ''
             var that = this
             indexArray.forEach(function(item, index){
+                console.log(that.tt[index].length)
                 if(that.tt[index].length > 0){
                     region += that.tt[index][item].name + '-'
                     console.log(index)
                     that.region_id = that.tt[index][item].id
                 }	
             })
+            console.log('ok here')
             this.province_id = that.tt[0][indexArray[0]].id
             this.city_id = that.tt[1][indexArray[1]].id
+            this.district_id = that.tt[2][indexArray[2]].id
             that.region = region.slice(0, region.length -1 )
             // that.code = { code: that.tt[2][indexArray[2]].code, name: that.tt[2][indexArray[2]].name }
         },
         change (e){
+            console.log(this.multiIndex)
             var id = 0
             var that = this
             if(e.detail.column == 0){
@@ -349,7 +434,7 @@ export default {
             this.welfare = values
             for (var i = 0, lenI = items.length; i < lenI; ++i) {
                 const item = items[i]
-                if(values.includes(item.value)){
+                if(values.includes(item.name)){
                     this.$set(item,'checked',true)
                 }else{
                     this.$set(item,'checked',false)
@@ -364,11 +449,17 @@ export default {
         onEditorReady () {
             uni.createSelectorQuery().select('#editor').context((res) => {
                 this.editorCtx = res.context
+                if(that.content){
+                    that.editorCtx.setContents({
+                        html: that.content,
+                    })
+                }	
             }).exec()
         },
         onBackPress() { // 返回时，重置store的期望职位
 			console.log('back')
-			this.$store.commit('resetIntentsion')
+            this.$store.commit('resetIntentsion')
+            this.$store.commit('resetJob_benefits')
 		},
     }
 }

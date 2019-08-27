@@ -122,9 +122,9 @@
 				"navigationBarTitleText": "企业",
 				"titleNView": {
 					"buttons": [ 
-						{ "text": "\ue60d","fontSrc": "/static/font/iconfont.ttf","fontSize":"22px","width":"32px"},
+						{ "text": "\ue60d","fontSrc": "/static/font/iconfont.ttf","fontSize":"24px","width":"32px"},
 						{ "text": "\ue651","fontSrc": "/static/font/iconfont.ttf","fontSize":"19px","width":"32px"},
-						{ "text": "\ue64d","fontSrc": "/static/font/iconfont.ttf","fontSize":"19px","width":"32px"}
+						{ "text": "\ue64d","fontSrc": "/static/font/iconfont.ttf","fontSize":"20px","width":"32px"}
 					]
 				}
 			}	
@@ -141,6 +141,12 @@
 				"navigationBarTitleText": "我的",
 				"titleNView":false,
 				"navigationBarTextStyle": "white"
+			}	
+		},
+		{
+			"path": "pages/user/personalSetting",
+			"style": {
+				"navigationBarTitleText": "个人信息"
 			}	
 		},
 		{
@@ -167,7 +173,6 @@
 				"navigationBarTitleText": "职位详情",
 				"titleNView": {
 					"buttons": [
-						{ "type": "share"},
 						{ "text": "\ue654","fontSrc": "/static/font/iconfont.ttf","fontSize":"24px","width":"32px"}
 					]
 				}
@@ -180,7 +185,6 @@
 				"app-plus": {
 					"titleNView": {
 						"buttons": [ 
-							{ "type": "share" },
 							{ "text": "\ue654","fontSrc": "/static/font/iconfont.ttf","fontSize":"24px","width":"32px"}
 						]
 					}

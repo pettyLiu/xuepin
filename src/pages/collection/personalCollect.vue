@@ -10,21 +10,22 @@
 			<block v-for="(it,i) of resumeCollection" :key="i">
 				<view class="uni-swipe-action__container" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd"
 				 @touchcancel="touchEnd" :style="{'transform':messageIndex == i ? transformX : 'translateX(0px)','-webkit-transform':messageIndex == i ? transformX : 'translateX(0px)'}" :data-index="i" :data-disabled="it.disabled">
-					<view class="uni-swipe-action__content" @click="toPostDetail">
+					<view class="uni-swipe-action__content" @click="toPostDetail(it.job_id)">
 						<view class="row just_btw indent">
-							<text class="title">技术总监</text>
-							<text class="salary">10k-20k/月</text>
+							<text class="title">{{it.jobName}}</text>
+							<text class="salary">{{it.salary}}</text>
 						</view>
 						<view class="txt row just_btw">
-							<text class="company"><i></i>章贡区<i></i>赣州公司</text>
-							<text class="date">6月15日</text>
+							<text class="company">{{it.enterpriseName}}</text>
+							<text class="date">6-15</text>
 						</view>			
 						<view class=" indent">
 							<view class="row tags">
-								<text class="tag">带薪休假</text>
-								<text class="tag">五险一金</text>
+								<text class="tag" v-for="item in it.tags" :key="item">{{item}}</text>
 							</view>
-							<text class="address"><text class="iconfont icon-weizhi"></text>章贡区</text>
+							<text class="address">
+							<text class="iconfont icon-weizhi"></text>
+							{{it.province}}{{it.city}}{{it.district}}</text>
 						</view>
 					</view>
 					<view class="uni-swipe-action__btn-group" :id="elId">
@@ -137,9 +138,9 @@
 					this.getCollectionList()
 				}	
 			},
-			toPostDetail () {
+			toPostDetail (id) {
 				uni.navigateTo({
-					url: '/pages/postDetail'
+					url: '/pages/postDetail?id=' + id
 				})
 			},
 			toCompanyDetail () {

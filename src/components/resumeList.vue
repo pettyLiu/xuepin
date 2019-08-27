@@ -1,15 +1,15 @@
 <template>
-	<view class="resumeLists">
-		<view class="resumeList row" @click="toResumeDetail(item.id)" v-for="(item, index) in list" :key="index">
+	<view class="resumeLists" v-if="list">
+		<view class="resumeList row" @click="toResumeDetail(type=='news'?item.resume_id:item.id)" v-for="(item, index) in list" :key="index">
 			<image class="resumeAvatar" :src="imgUrl + item.avatar"></image>
             <view class="flex1  f_22">
                 <view class="resumeTitle">
                     <text class="f_26 name">{{item.name}}</text>
                     <text class="f_20 c_666"><text class="borderRight">{{item.sex}}</text>{{item.age}}岁</text>
                 </view>
-                <text class="borderRight">5-10年</text>
-                <text class="borderRight">本科</text>
-                <text>图像处理</text>
+                <text class="borderRight">{{item.work_experience}}</text>
+                <text class="borderRight">{{item.edu_level}}</text>
+                <text>{{item.expect_jobs}}</text>
                 <view class="resumeVideo row just_btw ali_center f_24">
                     <view class="">
                         <text class="iconfont icon-video f_30"></text>
@@ -19,8 +19,8 @@
                 </view>
             </view>
             <view class="resumeFocu column center">
-                <text class="bold">设计师</text>
-                <text class="eb8">查看</text>
+                <text class="bold">{{item.expect_jobs}}</text>
+                <text class="eb8" v-if="type == 'news'">{{item.status}}</text>
             </view>          
 		</view>
 		<view class="nothing column center" v-if="list.length == 0">
@@ -42,9 +42,15 @@
 		methods:{
 			// 简历详情
 			toResumeDetail (id) {
-				uni.navigateTo({
-					url: '/pages/resumeDetail?id=' + id
-				})
+                if(this.type == 'news'){
+                    uni.navigateTo({
+                        url: '/pages/resumeDetail?id=' + id + '&way=1'
+                    })
+                }else{
+                    uni.navigateTo({
+                        url: '/pages/resumeDetail?id=' + id
+                    })
+                }	
 			},
 			// 公司详情
 			toCompanyDetail (id) {
@@ -60,13 +66,6 @@
 					})
 				// }
 			}
-		},
-		mounted(){
-			console.log(7777)
-		},
-		computed:{
-
-
 		}
 	}
 </script>

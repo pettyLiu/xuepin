@@ -8,6 +8,10 @@
 			<view class="areaItem" v-for="(item, index) in area" :key="index" @click="changeTwo(index, item.id)" 
 			:class="{active: areaId == item.id}">{{item.name}}</view>
 		</scroll-view>
+		<scroll-view scroll-y="true" class="areaRight">
+			<view class="areaItem" v-for="(item, index) in last" :key="item.id" 
+			:class="{active: lastId == item.id}" @click="chooseIntension(item, item.id, index)">{{item.name}}</view>
+		</scroll-view>
 		<view class="btn row ali_center just_btw">
 			<text class="reset" @click="reset">重置</text>
 			<text class="comfirm" @click="confirm">确定</text>
@@ -26,14 +30,26 @@ import { Stream } from 'stream';
 				topCategory: '',
 				activeCategory: 0,
 				categoryId: '',
-				areaId: ''
+				areaId: '',
+				last: '',
+				lastId: ''
 			}
 		},
 		props: {
 			alias: String
 		},
 		mounted() {
-			
+			const that = this
+			const category = that.$store.state.category
+			if(category){
+				if (that.alias == 'full_rec'&& category.alias=='full_rec') { // 全职
+					that.categoryId = category.grandParant_id
+					that.areaId = category.parent_id
+					that.lastId = category.id
+				}else{ // 兼职
+					that.categoryId = category.id
+				}
+			}
 			this.getCategory()
 		},
 		methods:{
@@ -48,22 +64,46 @@ import { Stream } from 'stream';
 					}
 				}).then(res => {
 					that.topCategory = res.data
-					const category = that.$store.state.category
-					if(category){
-						if (that.alias == 'full_rec'&& category.alias=='full_rec') { // 全职
-							that.categoryId = category.parent_id
-							that.areaId = category.id
-						}else{ // 兼职
-							that.areaId = category.id
-						}
+					const category = that.$store.state.category	
+					if(category && that.alias == 'full_rec'){
+						that.showSecond(that.categoryId)
 					}else{
 						that.categoryId = res.data[0].id
-					}	
-					that.showNext(0, that.categoryId)
+						if(that.alias == 'full_rec'){
+							that.showNext(0, that.categoryId)
+						}
+						
+					}
+					
+				})
+			},
+			showSecond(id){
+				const that = this
+				that.$axios({
+					url: 'api/base/twoJob',
+					data: {
+						id: id
+					}
+				}).then(res => {
+					that.area = res.data
+					const category = that.$store.state.category
+					that.showThree(that.areaId)
+				})
+			},
+			showThree(id){
+				const that = this
+				that.$axios({
+					url: 'api/base/twoJob',
+					data: {
+						id: id
+					}
+				}).then(res => {
+					that.last = res.data
 				})
 			},
 			showNext (index, id) {
 				const that = this
+				this.categoryId = id
 				that.activeArea = 0
 				that.$axios({
 					url: 'api/base/twoJob',
@@ -73,25 +113,50 @@ import { Stream } from 'stream';
 				}).then(res => {
 					that.area = res.data
 					const category = that.$store.state.category
-					if(!category && that.alias == 'full_rec'){
+					that.areaId = res.data[0].id
+					if(that.areaId === '' && that.alias == 'full_rec'){
 						that.areaId = res.data[0].id
-					}	
+					}else{
+
+					}
+					this.showLast(this.areaId)
 				})
 				this.activeCategory = index
-				this.categoryId = id	
+				
+			},
+			showLast (id) { // 第三级
+				const that = this
+				that.$axios({
+					url: 'api/base/twoJob',
+					data: {
+						id: id
+					}
+				}).then(res => {
+					that.last = res.data
+					// if(that.lastId === ''){
+					// 	that.lastId = res.data[0].id
+					// }
+				})
+			},
+			chooseIntension (item, id , index){
+				this.lastId = id
+				this.activeLast = index
 			},
 			changeTwo (index, id) {
 				this.activeArea = index
 				this.areaId = id
+				this.showLast(id)
 			},
 			reset () {
 				this.activeArea = 0
-				this.areaId = ''
+				// this.areaId = ''
+				this.lastId = ''
 				this.$store.commit('changeCategory', '')
 			},
 			confirm () {
 				if(this.area != ''){
-					this.category = this.area[this.activeArea]
+					this.category = this.last[this.activeLast]
+					this.category.grandParant_id = this.categoryId
 				}else{
 					this.category = this.topCategory[this.activeCategory]
 				}

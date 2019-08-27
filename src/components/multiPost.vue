@@ -70,6 +70,7 @@
 				}).then(res => {
 					that.topCategory = res.data
 					const category = that.$store.state.category
+					console.log(category)
 					if(category){
 						if (that.alias == 'full_rec'&& category.alias=='full_rec') { // 全职
 							that.categoryId = category.parent_id

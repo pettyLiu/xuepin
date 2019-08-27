@@ -187,7 +187,7 @@
 		},
 		onNavigationBarButtonTap (val){	
 			const that = this	
-			if(val.index == 0){
+			if(val.index == 1){
 				this.showMask = true
 			}else{
 				var webView = this.$mp.page.$getAppWebview()

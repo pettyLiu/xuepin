@@ -1,10 +1,12 @@
 export function getProvider(){ // 支付
+	var providerList = [];
 	uni.getProvider({
 	    service: "payment",
 	    success: (e) => {
 	        console.log("payment success:" + JSON.stringify(e));
-	        let providerList = [];
+	        
 	        e.provider.map((value) => {
+				console.log(value)
 	            switch (value) {
 	                case 'alipay':
 	                    providerList.push({
@@ -21,13 +23,19 @@ export function getProvider(){ // 支付
 	                default:
 	                    break;
 	            }
-	        })
-	        return providerList;
+			})
+			console.log(providerList)
+	        
 	    },
 	    fail: (e) => {
 	        console.log("获取支付通道失败：", e);
 	    }
 	});
+	console.log(providerList)
+	setTimeout(function(){
+		return providerList;
+	},3000)
+	
 }
 export function getShareProvider(){ // 分享
 	uni.getProvider({

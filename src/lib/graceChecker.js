@@ -91,6 +91,7 @@ module.exports = {
 					if(data[rule[i].name] == null || data[rule[i].name].length < 1){this.error = rule[i].errorMsg; return false;}
 				break;
 				case 'notcheck':
+				console.log(data[rule[i].name].Fri)
 					var tt = data[rule[i].name].Fri.concat(data[rule[i].name].Mon).concat(data[rule[i].name].Sat).concat(data[rule[i].name].Sun).concat(data[rule[i].name].Thu).concat(data[rule[i].name].Tue).concat(data[rule[i].name].Wed)
 					this.error = rule[i].errorMsg
 					var ttt = false

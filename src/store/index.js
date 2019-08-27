@@ -76,7 +76,7 @@ const store = new Vuex.Store({
 					selectedIconPath: 'static/image/post_hov.png'
 				})
 			}
-			// uni.setStorageSync('roleType', payload)
+			uni.setStorageSync('roleType', payload)
 		}
 	},
 	actions: {
