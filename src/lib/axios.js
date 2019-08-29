@@ -48,7 +48,7 @@ export default function (options) {
 						url: '/pages/basicInformation'
 					})
 				}, 1500)
-			} else if(res.data.data && res.data.data.type == 0 && res.data.data.userinfo.email == null){
+			} else if(res.data.data && res.data.data.type == 0 && res.data.data.userinfo.start_work_time == null){
                 store.commit('loginIn', { 
                     token : res.data.data.token, 
                     Authorization: res.data.data.Authorization,
@@ -58,7 +58,6 @@ export default function (options) {
 					url: '/pages/basicInformation'
 				})
             } else{
-                console.log(1111)
 				resolve(res.data)
 			}
         }, error => {

@@ -12,9 +12,11 @@
 				<text class="date">{{item.updated_at}}</text>
 			</view>			
 			<view class="column" >
-				<view class="row tags">
+				<view class="row tags" v-if="item.job_type == 1">
 					<text class="tag" v-for="tag in item.tags" :key="tag">{{tag}}</text>
+					
 				</view>
+				<text v-if="item.job_type == 2">{{item.validity}}</text>
 				<text v-if="type == 'index'" class="address"><text class="iconfont icon-weizhi"></text>{{item.district}}</text>
 				<view v-if="type == 'news'" class="newsTip row just_btw" @click.stop="toInterviewDetail(item)">
 					<text class="time">6月15日 12:00</text>
@@ -88,7 +90,7 @@
 				font-size: 30upx;
 			}
 			.tags{
-				margin-bottom: 16upx;
+				margin-bottom: 8upx;
 				flex-wrap: wrap;
 				.tag{
 					padding: 6upx 10upx;

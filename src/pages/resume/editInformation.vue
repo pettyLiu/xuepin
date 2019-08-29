@@ -339,6 +339,10 @@
 			// 	return true
 			// }
 		},
+		onShow(){
+			console.log(this.userInfo)
+			this.info = this.userInfo
+		},
 		onLoad() {
 			const that = this
 			this.$axios({

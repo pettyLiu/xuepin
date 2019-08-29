@@ -17,7 +17,7 @@
 						</view>
 						<view class="txt row just_btw">
 							<text class="company">{{it.enterpriseName}}</text>
-							<text class="date">6-15</text>
+							<text class="date">{{it.updated_at}}</text>
 						</view>			
 						<view class=" indent">
 							<view class="row tags">
@@ -41,11 +41,11 @@
 				<text>暂无收藏的职位</text>
 			</view>
 		</view>
-		<view class="message-list uni-swipe-action"  v-if="tabs==2">
+		<view class="message-list uni-swipe-action"  v-if="tabs==2&&companyCollection.length">
 			<block v-for="(it,i) of companyCollection" :key="i">
 				<view class="uni-swipe-action__container" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd"
 				 @touchcancel="touchEnd" :style="{'transform':messageIndex == i ? transformX : 'translateX(0px)','-webkit-transform':messageIndex == i ? transformX : 'translateX(0px)'}" :data-index="i" :data-disabled="it.disabled">
-					<view class="uni-swipe-action__content" @click="toCompanyDetail">
+					<view class="uni-swipe-action__content" @click="toCompanyDetail(it.id)">
 						<view class="companyTxt row ali_center">
 							<image class="companyAvatar" :src="imgUrl + it.logo" mode=""></image>
 							<view class="column just_btw">
@@ -100,7 +100,8 @@
 				showLoadMore: false,
 				currentPage: 1,
 				total: 1,
-				imgUrl: config.imgUrl
+				imgUrl: config.imgUrl,
+				getSizes: false
 			};
 		},
 		methods:{
@@ -123,6 +124,13 @@
 						}
 						that.showLoadMore = false
 						that.currentPage += that.currentPage
+						if(!that.getSizes){
+							setTimeout(() => {
+								that.getSize()
+							}, 500);
+							
+							that.getSizes = true
+						}
 					}
 				})
 			},
@@ -143,44 +151,47 @@
 					url: '/pages/postDetail?id=' + id
 				})
 			},
-			toCompanyDetail () {
+			toCompanyDetail (id) {
 				uni.navigateTo({
-					url: '/pages/companyDetail'
+					url: '/pages/companyDetail?id=' + id
 				})
 			},
 			getSize() {
+				console.log(uni.createSelectorQuery().in(this).select(`#${this.elId}`))
 				uni.createSelectorQuery().in(this).select(`#${this.elId}`).boundingClientRect().exec((ret) => {
+					console.log(ret)
 					this.btnGroupWidth = ret[0].width;
 				});
 			},
 			bindClickBtn(item, index) {
 				const that = this
 				this.messageIndex = -1;
-				if(this.tabs == 1){
-					this.resumeCollection.splice(index, 1)
+				if(this.tabs == 1){	
 					that.$axios({
 						url: 'api/user/cancelCollectJob',
 						method: 'post',
 						data: {
-							id: that.resumeCollection[index].id
+							id: that.resumeCollection[index].job_id
 						}
 					}).then(res =>{
 						if(res.code == 1){
-							uni.showToast('取消成功')
+							this.resumeCollection.splice(index, 1)
+							uni.showToast({ title: res.msg, icon: 'none' })
 						}
 					})
 					console.log('删除职位收藏第' + index + '项')
 				}else if(this.tabs == 2){
-					this.companyCollection.splice(index, 1)
+					
 					that.$axios({
 						url: 'api/user/cancelCollectEnt',
 						method: 'post',
 						data: {
-							id: that.companyCollection[index].id
+							id: that.companyCollection[index].enterprise_id
 						}
 					}).then(res =>{
 						if(res.code == 1){
-							uni.showToast('取消成功')
+							this.companyCollection.splice(index, 1)
+							uni.showToast({ title: res.msg, icon: 'none' })
 						}
 					})
 					console.log('删除企业收藏第' + index + '项')
@@ -252,16 +263,6 @@
 			this.startY = 0
 			this.btnGroupWidth = 0
 			this.isMoving = false
-		},
-		mounted() {
-			// this.getSize()
-		},
-		onReady() {
-			console.log(this.companyCollection)
-			console.log(this.resumeCollection)
-			if((this.companyCollection.length > 0) && (this.resumeCollection.length > 0)){
-				this.getSize()
-			}
 		},
 		onLoad() {
 			var that = this

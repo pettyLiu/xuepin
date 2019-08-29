@@ -107,9 +107,9 @@
 					// #ifdef APP-PLUS
 					var webView = that.$mp.page.$getAppWebview()
 					if(that.collect){ // 更换收藏图标
-						webView.setTitleNViewButtonStyle(1, {  text: '\ue657' })
+						webView.setTitleNViewButtonStyle(0, {  text: '\ue657' })
 					}else{
-						webView.setTitleNViewButtonStyle(1, {  text: '\ue654' })
+						webView.setTitleNViewButtonStyle(0, {  text: '\ue654' })
 					}
 					// #endif
 					let address = res.data.enterprise.addr_code.split(',')
@@ -191,13 +191,10 @@
 				this.showMask = true
 			}else{
 				var webView = this.$mp.page.$getAppWebview()
-				this.collect = !this.collect
 				var url = ''
-				if(this.collect){ // 更换收藏图标
-					webView.setTitleNViewButtonStyle(1, {  text: '\ue657' })
+				if(!this.collect){ // 更换收藏图标
 					url = 'api/user/collectEnt'
 				}else{
-					webView.setTitleNViewButtonStyle(1, {  text: '\ue654' })
 					url = 'api/user/cancelCollectEnt'
 				}
 				that.$axios({
@@ -208,6 +205,12 @@
 					}
 				}).then(res => {
 					if(res.code == 1){
+						this.collect = !this.collect
+						if(this.collect){ // 更换收藏图标
+							webView.setTitleNViewButtonStyle(0, {  text: '\ue657' })
+						}else{
+							webView.setTitleNViewButtonStyle(0, {  text: '\ue654' })
+						}
 						uni.showToast({ title: that.collect ? '收藏成功' : '取消收藏', icon: "none" })
 					}
 				})	
@@ -216,6 +219,7 @@
 		onLoad(options) {
 			var that = this
 			that.id = options.id
+			console.log(options)
 			that.getCompanyInfo()
 			uni.getSystemInfo({
 			    success: function (res) {

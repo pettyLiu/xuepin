@@ -86,7 +86,7 @@
 		name: 'interviewDetail',
 		data() {
 			return {
-				status: 1,
+				status: -1,
 				info: '',
 				enterprise: '',
 				job: '',

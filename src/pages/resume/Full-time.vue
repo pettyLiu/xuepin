@@ -29,7 +29,8 @@
 							 {{detail.salary}}
 							<text class="iconfont icon-youjiantou"></text>
 						</text>
-						<text class="f_22 c_999 address" v-for="item in detail.desired_area" :key="item.code">{{item.name}}</text>
+						<text class="f_22 c_999 address" v-for="(item, index) in detail.desired_area"
+						 :key="item.code" v-if="index == 0">{{item.name}}</text>
 					</view>
 					<text class="btn" @click="toNext('/pages/resume/jobIntension')" v-else>添加求职意向</text>
 				</view>	
@@ -84,12 +85,14 @@
 				</view>	
 			</view>
 		</view>
+		<!-- <web-view :webview-styles="webviewStyles" src="/hybrid/html/local.html"></web-view> -->
 	</view>
 </template>
 
 <script>
 	import { mapState } from 'vuex'
 	import config from '../../lib/config'
+	var wv;//计划创建的webview
 import { setTimeout } from 'timers';
 	export default {
 		name: 'Full-time',
@@ -97,7 +100,13 @@ import { setTimeout } from 'timers';
 			return {
 				video: '',
 				detail: '',
-				imgUrl: config.imgUrl
+				imgUrl: config.imgUrl,
+				webviewStyles: {
+                    progress: {
+						color: '#FF3333',
+						background: '#fff'
+                    }
+                }
 			};
 		},
 		methods:{
@@ -252,12 +261,11 @@ import { setTimeout } from 'timers';
 					}
 				}).then( res => {
 					uni.showToast({ title: '设置成功' })
-					checked = true
+					that.checked = true
 				})
 			}
 		},
 		onShow(){
-			console.log('onshow')
 			this.getResumeDetail()
 		},
 		onLoad(options) {
@@ -266,9 +274,21 @@ import { setTimeout } from 'timers';
 			this.checked = options.checked
 			console.log(options)
 			this.getResumeDetail()
-			uni.showModal({
-				content: this.userInfo.salary
-			})
+			// #ifdef APP-PLUS
+
+			// wv = plus.webview.create("","custom-webview",{
+			// 	plusrequire:"none", //禁止远程网页使用plus的API，有些使用mui制作的网页可能会监听plus.key，造成关闭页面混乱，可以通过这种方式禁止
+			// 	top:uni.getSystemInfoSync().statusBarHeight+44 //放置在titleNView下方。如果还想在webview上方加个地址栏的什么的，可以继续降低TOP值
+			// })
+			// wv.loadURL("https://arw.dev.intelgice.com/resume/fullresume")
+			// var currentWebview = this.$mp.page.$getAppWebview() //获取当前页面的webview对象
+			// currentWebview.append(wv);//一定要append到当前的页面里！！！才能跟随当前页面一起做动画，一起关闭
+			// setTimeout(function() {
+			// 	console.log(wv.getStyle())
+			// 	wv.setStyle({ top:150, height:400 })
+			// }, 1000);//如果是首页的onload调用时需要延时一下，二级页面无需延时，可直接获取
+			// #endif
+			
 		},
 		onBackPress(e){
 			

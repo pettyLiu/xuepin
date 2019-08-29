@@ -122,6 +122,7 @@
 			getNewsList () {
 				const that = this
 				console.log(this.status)
+				
 				const data = this.roleType == 1 ? { page: that.currentPage, status: that.status} : { page: that.currentPage, messageId: that.messageId}
 				that.$axios({  
 					url: api().message_data, 

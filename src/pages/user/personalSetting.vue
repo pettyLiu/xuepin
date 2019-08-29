@@ -7,33 +7,33 @@
 						<text>头像</text>
 					</view>
 					<view class="listImgs" @click="uploadImg()">
-                        <text class="f_72 iconfont icon-tianjia globelColor" v-if="avatar==''"></text>
-                        <img class="listImg" :src="imgUrl + avatar" alt="" v-else>
+                        <text class="f_72 iconfont icon-tianjia globelColor" v-if="info.avatar==''"></text>
+                        <img class="listImg" :src="imgUrl + info.avatar" alt="" v-else>
                     </view>
 				</view>				
 				<view class="list">
 					<view class="title f_24 c_999 row just_btw">
 						<text>姓名</text>
 					</view>
-					<input name="true_name" type="text" :value="true_name"  placeholder="请输入您的姓名" 
+					<input name="true_name" type="text" :value="info.name"  placeholder="请输入您的姓名" 
 					placeholder-class="placeholder"/>
 				</view> 
                 <view class="list">
 					<view class="title f_24 c_999 row just_btw">
 						<text>所在公司</text>
 					</view>
-					<input name="enterpriseName" type="text" :value="enterpriseName"  placeholder="请输入所在公司" 
+					<input name="enterpriseName" type="text" :value="info.enterprise_name"  placeholder="请输入所在公司" 
 					placeholder-class="placeholder"/>
 				</view>
                 <view class="list">
 					<view class="title f_24 c_999 row just_btw">
 						<text>所任职务</text>
 					</view>
-					<input name="post" type="text" :value="post"  placeholder="请输入所任职务" 
+					<input name="post" type="text" :value="info.post"  placeholder="请输入所任职务" 
 					placeholder-class="placeholder"/>
 				</view>
                 
-				<button class="formBtn" formType="submit" v-if="type == 1">保存</button>
+				<button class="formBtn" formType="submit">保存</button>
 			</form>
 		</view>
     </view>
@@ -49,10 +49,7 @@
 			return {
 				avatar: '',
                 imgUrl: config.imgUrl,
-                enterpriseName: '',
-                post: '',
-                avatar: '',
-                true_name: '',
+                info: {},
                 type: '', // 从哪来，1为从切换企业角色来，其他为创建企业角色后修改信息，不传type，应默认''
 			};
 		},
@@ -99,11 +96,11 @@
 				const that = this
 				that.$axios({
 					url: 'api/user/EnterPriseUserEdit',
-					method: 'post'
+					method: 'get'
 				}).then(res => {
                     console.log(res)
 					if(res.code == 1){							
-						
+						that.info = res.data
 					}
 				})
 			},

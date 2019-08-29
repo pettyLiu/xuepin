@@ -59,6 +59,9 @@
 				set(val){
 					this.$store.state.city
 				}
+			},
+			roleType () {
+				return this.$store.state.roleType
 			}
 		},		
 		methods:{
@@ -78,8 +81,9 @@
 				this.activeDots = e.detail.current
 			},
 			focusOn () { // 点击搜索框时
+				const type = this.roleType == 1 ? 1 : 3
 				uni.navigateTo({
-					url:'../search/index?type=1'
+					url:'../search/index?type=' + type
 				})
 			},
 			toChooseAddress () {

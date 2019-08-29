@@ -15,7 +15,7 @@
 			<text class="title">职位信息</text>
 			<view class="postDescribe">
 				<rich-text :nodes="detail.content"></rich-text>
-			</view>
+			</view>	
 		</view>
 		<view class="footer">
 			<text class="title">公司信息</text>
@@ -83,9 +83,9 @@
 					// #ifdef APP-PLUS
 					var webView = that.$mp.page.$getAppWebview()
 					if(that.collect){ // 更换收藏图标
-						webView.setTitleNViewButtonStyle(1, {  text: '\ue657' })
+						webView.setTitleNViewButtonStyle(0, {  text: '\ue657' })
 					}else{
-						webView.setTitleNViewButtonStyle(1, {  text: '\ue654' })
+						webView.setTitleNViewButtonStyle(0, {  text: '\ue654' })
 					}
 					// #endif
 					const address = res.data.addr_code.split(',')
@@ -135,9 +135,11 @@
 						target_user: that.detail.ent_uid
 					}
 				}).then(res => {
-					if(res.code == 1){
-						uni.showToast({ title: '简历投递成功', icon: "none" })
+					if(res.result){
+						uni.showToast({ title: res.msg, icon: "none" })
+						return
 					}
+					uni.showToast({ title: res.msg, icon: "none" })
 				})
 			}
 		},
@@ -156,17 +158,12 @@
 				console.log('点击了分享')
 			}else{
 				console.log('点击了收藏')
-				var webView = this.$mp.page.$getAppWebview()
-				this.collect = !this.collect
 				var url = ''
-				uni.showToast({ title: that.collect ? '收藏成功' : '取消收藏', icon: "none" })
-				if(this.collect){ // 更换收藏图标
-					webView.setTitleNViewButtonStyle(1, {  text: '\ue657' })
+				if(!this.collect){ // 更换收藏图标
 					url = 'api/user/collectJob'
 				}else{
 					url = 'api/user/cancelCollectJob'
-					webView.setTitleNViewButtonStyle(1, {  text: '\ue654' })
-				}
+				}			
 				that.$axios({
 					url: url,
 					method: 'post',
@@ -174,8 +171,14 @@
 						id: that.id
 					}
 				}).then(res => {
-					console
-					if(res.code == 1){			
+					if(res.code == 1){
+						var webView = this.$mp.page.$getAppWebview()
+						this.collect = !this.collect
+						if(this.collect){ // 更换收藏图标
+							webView.setTitleNViewButtonStyle(0, {  text: '\ue657' })
+						}else{
+							webView.setTitleNViewButtonStyle(0, {  text: '\ue654' })
+						}		
 						uni.showToast({ title: that.collect ? '收藏成功' : '取消收藏', icon: "none" })
 					}
 				})	

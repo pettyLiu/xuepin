@@ -36,8 +36,8 @@
 			</view>
 			<view class="column just_arw" v-if="roleType == 2">
 				<text class="f_36"><text class="f_46">70%</text>的求职者会查看主页</text>
-				<text class="f_28">剩余2步完成</text>
-				<text class="btn" @click="toNext('/pages/resume/index')">立即完善</text>
+				<text class="f_28">剩余{{info.count}}步完成</text>
+				<text class="btn" @click="toNext('/pages/companySetting')" >立即完善</text>
 			</view>
 			<!-- <canvas class="degree" canvas-id="degree"></canvas> -->
 		</section>
@@ -62,7 +62,7 @@
 				<image class="icon" src="/static/icon/qiehuangshe_icon@2x.png" mode=""></image>我的收藏<text class="iconfont icon-youjiantou"></text>
 			</view>
 			<view class="list" @click="changeRole">
-				<image class="icon" src="/static/icon/qiehuangshe_icon@2x.png" mode=""></image>切换为招聘者<text class="iconfont icon-youjiantou"></text>
+				<image class="icon" src="/static/icon/qiehuangshe_icon@2x.png" mode=""></image>{{tip}}<text class="iconfont icon-youjiantou"></text>
 			</view>
 			<view class="list" @click="toNext('/pages/setting/index')">
 				<image class="icon" src="/static/icon/shezhi_icon@2x.png" mode=""></image>设置<text class="iconfont icon-youjiantou"></text>
@@ -75,13 +75,13 @@
 	import config from '../../lib/config'
 	import { mapState } from 'vuex'
 	import {api} from '../../lib/api'
-import { setTimeout } from 'timers';
 	export default{
 		data(){
 			return{
 				avatar: '../../static/icon/moren.png',
 				info: {},
-				imgUrl: config.imgUrl
+				imgUrl: config.imgUrl,
+				tip: '切换为招聘者'
 			}
 		},
 		components:{
@@ -202,6 +202,7 @@ import { setTimeout } from 'timers';
 		},
 		onLoad () {
 			this.getUserInfo()
+			this.tip = this.roleType == 1 ? '切换为招聘者' : '切换为求职者'	
 		},
 		onShow () {
 			this.getUserInfo()

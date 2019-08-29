@@ -4,7 +4,7 @@
 		<section class="personal-index">		
 			<pageTop :istop="istop"></pageTop><!-- 轮播图 -->
 			<view class="modules row just_btw" v-if="!istop && roleType == 1" ><!-- 快捷搜索 -->
-				<view class="module column center"  v-for="(item, index) in module" :key="index" @click="toNext(item.text)">
+				<view class="module column center"  v-for="(item, index) in module" :key="index" @click="toNext(item.text, index + 1)">
 					<image :src="item.img" mode=""></image>
 					<text>{{item.text}}</text>
 				</view>
@@ -303,9 +303,9 @@
 					this.getPostList()
 				}	
 			},
-			toNext (title) {
+			toNext (title, type) {
 				uni.navigateTo({
-					url: '/pages/search/moduleSearch?title=' + title
+					url: '/pages/search/moduleSearch?title=' + title + '&type=' + type
 				})
 			}
 		},

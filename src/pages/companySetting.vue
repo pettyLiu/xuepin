@@ -121,7 +121,7 @@ import { setTimeout } from 'timers';
                 business_license_img: '', // 营业执照
 				avatar: '',
 				tt: [[], [], []],
-				multiIndex: [],
+				multiIndex: [0,0,0],
 				region: '',
 				addr: {},
 				contact_name: '',
@@ -210,9 +210,9 @@ import { setTimeout } from 'timers';
 						console.log(datas)		
 						that.type = 2
 						var info = {}
-						info.province = '河北省'
+						info.province = datas.province_name
 						info.city = datas.city_name
-						info.district = '长安区'
+						info.district = datas.district_name
 						that.info = info
 						that.companyName = datas.name
 						that.ent_scaleIndex = datas.scale - 1
@@ -349,19 +349,18 @@ import { setTimeout } from 'timers';
 				}).then(function(res){
 					that.tt[0] = (res.data)
 					if(that.type == 1){
-						that.multiIndex.push(0)
+						that.multiIndex[0] = 0
 						that.province_id = res.data[0].id
 					}else{
 						console.log(that.type)
 						for(let i = 0; i < res.data.length; i++){
 							if(res.data[i].name == that.info.province){
-								that.multiIndex.push(i)
+								that.multiIndex[0] = i
 								that.province_id = res.data[i].id
 								break
 							}
 						}
 					}
-					console.log(that.province_id)
 					that.getCity()	
 				})
 			},
@@ -376,13 +375,13 @@ import { setTimeout } from 'timers';
 				}).then(function(res1){
 					that.tt.splice(1, 1, res1.data)
 					if(that.type == 1){
-						that.multiIndex.push(0)
+						that.multiIndex[1] = 0
 						that.city_id = res1.data[0].id
 					}else{
 						for(let i = 0; i < res1.data.length; i++){
 							if(res1.data[i].name == that.info.city){
 								console.log(1212)
-								that.multiIndex.push(i)
+								that.multiIndex[1] = i
 								that.city_id = res1.data[i].id
 								break
 							}
@@ -402,12 +401,12 @@ import { setTimeout } from 'timers';
 				}).then(function(res1){
 					that.tt.splice(2, 1, res1.data)
 					if(that.type == 1){
-						that.multiIndex.push(0)
+						that.multiIndex[2] = 0
 						that.district_id = res1.data[0].id
 					}else{
 						for(let i = 0; i < res1.data.length; i++){
 							if(res1.data[i].name == that.info.district){
-								that.multiIndex.push(i)
+								that.multiIndex[2] = i
 								that.district_id = res1.data[i].id
 								break
 							}
@@ -428,10 +427,12 @@ import { setTimeout } from 'timers';
 				})
 				this.province_id = that.tt[0][indexArray[0]].id
 				this.city_id = that.tt[1][indexArray[1]].id
+				this.district_id = that.tt[2][indexArray[2]].id
 				that.region = region.slice(0, region.length -1 )
 				that.code = { code: that.tt[2][indexArray[2]].code, name: that.tt[2][indexArray[2]].name }
 			},
 			change (e){
+				console.log(this.multiIndex)
 				var id = 0
 				var that = this
 				if(e.detail.column == 0){

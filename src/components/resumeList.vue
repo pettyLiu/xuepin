@@ -1,6 +1,7 @@
 <template>
 	<view class="resumeLists" v-if="list">
-		<view class="resumeList row" @click="toResumeDetail(type=='news'?item.resume_id:item.id)" v-for="(item, index) in list" :key="index">
+		<view class="resumeList row"  v-for="(item, index) in list" :key="index"
+        @click="toResumeDetail(type=='news'?item.resume_id:item.id, item.category_id, type=='news'?item.job_id:'')">
 			<image class="resumeAvatar" :src="imgUrl + item.avatar"></image>
             <view class="flex1  f_22">
                 <view class="resumeTitle">
@@ -41,14 +42,15 @@
 		props:['list', 'type'],
 		methods:{
 			// 简历详情
-			toResumeDetail (id) {
+			toResumeDetail (id, category_id, job_id) {
                 if(this.type == 'news'){
                     uni.navigateTo({
-                        url: '/pages/resumeDetail?id=' + id + '&way=1'
+                        url: '/pages/resumeDetail?id=' + id + '&way=1' + '&job_id=' + job_id
                     })
                 }else{
+                    console.log(category_id)
                     uni.navigateTo({
-                        url: '/pages/resumeDetail?id=' + id
+                        url: '/pages/resumeDetail?id=' + id + '&type='+ category_id
                     })
                 }	
 			},

@@ -159,3 +159,48 @@
 	text-align: center;
 	display: block
 }
+.resumeLists{
+	.resumeList{
+		margin-bottom: @g_bottom;
+		background: white;
+		padding: 22upx @g_margin 10upx;
+		position: relative;
+		.resumeAvatar{
+			height: 86upx;
+			width: 86upx;
+			border-radius: 50%;
+			margin-right: 26upx;
+		}
+		.resumeTitle{
+			margin-bottom: 20upx;
+			.name{
+				padding-right: 48upx;
+			}   
+		}
+		.borderRight{
+			padding-right: 16upx;
+			border-right: 1px solid #dedede;
+			margin-right: 16upx;
+		}
+		.resumeVideo{
+			margin-top: 16upx;
+			border-top: 1px solid #dedede;
+			padding: 22upx 0 12upx
+		}
+		.resumeFocu{
+			position: absolute;
+			top: 22upx;
+			right: @g_margin;
+			line-height: 32upx;
+		}
+	}
+	.flex1{
+        flex: 1
+    }
+    .icon-video{
+        margin-right: 20upx;
+    }
+    .eb8{
+        color: #EB8557
+    }
+}

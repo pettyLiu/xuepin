@@ -47,6 +47,31 @@
 					</view>
 				</view>
 			</view>
+			<view class="resumeLists"  v-if="type == 3">
+				<view class="resumeList row" @click="toResumeDetail(item.id, item.category_id)" 
+				v-for="(item, index) in lists" :key="index">
+					<image class="resumeAvatar" :src="url + item.avatar"></image>
+					<view class="flex1  f_22">
+						<view class="resumeTitle">
+							<text class="f_26 name">{{item.name}}</text>
+							<text class="f_20 c_666"><text class="borderRight">{{item.sex}}</text>{{item.age}}岁</text>
+						</view>
+						<text class="borderRight">{{item.work_exp}}</text>
+						<text class="borderRight">{{item.edu_level_name}}</text>
+						<text>{{item.expect_jobs_list}}</text>
+						<view class="resumeVideo row just_btw ali_center f_24">
+							<view class="">
+								<text class="iconfont icon-video f_30"></text>
+								<text>视频简历</text>
+							</view>
+							<text class="iconfont icon-youjiantou"></text>
+						</view>
+					</view>
+					<view class="resumeFocu column center">
+						<text class="bold">{{item.category_id == 1 ? '全职简历' : '兼职简历'}}</text>
+					</view>          
+				</view>
+			</view>
 			<text class="tips" v-if="showLists">暂无搜索内容</text>
 			<view class="historyTitle row just_btw" 
 			v-if="lists.length == 0 && keyword =='' && history.length != 0">
@@ -101,6 +126,14 @@
 						uni.setStorageSync('search', this.history)
 					}
 				}
+				
+				if (this.roleType == 2) {
+					this.companySearch(keyword)
+				}else{
+					this.personalSearch(keyword)
+				}
+			},
+			personalSearch (keyword) {
 				const that = this
 				that.$axios({
 					url: 'api/job/allSearch',
@@ -129,6 +162,38 @@
 						}
 					}
 				})
+			},
+			companySearch (keyword) {
+				const that = this
+				that.$axios({
+					url: 'api/enterprise/appResumeSearch',
+					method: 'post',
+					data: { 
+						page: that.currentPage,
+						Choosetext: keyword, 
+						areaName: that.city.id,
+					}
+					}).then(res =>{
+					console.log(res)
+					if(res.code == 1){
+						that.lists = res.data.data
+						that.total = res.data.total
+						that.currentPage++
+						that.showLoadMore = false
+						if(that.lists.length){
+							that.showLists = false
+						}else{
+							that.showLists = true
+						}
+					}
+				})
+			},
+			// 简历详情
+			toResumeDetail (id, category_id) {
+				console.log(category_id)
+				uni.navigateTo({
+					url: '/pages/resumeDetail?id=' + id + '&type='+ category_id
+				})	
 			},
 			toPostDetail (id) {
 				uni.navigateTo({
@@ -162,12 +227,15 @@
 				this.showLoadMore = true
 			}
 		},
-		onLoad(options) {
-			this.type = options.type
+		onLoad (options) {
+			this.type = options.type // 为1,2时为个人端职位与公司的搜索，3为企业端简历搜索
 		},
 		computed: {
-			city (){
+			city ()  {
 				return this.$store.state.city
+			},
+			roleType () {
+				return this.$store.state.roleType
 			}
 		}
 	}

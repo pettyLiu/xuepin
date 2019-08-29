@@ -4,16 +4,15 @@
 			<block v-for="(it,i) of resumeCollection" :key="i">
 				<view class="uni-swipe-action__container" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd"
 				 @touchcancel="touchEnd" :style="{'transform':messageIndex == i ? transformX : 'translateX(0px)','-webkit-transform':messageIndex == i ? transformX : 'translateX(0px)'}" :data-index="i" :data-disabled="it.disabled">
-					<view class="uni-swipe-action__content resumeList row" @click="toResumeDetail(item.id)">
+					<view class="uni-swipe-action__content resumeList row" @click="toResumeDetail(it.resume_id,it.category_id)">
 						<image class="resumeAvatar" src="/static/image/bg.png"></image>
 						<view class="flex1  f_22">
 								<view class="resumeTitle">
-										<text class="f_26 name">李晓丽</text>
-										<text class="f_20 c_666"><text class="borderRight">男</text>23岁</text>
+										<text class="f_26 name">{{it.name}}</text>
+										<text class="f_20 c_666"><text class="borderRight">{{it.sex}}</text>{{it.age}}岁</text>
 								</view>
-								<text class="borderRight">5-10年</text>
-								<text class="borderRight">本科</text>
-								<text>图像处理</text>
+								<text class="borderRight">{{it.work_experience}}</text>
+								<text class="borderRight">{{it.edu_level}}</text>
 								<view class="resumeVideo row just_btw ali_center f_24">
 										<view class="">
 												<text class="iconfont icon-video f_30"></text>
@@ -23,8 +22,7 @@
 								</view>
 						</view>
 						<view class="resumeFocu column center">
-								<text class="bold">设计师</text>
-								<text class="eb8">查看</text>
+								<text class="bold">{{it.expect_jobs}}</text>
 						</view>          
 					</view>
 					<view class="uni-swipe-action__btn-group" :id="elId">
@@ -58,13 +56,14 @@
 				elId: elId,
 				transformX: 'translateX(0px)',
 				messageIndex: -1,
-				resumeCollection: [1,2],
+				resumeCollection: [],
 				options: [{text:'取消收藏'}],
 				loadMoreText: "加载中...",
 				showLoadMore: false,
 				currentPage: 1,
 				total: 1,
-				imgUrl: config.imgUrl
+				imgUrl: config.imgUrl,
+				getSizes: false
 			};
 		},
 		methods:{
@@ -79,16 +78,22 @@
 				}).then(res =>{
 					if(res.code == 1){
 						console.log(res)
-						that.total = res.data.total
-						that.resumeCollection = res.data.data
+						that.total = res.data.resumeCollection.total
+						that.resumeCollection = res.data.resumeCollection.data
 						that.showLoadMore = false
 						that.currentPage += that.currentPage
+						if(!that.getSizes&&that.total>0){
+							setTimeout(() => {
+								that.getSize()
+							}, 3000);
+							that.getSizes = true
+						}
 					}
 				})
 			},
-			toResumeDetail (id) { // 跳转简历详情
+			toResumeDetail (id, type) { // 跳转简历详情
 				uni.navigateTo({
-					url: '/pages/resumeDetail?id=' + id
+					url: '/pages/resumeDetail?id=' + id + '&type=' + type
 				})
 			},
 			getSize() {
@@ -104,11 +109,11 @@
 					url: 'api/user/deleteResumeCollection',
 					method: 'post',
 					data: {
-						id: that.resumeCollection[index].id
+						id: that.resumeCollection[index].resume_id
 					}
 				}).then(res =>{
 					if(res.code == 1){
-						uni.showToast('取消成功')
+						uni.showToast({ title: res.msg, icon: 'none' })
 						that.resumeCollection.splice(index, 1)
 					}
 				})
@@ -181,22 +186,8 @@
 			this.btnGroupWidth = 0
 			this.isMoving = false
 		},
-		mounted() {
-            this.getSize()
-            console.log(1212)
-		},
-		onReady() {
-			this.getSize()
-		},
 		onLoad() {
-			var that = this
-			uni.getSystemInfo({
-			    success: function (res) {
-					that.sliderLeft = (res.windowWidth/3 - sliderWidth)/2,
-					that.tt = (res.windowWidth/3 - sliderWidth)/2
-			    }
-			})
-			that.getCollectionList()
+			this.getCollectionList()
 		},
 	}
 </script>

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>快速创建小程序</title>
+    <meta charset="utf-8" />
+    <meta name="viewport"   content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+    
+    <style>
+        .content{
+            text-align: center
+        }
+        .content h1{
+            margin: 100px 0 100px
+        }
+        .content input{
+            height: 30px;
+            line-height: 30px;
+            width: 240px;
+            margin: 0 0 20px 20px;
+            padding-left: 10px 
+        }
+        .content .txt{
+            width: 200px;
+            display: inline-block
+        }
+        .content #btn{
+            height: 40px;
+            width: 100px;
+            margin-top: 80px;
+            font-size: 20px
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content dh">
+        
+        <div class="video">
+            <span class="listTitle">视频简历</span>
+            <div class="form-group " id="aetherupload-wrapper">
+                <div id="upload_video">
+                    <!--组件最外部需要有一个名为aetherupload-wrapper的id，用以包装组件-->
+                    <div class="controls">
+                        <input type="file" id="file"
+                               onchange="aetherupload(this,'file').success(callback).upload()">
+                        <!--需要有一个名为file的id，用以标识上传的文件，aetherupload(file,group)中第二个参数为分组名，success方法可用于声名上传成功后的回调方法名-->
+                    </div>
+                </div>
+                <div class="progress " style="height: 6px;margin-bottom: 2px;margin-top: 10px;width: 145px;">
+                    <div id="progressbar" style="background:#00b38a;height:6px;width:0;"></div>
+                    <!--需要有一个名为progressbar的id，用以标识进度条-->
+                </div>
+                <span style="font-size:12px;color:#aaa;" id="output"></span>
+                <!--需要有一个名为output的id，用以标识提示信息-->
+                <input type="hidden" name="vido" id="savedpath">
+                <!--需要有一个名为savedpath的id，用以标识文件保存路径的表单字段，还需要一个任意名称的name-->
+            </div>
+
+        </div>   
+        <input type="hidden" id="http_id" name="http_id" value="{{config('app.url')}}">
+    </div>     
+</body>
+
+</html>
+<script type="text/javascript" src="https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.1.js"></script>
+    <script type="text/javascript" src="https://git.0797i.cn/js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+$('#btn').on('click', function(){
+    var d = {}
+    var t = $('form').serializeArray();
+    $.each(t, function () {
+        d[this.name] = this.value;
+    });
+    $.ajax({
+        url: 'https://xcx.dev.intelgice.com/index.php',
+        type: 'post',
+        traditional: true,
+        dataType: "JSON",
+        data: d,
+        success: function (data) {
+            if(data.errcode === 0 && data.errmsg === 'ok'){
+                alert('创建成功')
+            }else{
+                alert('程序错误，请联系管理员！')
+            }
+        },
+        error: function (data) {
+            alert('请求错误，请稍后重试')
+        }
+    })
+})
+var AetherUpload = {
+
+upload: function () {
+
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+        }
+    });
+    this.fileDom = this.wrapperDom.find("#file"),
+
+        this.outputDom = this.wrapperDom.find("#output"),
+
+        this.progressBarDom = this.wrapperDom.find("#progressbar"),
+
+        this.savedPathDom = this.wrapperDom.find("#savedpath"),
+
+        this.file = this.fileDom[0].files[0],
+
+        this.fileName = this.file.name,
+
+        this.fileSize = this.file.size,
+
+        this.uploadBaseName = "",
+
+        this.uploadExt = "",
+
+        this.chunkSize = 0,
+
+        this.chunkCount = 0,
+
+        this.subDir = "",
+
+        this.savedPath = "",
+
+        this.fileHash = "",
+
+        this.blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice,
+
+        this.i = 0,
+
+        this.locale,
+
+        this.messages = this.getLocalizedMessages();
+
+    this.outputDom.text(this.messages.status_upload_begin);
+
+    if (!this.blobSlice) {
+
+        this.outputDom.text(this.messages.error_unsupported_browser);
+
+        return;
+    }
+
+    if (!("FileReader" in window) || !("File" in window)) {
+
+        this.preprocess(); //浏览器不支持读取本地文件，跳过计算hash
+
+    } else {
+
+        this.calculateHash();
+
+    }
+
+},
+
+calculateHash: function () { //计算hash
+
+    var _this = this,
+
+        chunkSize = 2000000,
+
+        chunks = Math.ceil(_this.file.size / chunkSize),
+
+        currentChunk = 0,
+
+        spark = new SparkMD5.ArrayBuffer(),
+
+        fileReader = new FileReader();
+
+    fileReader.onload = function (e) {
+
+        spark.append(e.target.result);
+
+        ++currentChunk;
+
+        _this.outputDom.text(_this.messages.status_hashing + ' ' + parseInt(currentChunk / chunks * 100) + "%");
+
+        if (currentChunk < chunks) {
+
+            loadNext();
+
+        } else {
+
+            _this.fileHash = spark.end();
+
+            _this.preprocess();
+
+        }
+    };
+
+    fileReader.onerror = function () {
+
+        _this.preprocess();
+
+    };
+
+    function loadNext() {
+
+        var start = currentChunk * chunkSize,
+
+            end = start + chunkSize >= _this.file.size ? _this.file.size : start + chunkSize;
+
+        fileReader.readAsArrayBuffer(_this.blobSlice.call(_this.file, start, end));
+
+    }
+
+    loadNext();
+
+},
+
+preprocess: function () { //预处理
+    var _this = this;
+    var tt = $('#http_id').val()
+    $.post(tt+"/aetherupload/preprocess", {
+
+        file_name: _this.fileName,
+
+        file_size: _this.fileSize,
+
+        file_hash: _this.fileHash,
+
+        locale: _this.locale,
+
+        group: _this.group
+
+    }, function (rst) {
+        if (rst.error) {
+
+            _this.outputDom.text(rst.error);
+
+            return;
+
+        }
+
+        _this.uploadBaseName = rst.uploadBaseName;
+
+        _this.uploadExt = rst.uploadExt;
+
+        _this.chunkSize = rst.chunkSize;
+
+        _this.chunkCount = Math.ceil(_this.fileSize / _this.chunkSize);
+
+        _this.subDir = rst.subDir;
+
+        if (rst.savedPath.length === 0) {
+
+            _this.outputDom.text(_this.messages.status_uploading + " 0%");
+
+            _this.uploadChunkInterval = setInterval($.proxy(_this.uploadChunk, _this), 0);
+
+        } else {
+
+            _this.progressBarDom.css("width", "100%");
+
+            _this.savedPath = rst.savedPath;
+
+            _this.savedPathDom.val(_this.savedPath);
+
+            _this.fileDom.attr("disabled", "disabled");
+
+            _this.outputDom.text(_this.messages.status_instant_completion_success);
+
+            typeof (_this.callback) !== "undefined" ? _this.callback() : null;
+
+        }
+
+    }, "json");
+
+},
+
+uploadChunk: function () {
+
+    var _this = this,
+
+        start = this.i * this.chunkSize,
+
+        end = Math.min(this.fileSize, start + this.chunkSize),
+
+        form = new FormData();
+
+    form.append("file", this.file.slice(start, end));
+
+    form.append("upload_ext", this.uploadExt);
+
+    form.append("chunk_total", this.chunkCount);
+
+    form.append("chunk_index", this.i + 1);
+
+    form.append("upload_basename", this.uploadBaseName);
+
+    form.append("group", this.group);
+
+    form.append("sub_dir", this.subDir);
+
+    form.append("locale", this.locale);
+    var tt = $('#http_id').val()
+
+    $.ajax({
+
+        url: tt+"/aetherupload/uploading",
+
+        type: "POST",
+
+        data: form,
+
+        dataType: "json",
+
+        async: false,
+
+        processData: false,
+
+        contentType: false,
+
+        success: function (rst) {
+
+            console.log(rst)
+            if (rst.error) {
+
+                _this.outputDom.text(rst.error);
+
+                clearInterval(_this.uploadChunkInterval);
+
+                return;
+
+            }
+
+            var percent = parseInt((_this.i + 1) / _this.chunkCount * 100);
+            console.log(percent)
+            _this.progressBarDom.css("width", percent + "%");
+
+            _this.outputDom.text(_this.messages.status_uploading + " " + percent + "%");
+
+            if (_this.i + 1 === _this.chunkCount) {
+
+                clearInterval(_this.uploadChunkInterval);
+
+                _this.savedPath = rst.savedPath;
+
+                _this.savedPathDom.val(_this.savedPath);
+
+                _this.fileDom.attr("disabled", "disabled");
+
+                _this.outputDom.text(_this.messages.status_upload_success);
+
+                typeof (_this.callback) !== "undefined" ? _this.callback() : null;
+
+            }
+
+            ++_this.i;
+
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+            if (XMLHttpRequest.status === 0) {
+
+                _this.outputDom.text(_this.messages.status_retrying);
+
+                _this.sleep(3000);
+
+            } else {
+
+                _this.outputDom.text(_this.messages.error_upload_fail);
+
+                clearInterval(_this.uploadChunkInterval);
+
+            }
+        }
+
+    });
+
+},
+
+sleep: function (milliSecond) {
+
+    var wakeUpTime = new Date().getTime() + milliSecond;
+
+    while (true) {
+
+        if (new Date().getTime() > wakeUpTime) {
+
+            return;
+        }
+    }
+},
+
+success: function (callback) {
+
+    this.callback = callback;
+
+    return this;
+},
+
+getLocalizedMessages: function () {
+
+    var lang = navigator.language ? navigator.language : navigator.browserLanguage;
+
+    var locales = Object.getOwnPropertyNames(this.text);
+
+    for (var k in locales) {
+
+        if (lang.indexOf(locales[k]) > -1) {
+
+            this.locale = locales[k];
+
+            return this.text[this.locale];
+
+        }
+
+    }
+
+    this.locale = "en";
+
+    return this.text[this.locale];
+
+},
+
+text: {
+    en: {
+        status_upload_begin: "upload begin",
+        error_unsupported_browser: "Error: unsupported browser",
+        status_hashing: "hashing",
+        status_instant_completion_success: "upload success (instant completion) ",
+        status_uploading: "uploading",
+        status_upload_success: "upload success",
+        status_retrying: "network problem, retrying...",
+        error_upload_fail: "Error: upload failed"
+    },
+    zh: {
+        status_upload_begin: "开始上传",
+        error_unsupported_browser: "错误：上传组件不被此浏览器支持",
+        status_hashing: "正在哈希",
+        status_instant_completion_success: "上传成功（秒传）",
+        status_uploading: "正在上传",
+        status_upload_success: "上传成功",
+        status_retrying: "网络故障，正在重试……",
+        error_upload_fail: "错误：上传失败"
+    }
+}
+
+
+};
+
+/*
+* 创建AetherUpload对象的全局方法
+* file 文件对象
+* group 分组名
+*/
+function aetherupload(file, group) {
+
+var newInstance = Object.create(AetherUpload);
+
+newInstance.wrapperDom = $(file).parents("#aetherupload-wrapper");
+
+newInstance.group = group;
+
+return newInstance;
+}
+
+
+function callback(e) {
+
+jeBox.msg('上传成功', {icon: 2, time: 2});
+}
+
+</script>

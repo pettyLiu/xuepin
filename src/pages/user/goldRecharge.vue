@@ -17,7 +17,7 @@
 				<text class="f_48 num">{{pay}}（元）</text>
 			</view>
 			<view class="types">
-				<text class="f_24">选择支付方式</text>{{providerList}}
+				<text class="f_24">选择支付方式</text>
 				<radio-group name="radio" class="column" @change="radioChange">
 					
 					<label class="row just_btw type" v-for="(item,index) in providerList" :key="index">

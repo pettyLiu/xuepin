@@ -66,9 +66,10 @@
 			<text>{{detail.intro}}</text>
 		</view>
 		<view class="row just_arw btns">
-			<text class="btn color1" @click="notSuit" v-if="way == 1 && status == 1">不合适</text>
+			<text class="btn color1" @click="notSuit" v-if="way == 1 && (status == 1 || status == -1)">不合适</text>
 			<text class="btn color1" @click="notSuit" v-if="way == 1 && status == 2">已标记不合适</text>
-			<text class="btn color2" @click="invite" v-if="way == 1 && status == 4">邀请面试</text>
+			<text class="btn color2" @click="invite" v-if="way == 1 && (status == 1 || status == -1)">邀请面试</text>
+			<text class="btn color2" @click="invite" v-if="way == 1 && status == 4">已邀请面试</text>
 			<text class="btn color3" @click="getTel" v-if="!show_status">获取联系方式</text>
 		</view>
 	</view>
@@ -94,11 +95,12 @@
 			var url = ''
 			this.type = options.type // 简历类型 1为全职
 			// type还要传值，null为测试数据
-			url = this.type == null ? 'api/resume/showFullResume' : 'api/resume/showPartResume'
+			url = this.type == 1 ? 'api/resume/showFullResume' : 'api/resume/showPartResume'
 			if(options.way){
 				this.way = options.way // 从何处点击进去，消息还是其他界面,判断其他按钮的显隐
 				// 从消息列表进入详情，需请求不同接口
 				url = 'api/enterprise/showMessageResume'
+				this.job_id = options.job_id
 			}
 			this.getDetail(url)
 		},
@@ -123,16 +125,19 @@
 					url: 'api/enterprise/sendInterview',
 					method: 'post',
 					data: {
-						id: that.id
+						resume_id: that.id,
+						job_id: that.job_id,
+						// source: 1
 					}
 				}).then(res => {
-					
+					if(res.code == 1){
+						uni.showToast({ title:'邀请面试成功，请尽快电话通知面试！', icon: 'none' })
+					}
 				})
 			},
 			getTel () { // 获取联系方式
 				const that = this
-				const info = uni.getStorageSync('userInfo')
-				
+				const info = uni.getStorageSync('userInfo')				
 				that.$axios({
 					url: 'api/enterprise/showPhone',
 					method: 'post',
@@ -163,11 +168,12 @@
 			},
 			getDetail (url) {
 				const that = this
+				const data = this.way ? { id: that.id, job_id: that.job_id } : { id: that.id }
 				that.$axios({
 					url: url,
 					method: 'post',
 					data: {
-						id: that.id
+						...data
 					}
 				}).then(res => {
 					console.log(res)
@@ -196,16 +202,11 @@
 		onNavigationBarButtonTap (val){
 			const that = this
 			console.log('点击了收藏')
-			var webView = this.$mp.page.$getAppWebview()
-			this.collect = !this.collect
 			var url = ''
-			uni.showToast({ title: that.collect ? '收藏成功' : '取消收藏', icon: "none" })
-			if(this.collect){ // 更换收藏图标
-				webView.setTitleNViewButtonStyle(1, {  text: '\ue657' })
+			if(!this.collect){ // 更换收藏图标
 				url = 'api/user/createResumeCollection'
 			}else{
 				url = 'api/user/deleteResumeCollection'
-				webView.setTitleNViewButtonStyle(1, {  text: '\ue654' })
 			}
 			that.$axios({
 				url: url,
@@ -214,8 +215,14 @@
 					id: that.id
 				}
 			}).then(res => {
-				console
-				if(res.code == 1){			
+				if(res.code == 1){	
+					var webView = that.$mp.page.$getAppWebview()
+					that.collect = !that.collect
+					if(that.collect){ // 更换收藏图标
+						webView.setTitleNViewButtonStyle(1, {  text: '\ue657' })
+					}else{
+						webView.setTitleNViewButtonStyle(1, {  text: '\ue654' })
+					}		
 					uni.showToast({ title: that.collect ? '收藏成功' : '取消收藏', icon: "none" })
 				}
 			})	
