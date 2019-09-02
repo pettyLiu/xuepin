@@ -11,7 +11,9 @@
 			</view> -->
 			<view class="list" @click="toNext('/pages/setting/authorize')">
 				<view class="title f_24 c_999 row just_btw"><text>社交账号绑定</text><text class="iconfont icon-youjiantou"></text></view>
-				<text class="f_30">未绑定</text>
+				<text class="f_30" v-if="!datas.vx && !datas.qq">未绑定</text>
+				<text class="f_30" v-if="datas.vx">已绑定微信 </text>
+				<text class="f_30" v-if="datas.qq">已绑定QQ</text>
 			</view>
 		</view>
 	</view>
@@ -22,7 +24,8 @@
 		name: 'setting-index',
 		data() {
 			return {
-				tel: uni.getStorageSync('tel')
+				tel: uni.getStorageSync('tel'),
+				datas: ''
 			};
 		},
 		methods:{
@@ -30,10 +33,20 @@
 				uni.navigateTo({
 					url: url
 				})
-			}
+			},
+			getData () {
+				const that = this
+				that.$axios({
+					url: 'api/user/bindInfo',
+					method: 'post',
+				}).then(res => {
+					that.datas = res.data
+				})
+			},
 		},
 		onShow () {
 			this.tel = uni.getStorageSync('tel')
+			this.getData()
 		},
 		computed:{
 		},

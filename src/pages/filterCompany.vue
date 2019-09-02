@@ -6,8 +6,7 @@
 				<view class="contentList">
 					<text class="contentTxt" :class="{active: activeNature == 99}" @click="changeNatureActive(99)">全部</text>
 				</view>	
-				<view class="contentList" v-for="(item, index) in nature"  :key="index">
-					
+				<view class="contentList" v-for="(item, index) in nature"  :key="index">				
 					<text class="contentTxt" :class="{active: activeNature == index}" 
 					@click="changeNatureActive(index)">{{item.name}}</text>
 				</view>	
@@ -47,6 +46,9 @@
 		onLoad() {
 			this.getNature()
 			this.scale = this.basicConfig.basicConfig.ent_scale
+			const filters = this.$store.state.filterCompany.filter
+			this.activeNature = filters.nature ? Number(filters.nature - 1) : 99
+			this.activeScale = filters.scale ? Number(filters.scale - 1) : 99
 		},
 		methods:{
 			getNature () {
@@ -70,6 +72,7 @@
 			reset () {
 				this.activeScale = 99
 				this.activeNature = 99
+				this.$store.commit('reset_filter')
 			},
 			comfirm () {
 				const scale = this.activeScale == 99 ? '' : this.activeScale + 1

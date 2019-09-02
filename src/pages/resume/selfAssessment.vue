@@ -1,6 +1,6 @@
 <template>
 	<view class="selfAssessment">
-		<textarea class="text" @blur="bindTextAreaBlur" @input="changeWord" v-model="content"
+		<textarea class="text" @input="changeWord" v-model="content"
 		:placeholder="placeholder" maxlength="500" placeholder-class="placeholder"/>
 		<text class="f_26 num">{{num}}/500</text>
 	</view>
@@ -18,9 +18,6 @@ import { setTimeout } from 'timers';
 			};
 		},
 		methods:{
-			bindTextAreaBlur () {
-				
-			},
 			changeWord (e) { // 输入字符
 				this.num = e.detail.value.length
 			}

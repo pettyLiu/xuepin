@@ -123,42 +123,40 @@
 			    })
 			},
 			getProvider(){ // 支付
-	var providerList = [];
-	uni.getProvider({
-	    service: "payment",
-	    success: (e) => {
-	        console.log("payment success:" + JSON.stringify(e));
-	        
-	        e.provider.map((value) => {
-				console.log(value)
-	            switch (value) {
-	                case 'alipay':
-	                    providerList.push({
-	                        name: '支付宝',
-	                        id: value
-	                    });
-	                    break;
-	                case 'wxpay':
-	                    providerList.push({
-	                        name: '微信',
-	                        id: value
-	                    });
-	                    break;
-	                default:
-	                    break;
-	            }
-			})
-			console.log(providerList)
-			this.providerList = providerList
-			console.log(this.providerList[0])
-			this.$forceUpdate()
-	    },
-	    fail: (e) => {
-	        console.log("获取支付通道失败：", e);
-	    }
-	});
-	
-}
+				var providerList = [];
+				uni.getProvider({
+					service: "payment",
+					success: (e) => {
+	        			console.log("payment success:" + JSON.stringify(e));	        
+						e.provider.map((value) => {
+							console.log(value)
+							switch (value) {
+								case 'alipay':
+									providerList.push({
+										name: '支付宝',
+										id: value
+									});
+									break;
+								case 'wxpay':
+									providerList.push({
+										name: '微信',
+										id: value
+									});
+									break;
+								default:
+									break;
+							}
+						})
+						console.log(providerList)
+						this.providerList = providerList
+						console.log(this.providerList[0])
+						this.$forceUpdate()
+					},
+					fail: (e) => {
+						console.log("获取支付通道失败：", e);
+					}
+				});				
+			}
 		},
 		onLoad() {
 			// this.providerList = getProvider()

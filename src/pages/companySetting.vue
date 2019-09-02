@@ -140,7 +140,6 @@ import { setTimeout } from 'timers';
 				this.readOnly = false
 			},
 			formSubmit (e) {
-				console.log(e)
 				var rule = [
 					{name:"name", checkType : "notnull", checkRule:"",  errorMsg:"请输入企业名称"},
 					{name:"contact_name", checkType: 'notnull',checkRule:"", errorMsg:"请输入联系人姓名"},
@@ -206,8 +205,7 @@ import { setTimeout } from 'timers';
 					method: 'get'
 				}).then(res => {
 					if(res.code == 1){							
-						const datas = res.data.enterpriseRes
-						console.log(datas)		
+						const datas = res.data.enterpriseRes		
 						that.type = 2
 						var info = {}
 						info.province = datas.province_name
@@ -224,7 +222,6 @@ import { setTimeout } from 'timers';
 						that.addr.address = datas.address
 						that.addr.longitude = Number(datas.addr_code.split(',')[0])
 						that.addr.latitude = Number(datas.addr_code.split(',')[1])
-						console.log(datas.addr_code.split(','))
 						that.content = datas.content
 						if(that.editorCtx){
 							that.editorCtx.setContents({
@@ -263,14 +260,13 @@ import { setTimeout } from 'timers';
 				});
 			},
             bindPickerEnt_scale (e) { // 公司规模
-                this.ent_scaleIndex = e.detail.value
+                this.ent_scaleIndex = Number(e.detail.value)
             },
             bindPickerEnt_type (e) { // 公司性质
-                console.log(e)
-                this.ent_typeIndex = e.detail.value
+                this.ent_typeIndex = Number(e.detail.value)
             },
             bindPickerIndusty (e) {
-                this.industyIndex = e.detail.value
+                this.industyIndex = Number(e.detail.value)
             },
             getIndusty () { // 获取行业
                 const that = this
@@ -312,7 +308,6 @@ import { setTimeout } from 'timers';
 							filePath: img,
 							name: 'fileUpload',
 							success: (uploadFileRes) => { 
-								console.log(232)
                                 if(type == 1){
                                     that.business_license_img = JSON.parse(uploadFileRes.data).data
                                 }else{
@@ -324,7 +319,6 @@ import { setTimeout } from 'timers';
 				})
             },
             changeContent (e) {
-                console.log(e)
                 this.content = e.detail.html
             },
             onEditorReady () {
@@ -336,8 +330,7 @@ import { setTimeout } from 'timers';
 						that.editorCtx.setContents({
 							html: that.content,
 						})
-					}	
-					that.blur()		
+					}		
 				}).exec()
 				// #endif	
 			},
@@ -352,7 +345,6 @@ import { setTimeout } from 'timers';
 						that.multiIndex[0] = 0
 						that.province_id = res.data[0].id
 					}else{
-						console.log(that.type)
 						for(let i = 0; i < res.data.length; i++){
 							if(res.data[i].name == that.info.province){
 								that.multiIndex[0] = i
@@ -380,7 +372,6 @@ import { setTimeout } from 'timers';
 					}else{
 						for(let i = 0; i < res1.data.length; i++){
 							if(res1.data[i].name == that.info.city){
-								console.log(1212)
 								that.multiIndex[1] = i
 								that.city_id = res1.data[i].id
 								break
@@ -432,7 +423,6 @@ import { setTimeout } from 'timers';
 				that.code = { code: that.tt[2][indexArray[2]].code, name: that.tt[2][indexArray[2]].name }
 			},
 			change (e){
-				console.log(this.multiIndex)
 				var id = 0
 				var that = this
 				if(e.detail.column == 0){

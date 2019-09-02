@@ -16,10 +16,9 @@
 			};
 		},
 		onLoad(options) {
-			console.log(options)
 			this.placeholder = options.detail
 		},
-		// 保存信息
+		// 保存信息,暂时未有微信绑定
 		onNavigationBarButtonTap (val) {
             const that = this
             that.$axios({
@@ -30,11 +29,13 @@
                 }
             }).then(res => {
                 if(res.code == 1){
-                    uni.showToast({ title: '绑定成功' })
+                    uni.showToast({ title: '绑定成功', icon: 'none' })
                     setTimeout(function(){
                         uni.navigateBack()
                     }, 1000)
-                }
+                }else{
+					uni.showToast({ title: res.msg, icon: 'none' })
+				}
             })
 		},
 		methods:{

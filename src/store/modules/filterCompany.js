@@ -9,7 +9,7 @@ export default {
 		change_filter(state,data){
 			state.filter = data
 		},
-		reset_filter(state,index){
+		reset_filter(state){
 			state.filter = {nature:'', scale:''}
 		}
 	},

@@ -89,7 +89,14 @@
 		{
 			"path": "pages/news/index",
 			"style": {
-				"navigationBarTitleText": "消息"
+				"navigationBarTitleText": "消息",
+				"enablePullDownRefresh": true,
+				"app-plus": {
+					"pullToRefresh": {
+						"style": "circle"
+						// "offset": "50px"
+					}
+				}
 			}	
 		},
 		{

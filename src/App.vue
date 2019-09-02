@@ -1,4 +1,5 @@
 <script>
+import { setTimeout } from 'timers';
 	export default {
 		globalData: {  
             statusBarHeight: 0
@@ -10,7 +11,7 @@
 		onShow: function() {
 			// this.$store.dispatch('getBasicConfig')
 			// console.log(this.$store.dispatch('getBasicConfig'))
-			console.log(222)
+			console.log(this.$store.state.roleType)
 			if(this.$store.state.roleType == 1){
 				uni.setTabBarItem({
 					index: 1,
@@ -19,12 +20,16 @@
 					selectedIconPath: 'static/image/company_hov.png'
 				})
 			}else{
-				uni.setTabBarItem({
+				console.log(454515)
+				setTimeout(function(){
+					uni.setTabBarItem({
 					index: 1,
 					text: '职位',
 					iconPath: 'static/image/post_nor.png',
 					selectedIconPath: 'static/image/post_hov.png'
 				})
+				},1000)
+				
 			}
 		},
 		onHide: function() {

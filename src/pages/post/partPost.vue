@@ -251,7 +251,6 @@ export default {
             if(this.type == 2){
                 formData.jobId = this.jobId
             }
-            console.log(formData.validity)
             if(formData.validity == '短期兼职'){
                 formData.short_validity_time = this.from + '-' + this.to
                 if(this.from == ''){
@@ -262,7 +261,6 @@ export default {
                     return false
                 }  
             }
-
             var checkRes = graceChecker.check(formData, rule)
             if (checkRes) {
                 const that = this
@@ -287,7 +285,6 @@ export default {
                     }
                 })
             }else{
-                console.log(graceChecker.error)
                 uni.showToast({ title: graceChecker.error, icon: "none" })
             }
         },
@@ -304,7 +301,6 @@ export default {
             }).then(res => {
                 if(res.code == 1){
                     const data = res.data
-                    console.log(typeof data.salary)
                     that.salaryIndex = data.salary - 1
                     that.ageIndex = data.age - 1
                     that.edu_levelIndex = data.edu_level - 1
@@ -321,7 +317,6 @@ export default {
                     if(data.part_time){
                         that.dateCheck = JSON.parse(data.part_time ) 
                     }
-                    console.log(that.dateCheck)
                     this.$store.commit('changeIntentsion', expect_jobs)
                     if(that.editorCtx){
                         that.editorCtx.setContents({
@@ -349,9 +344,7 @@ export default {
         checked (type, index) { // 
             var date = this.dateCheck
             date[type][index]= !date[type][index]
-            console.log(date[type][index])
             this.$forceUpdate()
-            console.log(date)
             this.dateCheck = date
         },
         showIntension () { // 职位选择
@@ -438,7 +431,6 @@ export default {
             var indexArray = e.detail.value
             var region = ''
             var that = this
-            console.log(e)
             indexArray.forEach(function(item, index){
                 if(that.tt[index].length > 0){
                     region += that.tt[index][item].name + '-'
@@ -450,7 +442,6 @@ export default {
             this.city_id = that.tt[1][indexArray[1]].id
             this.district_id = that.tt[2][indexArray[2]].id
             that.region = region.slice(0, region.length -1 )
-            // that.code = { code: that.tt[2][indexArray[2]].code, name: that.tt[2][indexArray[2]].name }
         },
         change (e){
             var id = 0
@@ -521,7 +512,6 @@ export default {
                 }
             }
             this.welfare = values
-            console.log(values)
         },
         bindPickerTime (e) { // 兼职有效期
             this.timeIndex = e.detail.value
@@ -535,12 +525,10 @@ export default {
             this.from = time
         },
         getToData(time) {
-            console.log(time)
             this.from_maxSelect = time
             this.to = time
         },
         changeContent (e) { // 职位描述
-            console.log(e)
             this.content = e.detail.html
         },
         onEditorReady () {
@@ -549,7 +537,6 @@ export default {
             }).exec()
         },
         onBackPress() { // 返回时，重置store的期望职位
-			console.log('back')
 			this.$store.commit('resetIntentsion')
 		},
     },

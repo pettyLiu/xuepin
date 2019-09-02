@@ -67,7 +67,6 @@
 						id: that.id
 					}
 				}).then(res => {
-					console.log(res)
 					that.detail = res.data
 				})
 			},
@@ -79,7 +78,6 @@
 			toJobIntension () { // 跳转到职位详情
 				const expect_jobs = this.detail.expect_jobs
 				this.$store.commit('changeIntentsion', expect_jobs)
-				console.log(this.detail.desired_area[0])
 				uni.navigateTo({
 					url: '/pages/resume/jobIntension?id=' + this.id  + '&type=2' + '&alias=' + 'part_alias' +
 					 '&desired_area=' + JSON.stringify(this.detail.desired_area[0]) +'&salary=' + this.detail.expect_salary,
@@ -116,21 +114,13 @@
 			}
 		},
 		onShow(){
-			console.log('onshow')
 			this.getResumeDetail()
 		},
 		onLoad(options) {
-			// this.userInfo = this.information.userInfo
 			this.id = options.id
 			this.checked = options.checked
-			console.log(options)
 			this.getResumeDetail()
-		},
-		onBackPress(e){
-			
-		},
-		computed:{
-		},
+		}
 	}
 </script>
 

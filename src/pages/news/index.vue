@@ -13,7 +13,7 @@
 				</view>
 				<view class="txt row just_btw">
 					<text class="company" @click.stop="toCompanyDetail">
-						<i></i><i></i>{{item.enterprise.name}}
+						{{item.enterprise.name}}
 					</text>
 				</view>			
 				<view class="column">
@@ -51,7 +51,7 @@
 		},
 		data(){
 			return{
-				tabs: ['全部投递','被查看','邀请面试','不合适'],
+				tabs: ['全部投递','已查看','邀请面试','不合适'],
 				activeTab: 0,
 				news: [],
 				sliderLeft: 0,
@@ -63,20 +63,17 @@
 				messageId: 0
 			}
 		},
+		onPullDownRefresh() {
+			var that = this
+			that.currentPage = 1
+			that.total = 1
+			that.news = []
+			that.getNewsList()
+			setTimeout(function() {
+				uni.stopPullDownRefresh();
+			}, 300);
+		},
 		methods:{
-			// getNews () { // 获取消息列表
-			// 	const that = this
-			// 	that.$axios({
-			// 		url: api().message_data,
-			// 		methods: 'post',
-			// 		data: {
-			// 			status: that.status
-			// 		}
-			// 	}).then(res => {
-			// 		console.log(res)
-			// 		that.news= res.data
-			// 	})
-			// },
 			// 职位详情
 			toPostDetail (id) {
 				uni.navigateTo({
@@ -85,11 +82,9 @@
 			},
 			// 面试详情
 			toInterviewDetail (id) {
-				// if(this.activeTab == 2){
-					uni.navigateTo({
-						url: '/pages/news/InterviewDetail?id=' + id
-					})
-				// }
+				uni.navigateTo({
+					url: '/pages/news/InterviewDetail?id=' + id
+				})
 			},
 			changeTabs (e) {
 				if(this.activeTab != e.target.id){

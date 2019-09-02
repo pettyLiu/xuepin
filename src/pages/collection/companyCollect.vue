@@ -5,11 +5,11 @@
 				<view class="uni-swipe-action__container" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd"
 				 @touchcancel="touchEnd" :style="{'transform':messageIndex == i ? transformX : 'translateX(0px)','-webkit-transform':messageIndex == i ? transformX : 'translateX(0px)'}" :data-index="i" :data-disabled="it.disabled">
 					<view class="uni-swipe-action__content resumeList row" @click="toResumeDetail(it.resume_id,it.category_id)">
-						<image class="resumeAvatar" src="/static/image/bg.png"></image>
+						<image class="resumeAvatar" :src="it.avatar"></image>
 						<view class="flex1  f_22">
 								<view class="resumeTitle">
-										<text class="f_26 name">{{it.name}}</text>
-										<text class="f_20 c_666"><text class="borderRight">{{it.sex}}</text>{{it.age}}岁</text>
+									<text class="f_26 name">{{it.name}}</text>
+									<text class="f_20 c_666"><text class="borderRight">{{it.sex}}</text>{{it.age}}岁</text>
 								</view>
 								<text class="borderRight">{{it.work_experience}}</text>
 								<text class="borderRight">{{it.edu_level}}</text>

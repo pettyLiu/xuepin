@@ -12,19 +12,19 @@
         </view>
         <section class="lists">
 			<view class="list" @click="toNext('/pages/user/goldRecharge')">
-				<image class="icon" src="/static/icon/chongzhi_icon@2x.png" mode=""></image>金币充值<text class="iconfont icon-youjiantou"></text>
+				<image class="icon" src="/static/icon/recharge.png" mode=""></image>金币充值<text class="iconfont icon-youjiantou"></text>
 			</view>
 			<view class="list" @click="toNext('/pages/user/c_meal')">
-				<image class="icon" src="/static/icon/shoucang_icon@2x.png" mode=""></image>企业套餐<text class="iconfont icon-youjiantou"></text>
+				<image class="icon" src="/static/icon/taocan.png" mode=""></image>企业套餐<text class="iconfont icon-youjiantou"></text>
 			</view>
 			<view class="list" @click="toNext('/pages/user/integralRecord')">
-				<image class="icon" src="/static/icon/chongzhi_icon@2x.png" mode=""></image>积分记录<text class="iconfont icon-youjiantou"></text>
+				<image class="icon" src="/static/icon/record.png" mode=""></image>积分记录<text class="iconfont icon-youjiantou"></text>
 			</view>
             <view class="list" @click="toNext('/pages/user/goldRecord')">
-				<image class="icon" src="/static/icon/chongzhi_icon@2x.png" mode=""></image>金币记录<text class="iconfont icon-youjiantou"></text>
+				<image class="icon" src="/static/icon/record.png" mode=""></image>金币记录<text class="iconfont icon-youjiantou"></text>
 			</view>
-			<view class="list" @click="toNext('/pages/user/c_wallet')">
-				<image class="icon" src="/static/icon/shoucang_icon@2x.png" mode=""></image>如何获取积分<text class="iconfont icon-youjiantou"></text>
+			<view class="list" @click="showTips">
+				<image class="icon" src="/static/icon/tips.png" mode=""></image>如何获取积分<text class="iconfont icon-youjiantou"></text>
 			</view>
 		</section>
 	</view>
@@ -54,6 +54,22 @@
 					url: url
 				})
 			},
+			showTips(){
+				const that = this
+				// that.$axios({
+				// 	url: '',
+				// 	method: 'post'
+				// }).then(res => {
+				// 	uni.showModal({
+				// 		title: '提示',
+				// 		content: '每日签到即可获取积分'
+				// 	})
+				// })
+				uni.showModal({
+					title: '提示',
+					content: '每日签到即可获取积分'
+				})
+			}
 		},
 		onLoad (){
 			this.getData()

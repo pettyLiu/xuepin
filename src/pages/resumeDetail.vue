@@ -16,7 +16,14 @@
                 </view>
             </view>
         </view>
+		<view class="globalMargin column" v-if="way">
+			<view class="listTitle">
+				<!-- <text class="listTitleLine"></text> -->
+				<text>该求职者应聘职位的职位为： {{job_title}}</text>
+			</view>
+		</view>
 		<view class="globalMargin column">
+			
 			<view class="listTitle">
 				<text class="listTitleLine"></text>
 				<text>求职意向</text>
@@ -53,9 +60,9 @@
 				<text>教育经历</text>
 			</view>
 			<view class="timeLines column" v-for="(item, index) in detail.eduLines" :key="index">
-				<text>{{item.school}}</text>
+				<text>{{item.finish_school}}</text>
 				<text class="c_999 f_20">{{item.text7}}</text>
-				<text class="f_24">{{item.edu_levelName}} {{item.major}}</text>
+				<text class="f_24">{{item.major}}</text>
 			</view>	
 		</view>
 		<view class="globalMargin column"  v-if="detail.intro">
@@ -87,7 +94,9 @@
 				show_status: false,
 				way: '',
 				videoUrl: config.baseUrl,
-				status: ''
+				status: '',
+				coinNum: 0, // 获取联系方式扣除的金币数量
+				job_title: '', // 查看消息时，投递的为哪个职位
 			};
 		},
 		onLoad (options) {
@@ -111,7 +120,8 @@
 					url: 'api/enterprise/messageResumeUnsuitable',
 					method: 'post',
 					data: {
-						id: that.id
+						id: that.id,
+						job_id: that.job_id,
 					}
 				}).then(res => {
 					if(res.code == 1){
@@ -137,36 +147,40 @@
 			},
 			getTel () { // 获取联系方式
 				const that = this
-				const info = uni.getStorageSync('userInfo')				
-				that.$axios({
-					url: 'api/enterprise/showPhone',
-					method: 'post',
-					data: {
-						resume_id: that.id
-					}
-				}).then(res => {
-					console.log(res)
-					if(res.code == 1){
-						that.show_status = true
-						uni.showToast({ title: '已获取联系方式！' + that.detail.contact_tel, icon: 'none' })
-					}else{
-						uni.showModal({
-							title: '提示',
-							content: res.msg,
-							confirmText: '充值',
-							success: function (res) {
-								if (res.confirm) {
-									console.log('用户点击确定');
-									uni.navigateTo({
-										url: '/pages/user/goldRecharge'
-									})
-								} else if (res.cancel) {
-									console.log('用户点击取消');
+				const info = uni.getStorageSync('userInfo')
+				uni.showModal({
+					title: '提示',
+					content: '获取联系方式需要扣除'+ that.coinNum +'个金币',
+					success: function (res) {
+						if(res.confirm){
+							that.$axios({
+								url: 'api/enterprise/showPhone',
+								method: 'post',
+								data: {
+									resume_id: that.id
 								}
-							}
-						});
-					}						
-				})
+							}).then(res => {
+								if(res.code == 1){
+									that.show_status = true
+									uni.showToast({ title: '已获取联系方式！' + that.detail.contact_tel, icon: 'none' })
+								}else{
+									uni.showModal({
+										title: '提示',
+										content: res.msg,
+										confirmText: '充值',
+										success: function (res) {
+											if (res.confirm) {
+												uni.navigateTo({
+													url: '/pages/user/goldRecharge'
+												})
+											}
+										}
+									});
+								}						
+							})
+						}
+					}
+				})	
 			},
 			getDetail (url) {
 				const that = this
@@ -182,28 +196,26 @@
 					var datas = ''
 					if(res.code == 1){
 						datas =  this.way ==  1 ? res.data.original.data : res.data
-						console.log(datas)
 						that.detail = datas.resumeList
 						that.collect = datas.flag
 						that.show_status = datas.show_status
-						that.status = datas.status				
+						that.status = datas.status
+						that.coinNum = datas.coin_get_phone
+						that.job_title = res.data.job_title		
 						// #ifdef APP-PLUS
 						var webView = that.$mp.page.$getAppWebview()
 						if (that.collect) { // 更换收藏图标
-							webView.setTitleNViewButtonStyle(1, {  text: '\ue657' })
+							webView.setTitleNViewButtonStyle(0, {  text: '\ue657' })
 						}else {
-							webView.setTitleNViewButtonStyle(1, {  text: '\ue654' })
+							webView.setTitleNViewButtonStyle(0, {  text: '\ue654' })
 						}
 						// #endif
 					}	
 				})
 			},
 		},
-		computed: {
-		},
 		onNavigationBarButtonTap (val){
 			const that = this
-			console.log('点击了收藏')
 			var url = ''
 			if(!this.collect){ // 更换收藏图标
 				url = 'api/user/createResumeCollection'
@@ -221,9 +233,9 @@
 					var webView = that.$mp.page.$getAppWebview()
 					that.collect = !that.collect
 					if(that.collect){ // 更换收藏图标
-						webView.setTitleNViewButtonStyle(1, {  text: '\ue657' })
+						webView.setTitleNViewButtonStyle(0, {  text: '\ue657' })
 					}else{
-						webView.setTitleNViewButtonStyle(1, {  text: '\ue654' })
+						webView.setTitleNViewButtonStyle(0, {  text: '\ue654' })
 					}		
 					uni.showToast({ title: that.collect ? '收藏成功' : '取消收藏', icon: "none" })
 				}

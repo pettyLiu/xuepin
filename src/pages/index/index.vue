@@ -166,11 +166,10 @@
 			setTimeout(function(){
 				that.$nextTick(() => {
 					uni.createSelectorQuery().in(this).select('#tabs').boundingClientRect(function(rect){
-						console.log(rect)
 						that.top = rect.top
 					}).exec()
 				})
-			},1000)	
+			}, 1000)	
 		},
 		onPullDownRefresh() {
 			var that = this
@@ -196,15 +195,15 @@
 				})
 			},
 			bindPickerEdu (e) { // 学历选择器
-				this.eduIndex = e.detail.value
+				this.eduIndex = Number(e.detail.value)
 				this.resetData()
 			},
 			bindPickerWork (e) { // 工作经验选择器
-				this.workIndex = e.detail.value
+				this.workIndex = Number(e.detail.value)
 				this.resetData()
 			},
 			bindPickerSalary (e) { // 薪资选择器
-				this.salaryIndex = e.detail.value
+				this.salaryIndex = Number(e.detail.value)
 				this.resetData()
 			},
 			resetData () {
@@ -247,6 +246,16 @@
 							expect_salary: that.salaryIndex != '' ? that.salaryIndex : ''
 						}
 					}).then(res => {
+						console.log(res)
+						const datass =  {
+							page: that.currentPage,
+							alias: that.alias,
+							expect_jobs: that.category_id,
+							edu_level: that.eduIndex != '' ? that.eduIndex + 1 : '',
+							work_experience: that.workIndex == '' ? '' : that.workIndex + 1,
+							expect_salary: that.salaryIndex != '' ? that.salaryIndex : ''
+						}
+						console.log(datass)
 						that.postList = that.postList.concat(res.data.data)
 						that.currentPage = that.currentPage + 1
 						that.total = res.data.total
@@ -256,8 +265,6 @@
 				
 			},
 			chooseArea () { // 点击地区
-				// this.changePlace()
-				console.log(this.city)
 				uni.navigateTo({
 					url:'/pages/filterArea?city=' + JSON.stringify(this.city) 
 				})
@@ -270,8 +277,6 @@
 				}			
 			},	
 			chooseType () { // 点击职位类型
-				// this.changePlace()
-				console.log(this.alias)
 				const that = this
 				uni.navigateTo({
 					url:'/pages/filterPost?alias=' + this.alias

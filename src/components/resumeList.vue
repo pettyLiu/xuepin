@@ -48,7 +48,6 @@
                         url: '/pages/resumeDetail?id=' + id + '&way=1' + '&job_id=' + job_id
                     })
                 }else{
-                    console.log(category_id)
                     uni.navigateTo({
                         url: '/pages/resumeDetail?id=' + id + '&type='+ category_id
                     })
@@ -62,11 +61,9 @@
 			},
 			// 面试详情
 			toInterviewDetail (status) {
-				// if(this.activeTab == 2){
-					uni.navigateTo({
-						url: '/pages/news/InterviewDetail?status=' + status
-					})
-				// }
+                uni.navigateTo({
+                    url: '/pages/news/InterviewDetail?status=' + status
+                })
 			}
 		}
 	}

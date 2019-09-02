@@ -16,7 +16,8 @@
 				<swiper class="swiper" :autoplay="autoplay" :interval="interval" 
 				:duration="duration" indicator-active-color="#5E57EB" indicator-color="white" @change="swiperMove">
 					<swiper-item class="swiperItem row center" v-for="(item, index) in banner" :key=index>
-						<image :src="imgUrl + item.img" mode=""></image>
+						<image :src="imgUrl + item.picUrl" mode="" v-if="roleType == 1"></image>
+						<image :src="imgUrl + item.img" mode="" v-if="roleType == 2"></image>
 					</swiper-item>
 				</swiper>
 			</view>

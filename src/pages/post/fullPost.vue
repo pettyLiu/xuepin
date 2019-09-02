@@ -164,7 +164,6 @@ export default {
     computed: {
         basicConfig: {
             get(){
-                console.log(this.$store.state.basicConfig.basicConfig)
                 return this.$store.state.basicConfig.basicConfig
             },
             set(val){
@@ -189,7 +188,6 @@ export default {
             formData.category_id = this.jobIntension.length > 0 ? this.jobIntension[0].id : ''
             formData.welfare = JSON.stringify(this.welfare)
             formData.content = this.content
-            console.log(typeof this.salaryIndex+1)
             formData.salary = this.salaryIndex + 1
             formData.age = this.ageIndex + 1
             formData.edu_level = this.edu_levelIndex + 1
@@ -200,7 +198,6 @@ export default {
             formData.province_id = this.province_id
             formData.city_id = this.city_id
             formData.district_id = this.district_id
-            console.log(formData)
             if(this.type == 2){
                 formData.jobId = this.jobId
             }
@@ -364,26 +361,20 @@ export default {
         },
         regionChange(e) {
             var indexArray = e.detail.value
-            console.log(e)
             var region = ''
             var that = this
             indexArray.forEach(function(item, index){
-                console.log(that.tt[index].length)
                 if(that.tt[index].length > 0){
                     region += that.tt[index][item].name + '-'
-                    console.log(index)
                     that.region_id = that.tt[index][item].id
                 }	
             })
-            console.log('ok here')
             this.province_id = that.tt[0][indexArray[0]].id
             this.city_id = that.tt[1][indexArray[1]].id
             this.district_id = that.tt[2][indexArray[2]].id
             that.region = region.slice(0, region.length -1 )
-            // that.code = { code: that.tt[2][indexArray[2]].code, name: that.tt[2][indexArray[2]].name }
         },
         change (e){
-            console.log(this.multiIndex)
             var id = 0
             var that = this
             if(e.detail.column == 0){
@@ -452,10 +443,8 @@ export default {
                     this.$set(item,'checked',false)
                 }
             }          
-            console.log(values)
         },
         changeContent (e) { // 职位描述
-            console.log(e)
             this.content = e.detail.html
         },
         onEditorReady () {
@@ -470,7 +459,6 @@ export default {
             }).exec()
         },
         onBackPress() { // 返回时，重置store的期望职位
-			console.log('back')
             this.$store.commit('resetIntentsion')
             this.$store.commit('resetJob_benefits')
 		},

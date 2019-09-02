@@ -73,7 +73,7 @@
 			</view>
 			<view class="lists column"  v-if="status== (4 || 5)">
 				<text class="list"><text class="iconfont icon-wj-bjb"></text>{{job.contact_name}}</text>
-				<text class="list" @click="call"><text class="iconfont icon-dianhua"></text>{{job.contact_tel}}</text>
+				<text class="list" @click="call"><text class="iconfont icon-dianhua"></text>{{job.contact_tel}}<text class="iconfont icon-youjiantou"></text></text>
 				<text class="list"><text class="iconfont icon-shijian"></text>{{info.updated_at}}</text>
 				<text class="list" @click="toMap"><text class="iconfont icon-weizhi"></text>{{job.work_address}}<text class="iconfont icon-youjiantou"></text></text>
 			</view>
@@ -97,11 +97,9 @@
 		},
 		methods:{
 			call () {
-				console.log(12121)
 				uni.makePhoneCall({
-					phoneNumber:  this.job.contact_tel, //仅为示例,
+					phoneNumber:  this.job.contact_tel,
 					success(res){
-						console.log(res)
 					}
 				});
 			},
@@ -126,10 +124,6 @@
 			},
 			toMap () {
 				uni.openLocation({
-					// latitude: 25.854021,
-					// longitude: 114.928111,
-					// name: '江西理工大学',
-					// address: '红旗大道86号',
 					...this.cover,
 					success: function (res) {
 						console.log(res)
