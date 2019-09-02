@@ -52,7 +52,7 @@
 						<text>邀面试</text>
 						<text class="time">6月15日 15:30</text>
 					</view>					
-					<text class="active2 row center" v-if="status!=3">
+					<text class="active2 row center" v-if="status!=3&&status!=2">
 						<text class="iconfont icon-youjiantou"></text>
 						<text class="iconfont icon-youjiantou"></text>
 						<text class="iconfont icon-youjiantou"></text>
@@ -66,13 +66,14 @@
 				</view>
 			</view>
 			<view class="lists" >
-				<text class="f_24 tips"  v-if="status==-1">您的简历已投递成功</text>
+				<text class="f_24 tips"  v-if="status==-1">您的简历已投递成功,请耐心等待!!</text>
 				<text class="f_24 tips"  v-if="status==1">您的简历已被企业查看，请耐心等待!!</text>
-				<text class="f_24 tips"  v-if="status==2">不合适原因：已找到合适员工</text>
+				<text class="f_24 tips"  v-if="status==2">您的简历被企业标记为不合适，请另投简历!!</text>
+				<text class="f_24 tips"  v-if="status==4">您已被企业邀请面试，请尽快电话联系!!</text>
 			</view>
 			<view class="lists column"  v-if="status== (4 || 5)">
 				<text class="list"><text class="iconfont icon-wj-bjb"></text>{{job.contact_name}}</text>
-				<text class="list"><text class="iconfont icon-dianhua"></text>{{job.contact_tel}}</text>
+				<text class="list" @click="call"><text class="iconfont icon-dianhua"></text>{{job.contact_tel}}</text>
 				<text class="list"><text class="iconfont icon-shijian"></text>{{info.updated_at}}</text>
 				<text class="list" @click="toMap"><text class="iconfont icon-weizhi"></text>{{job.work_address}}<text class="iconfont icon-youjiantou"></text></text>
 			</view>
@@ -95,6 +96,15 @@
 			};
 		},
 		methods:{
+			call () {
+				console.log(12121)
+				uni.makePhoneCall({
+					phoneNumber:  this.job.contact_tel, //仅为示例,
+					success(res){
+						console.log(res)
+					}
+				});
+			},
 			getMessage () {
 				const that = this
 				that.$axios({

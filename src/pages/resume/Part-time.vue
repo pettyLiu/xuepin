@@ -15,7 +15,7 @@
 				<text class="list">户口所在地：{{detail.census_city!='null'?detail.census_city:'暂未填写'}}</text>
 			</view>
 			<text class="edit globelColor" @click="toEditInformation">编辑</text>
-			<text class="edit1 globelColor" @click="setLocal" v-if="detail.checked=='null'">设为默认简历</text>
+			<text class="edit1 globelColor" @click="setLocal" v-if="checked=='null'">设为默认简历</text>
 			<text class="edit1 globelColor" v-else>默认简历</text>
 		</view>
 		<view class="content">
@@ -67,6 +67,7 @@
 						id: that.id
 					}
 				}).then(res => {
+					console.log(res)
 					that.detail = res.data
 				})
 			},
@@ -110,7 +111,7 @@
 					}
 				}).then( res => {
 					uni.showToast({ title: '设置成功' })
-					this.detail.checked = true
+					this.checked = true
 				})
 			}
 		},

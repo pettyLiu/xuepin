@@ -13,13 +13,27 @@
 				</picker>
 			</view>
 			<view class="list">
-				<view class="title f_24 c_999 row just_btw"><text>在校时间</text><text class="iconfont icon-youjiantou"></text></view>
+				<view class="title f_24 c_999 row just_btw"><text>在校开始时间</text><text class="iconfont icon-youjiantou"></text></view>
 				<view class="row">
 					<view class="date_item">
 						<dyDatePicker placeholder="起始日期" :childValue="from" :minSelect="from_minSelect" :maxSelect="from_maxSelect"
 						:iconshow="false" @getData="getFromData" timeType="month"></dyDatePicker>
 					</view>
-					<text>--</text>
+					<!-- <text>--</text>
+					<view class="date_item">
+						<dyDatePicker placeholder="结束日期" :minSelect="to_minSelect" :childValue="to" :maxSelect="to_maxSelect" :iconshow="false"
+						@getData="getToData" timeType="month"></dyDatePicker>
+					</view> -->
+				</view>
+			</view>
+			<view class="list">
+				<view class="title f_24 c_999 row just_btw"><text>在校结束时间</text><text class="iconfont icon-youjiantou"></text></view>
+				<view class="row">
+					<!-- <view class="date_item">
+						<dyDatePicker placeholder="起始日期" :childValue="from" :minSelect="from_minSelect" :maxSelect="from_maxSelect"
+						:iconshow="false" @getData="getFromData" timeType="month"></dyDatePicker>
+					</view>
+					<text>--</text> -->
 					<view class="date_item">
 						<dyDatePicker placeholder="结束日期" :minSelect="to_minSelect" :childValue="to" :maxSelect="to_maxSelect" :iconshow="false"
 						@getData="getToData" timeType="month"></dyDatePicker>
@@ -126,8 +140,8 @@
 				this.education.major = this.eduLines[index].major
 				this.from = this.eduLines[index].text7.substr(0,7)
 				this.to_minSelect = this.eduLines[index].text7.substr(0,7)
-				this.to = this.eduLines[index].text7.substr(8,7)
-				this.from_maxSelect = this.eduLines[index].text7.substr(8,7)
+				this.to = this.eduLines[index].text7.replace(/\s+/g,"").substr(8,7)
+				this.from_maxSelect = this.eduLines[index].text7.replace(/\s+/g,"").substr(8,7)
 				console.log(this.$store.state.fullTime)
 			}	
 		},
@@ -168,6 +182,9 @@
 			padding-bottom: 22upx;
 			.title{
 				.h(63upx, 63upx, none)
+			}
+			.date_item{
+				width: 100%
 			}
 		}
 	}

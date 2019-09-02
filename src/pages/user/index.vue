@@ -153,7 +153,7 @@
 							filePath: that.avatar,
 							name: 'fileUpload',
 							success: (uploadFileRes) => {
-								that.info.avatar = config.imgUrl + JSON.parse(uploadFileRes.data).data
+								that.info.avatar = JSON.parse(uploadFileRes.data).data
 								that.$axios({
 									url: 'api/user/ajaxEditUser',
 									method: 'post',

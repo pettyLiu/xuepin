@@ -28,10 +28,8 @@ export default function (options) {
     if (!/json/.test(options.url)) {
         options.url = config.baseUrl + options.url
     }
-	var tt = uni.getStorageSync('info')
     return new Promise((resolve, reject) => {		
         axios.request(options).then(res => {
-            console.log(res.data)
             if (res.data.code == 0 && !res.data.msg.indexOf('token无效')) {
 				uni.reLaunch({
 					url: '/pages/login/index'

@@ -65,7 +65,8 @@
                         "appkey_ios" : "57060e23be675165e9f3e501e8abd573",
                         "appkey_android" : "57060e23be675165e9f3e501e8abd573"
                     }
-                }
+                },
+                "push" : {}
             }
         }
     },

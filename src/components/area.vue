@@ -29,7 +29,12 @@
 			}
 		},
 		props:{
-			city: Object
+			// city: Object
+		},
+		computed:{
+			city(){
+				return this.$store.state.city
+			}
 		},
 		mounted() {
 			if(this.$store.state.district){
@@ -45,6 +50,7 @@
 				this.$emit("closeMask", {name: item,type: 'area'})
 			},
 			getArea () {
+				console.log(this.city)
 				const that = this
 				that.$axios({
 					url: 'api/base/ajaxDistrict',

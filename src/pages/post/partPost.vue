@@ -115,7 +115,7 @@
 						<text>职位描述</text>
 					</view>
                     <editor id="editor" class="ql-container" placeholder="输入"
-                    @ready="onEditorReady" @input="changeContent"></editor>
+                    @ready="onEditorReady" @input="changeContent" :read-only="readOnly" @click="changeReadOnly"></editor>
 					<!-- <textarea name="content" id="" cols="20" rows="10" placeholder="请输入企业介绍"></textarea> -->
 				</view>
                 <view class="list">
@@ -143,7 +143,8 @@
 					<view class="title f_24 c_999 row just_btw">
 						<text>联系邮箱</text>
 					</view>
-					<input name="contact_email" type="text" :value="detail.contact_email"  placeholder="请输入联系邮箱" 
+					<input name="contact_email" type="text" :value="detail.contact_email == 'null' ? '' : detail.contact_email"  
+                    placeholder="请输入联系邮箱" 
 					placeholder-class="placeholder"/>
 				</view>
 				<button class="formBtn" formType="submit">保存</button>
@@ -191,7 +192,8 @@ export default {
                 work_address: '',
                 contact_email: ''
             },
-            info: {}
+            info: {},
+            readOnly: true,
         }
     },
     onLoad (options) {
@@ -289,6 +291,9 @@ export default {
                 uni.showToast({ title: graceChecker.error, icon: "none" })
             }
         },
+        changeReadOnly(){
+            this.readOnly = false
+        },
         getPostDetail (id) {
             const that = this
             that.$axios({
@@ -299,6 +304,7 @@ export default {
             }).then(res => {
                 if(res.code == 1){
                     const data = res.data
+                    console.log(typeof data.salary)
                     that.salaryIndex = data.salary - 1
                     that.ageIndex = data.age - 1
                     that.edu_levelIndex = data.edu_level - 1
@@ -312,8 +318,9 @@ export default {
                     }
                     let expect_jobs = []
                     expect_jobs.push({id: data.category_id, name: data.category_name})
-
-                    that.dateCheck = JSON.parse(JSON.parse(data.part_time) ) 
+                    if(data.part_time){
+                        that.dateCheck = JSON.parse(data.part_time ) 
+                    }
                     console.log(that.dateCheck)
                     this.$store.commit('changeIntentsion', expect_jobs)
                     if(that.editorCtx){
@@ -488,19 +495,19 @@ export default {
             }
         },
         bindPickerSalary (e) { // 薪资选择器
-            this.salaryIndex = e.detail.value
+            this.salaryIndex = Number(e.detail.value)
         },
         bindPickerAge (e) { // 年龄选择器
-            this.ageIndex = e.detail.value
+            this.ageIndex = Number(e.detail.value)
         },
         bindPickerEdu_level (e){ // 学历要求
-            this.edu_levelIndex = e.detail.value
+            this.edu_levelIndex = Number(e.detail.value)
         },
         bindPickerWork_exp (e) { // 工作经验
-            this.work_expIndex = e.detail.value
+            this.work_expIndex = Number(e.detail.value)
         },
         bindPickerSex (e) { // 性别选择器
-            this.sexIndex = e.detail.value
+            this.sexIndex = Number(e.detail.value)
         },
         checkboxChange: function (e) { // 职位福利
             var items = this.basicConfig.job_benefits,

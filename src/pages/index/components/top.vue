@@ -4,17 +4,19 @@
 		<view class="search row just_btw" :style="{paddingTop:statusBarHeight + 10 + 'px'}">
 			<view class="address" @click="toChooseAddress">{{city.name}}<text class="iconfont icon-sanjiao"></text></view>
 			<view class="searchView">
-				<input class="searchInp" type="text" value="" placeholder="输入关键字" @focus="focusOn" placeholder-class="searchPlaceholder"/>
+				<input class="searchInp" value="" disabled="true"
+				placeholder="输入关键字" @click="focusOn" placeholder-class="searchPlaceholder"/>
 				<text class="iconfont icon-sousuo"></text>
 			</view>
 		</view>
 		<!-- 轮播图 -->
-		<view class="page-section swiper" :style="{paddingTop:statusBarHeight + 10 + 'px'}" v-if="!istop">
-			<view class="page-section-spacing">
+		<view class="page-section" :style="{paddingTop:statusBarHeight + 10 + 'px'}" v-if="istop||banner.length==0"></view>
+		<view class="page-section swiper" :style="{paddingTop:statusBarHeight + 10 + 'px'}" v-if="!istop&&banner.length!=0">
+			<view class="page-section-spacing" v-if="banner.length>0">
 				<swiper class="swiper" :autoplay="autoplay" :interval="interval" 
 				:duration="duration" indicator-active-color="#5E57EB" indicator-color="white" @change="swiperMove">
 					<swiper-item class="swiperItem row center" v-for="(item, index) in banner" :key=index>
-						<image :src="item" mode=""></image>
+						<image :src="imgUrl + item.img" mode=""></image>
 					</swiper-item>
 				</swiper>
 			</view>
@@ -27,6 +29,7 @@
 
 <script>
 	import { mapState } from 'vuex'
+	import config from '../../../lib/config'
 	export default{
 		data(){
 			return{
@@ -36,11 +39,16 @@
 				banner: ['/static/image/banner1.png','/static/image/banner2.png','/static/image/banner3.png'],
 				dots: 1,
 				activeDots: 0,
+				imgUrl: config.imgUrl
 			}
 		},
 		props:['istop'],
 		mounted() {
-			// this.getBanner()
+			if(this.roleType == 1){
+				this.getBanner()
+			}else{
+				this.getBanner1()
+			}
 		},
 		computed:{
 			statusBarHeight() {
@@ -77,6 +85,18 @@
 					}	
 				})
 			},
+			getBanner1 (){
+				const that = this
+				that.$axios({
+					url: 'api/enterprise/getSlideMap',
+					method: 'get'
+				}).then(res => {
+					if(res.code == 1){
+						that.banner = res.data
+						that.dots = that.banner.length
+					}	
+				})
+			},
 			swiperMove (e) { // 轮播移动时
 				this.activeDots = e.detail.current
 			},
@@ -98,7 +118,7 @@
 <style lang="less">
 	@import '../../../style/common/mixin.less';
 	.swiper{
-		height: 220upx;
+		height: 348upx;
 		background:rgba(245,245,245,1);	
 	}
 	.top{
@@ -121,10 +141,10 @@
 		}
 	}
 	.swiperItem{
-		height: 220upx;
+		height: 348upx;
 		width: 100%;
 		image{
-			height: 150upx;
+			height: 278upx;
 			width: 90%;
 			border-radius: 75upx;
 		}
@@ -148,7 +168,6 @@
 		}
 		.icon-sanjiao{
 			position: absolute;
-			// left: 56upx;
 			z-index: 10;
 		}
 		.icon-sousuo{

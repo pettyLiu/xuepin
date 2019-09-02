@@ -12,13 +12,27 @@
 				<text class="f_30 c_666" v-else>请输入岗位名称</text>
 			</view>
 			<view class="list">
-				<view class="title f_24 c_999 row just_btw"><text>在职时间</text><text class="iconfont icon-youjiantou"></text></view>
+				<view class="title f_24 c_999 row just_btw"><text>在职开始时间</text><text class="iconfont icon-youjiantou"></text></view>
 				<view class="row">
 					<view class="date_item">
 						<dyDatePicker placeholder="起始日期" :childValue="from" :minSelect="from_minSelect" :maxSelect="from_maxSelect"
 						:iconshow="false" @getData="getFromData" timeType="month"></dyDatePicker>
 					</view>
-					<text>--</text>
+					<!-- <text>--</text> -->
+					<!-- <view class="date_item">
+						<dyDatePicker placeholder="结束日期" :minSelect="to_minSelect" :childValue="to" :maxSelect="to_maxSelect" :iconshow="false"
+						@getData="getToData" timeType="month"></dyDatePicker>
+					</view> -->
+				</view>
+			</view>
+			<view class="list">
+				<view class="title f_24 c_999 row just_btw"><text>在职结束时间</text><text class="iconfont icon-youjiantou"></text></view>
+				<view class="row">
+					<!-- <view class="date_item">
+						<dyDatePicker placeholder="起始日期" :childValue="from" :minSelect="from_minSelect" :maxSelect="from_maxSelect"
+						:iconshow="false" @getData="getFromData" timeType="month"></dyDatePicker>
+					</view> -->
+					<!-- <text>--</text> -->
 					<view class="date_item">
 						<dyDatePicker placeholder="结束日期" :minSelect="to_minSelect" :childValue="to" :maxSelect="to_maxSelect" :iconshow="false"
 						@getData="getToData" timeType="month"></dyDatePicker>
@@ -141,10 +155,10 @@
 				this.work.company = this.workLines[index].company
 				this.work.do_work = this.workLines[index].do_work
 				this.work.work_desc = this.workLines[index].work_desc
-				this.from = this.workLines[index].project_exp.substr(0,7)
+				this.from = this.workLines[index].project_exp.replace(/\s+/g,"").substr(0,7)
 				this.to_minSelect = this.workLines[index].project_exp.substr(0,7)
-				this.to = this.workLines[index].project_exp.substr(8,7)
-				this.from_maxSelect = this.workLines[index].project_exp.substr(8,7)
+				this.to = this.workLines[index].project_exp.replace(/\s+/g,"").substr(8,7)
+				this.from_maxSelect = this.workLines[index].project_exp.replace(/\s+/g,"").substr(8,7)
 				// this.$forceUpdate()
 				console.log(this.work)
 			}
@@ -181,6 +195,9 @@
 			padding-bottom: 22upx;
 			.title{
 				.h(63upx, 63upx, none)
+			}
+			.date_item{
+				width: 100%
 			}
 		}
 	}

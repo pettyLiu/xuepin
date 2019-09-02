@@ -1,8 +1,8 @@
 <template>
 	<view class="">
 		<view class="tabs row" id="tabs">
-			<text class="tab" id="2" @click="changeTabs(1)" :class="{active:tabs==1}">全职简历</text>
-			<text class="tab" id="3" @click="changeTabs(2)" :class="{active:tabs==2}">兼职简历</text>
+			<text class="tab" id="2" @click="changeTabs(1)" :class="{active:tabs==1}">全职职位</text>
+			<text class="tab" id="3" @click="changeTabs(2)" :class="{active:tabs==2}">兼职职位</text>
 		</view>
 		<postList :list="list"></postList>
 		<view class="loadmore" v-if="showLoadMore">{{loadMoreText}}</view>
@@ -11,6 +11,7 @@
 
 <script>
 	import postList from '../../components/postList'
+import { setTimeout } from 'timers';
 	export default{
 		name: 'moduleSearch',
 		data () {
@@ -25,6 +26,7 @@
 			}
 		},
 		onLoad(options) {
+			const that = this
 			uni.setNavigationBarTitle({
 				title: options.title
 			})
@@ -37,7 +39,9 @@
 				case '2':
 				this.url = 'api/index/nearPosition' // 离我最近
 				this.getLocation()
-				this.getList(this.url)
+				setTimeout(function(){
+					that.getList(that.url)
+				},500)	
 				break;
 				case '3':
 				this.url = 'api/index/urgentPosition' // 急招岗位
@@ -47,8 +51,7 @@
 				this.url = 'api/index/latestPosition' // 最新岗位
 				this.getList(this.url)
 				break;
-			}
-			
+			}	
 		},
 		onReachBottom() { // 触底加载更多
 			if(this.total > this.list.length){
@@ -64,7 +67,6 @@
 		methods:{
 			getList (url) {
 				const that = this
-				that.showLoadMore = true
 				var data = {}
 				var method = 'get'
 				if(this.type == 2){ // 最近岗位
@@ -85,11 +87,14 @@
 					method: method,
 					data: { ...data },
 				}).then(res =>{
-					if(res.code == 1){
+					that.showLoadMore = false
+					console.log(res)
+					console.log(that.longitude + ',' + that.latitude)
+					if(res.code == 1 && res.data.data){
 						that.currentPage = that.currentPage + 1
 						that.total = res.data.total
 						that.list = that.list.concat(res.data.data)
-						that.showLoadMore = false
+						
 					}
 				})
 			},
@@ -100,8 +105,10 @@
 					success: function (res) {
 						that.longitude = res.longitude
 						that.latitude = res.latitude
+						uni.showToast({title:'获取成功'+res.longitude})
 					},
 					fail(res) {
+						uni.showToast({title: '获取地理位置失败了'})
 						console.log(res)
 					}
 				})

@@ -1,6 +1,6 @@
 <template>
 	<view class="filterArea">
-		<areas :city="city"></areas>
+		<areas></areas>
 	</view>
 </template>
 
@@ -10,13 +10,12 @@
 		name: 'filterArea',
 		data() {
 			return {
-				
+				 
 			};
 		},
 		methods:{
 		},
 		onLoad (options) {
-			this.city = JSON.parse(options.city) 
 		},
 		computed:{
 		},

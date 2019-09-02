@@ -45,7 +45,7 @@
 			<block v-for="(it,i) of companyCollection" :key="i">
 				<view class="uni-swipe-action__container" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd"
 				 @touchcancel="touchEnd" :style="{'transform':messageIndex == i ? transformX : 'translateX(0px)','-webkit-transform':messageIndex == i ? transformX : 'translateX(0px)'}" :data-index="i" :data-disabled="it.disabled">
-					<view class="uni-swipe-action__content" @click="toCompanyDetail(it.id)">
+					<view class="uni-swipe-action__content" @click="toCompanyDetail(it.enterprise_id)">
 						<view class="companyTxt row ali_center">
 							<image class="companyAvatar" :src="imgUrl + it.logo" mode=""></image>
 							<view class="column just_btw">
@@ -114,6 +114,7 @@
 					  type: that.tabs
 					} 
 				}).then(res =>{
+					console.log(res)
 					if(res.code == 1){
 						console.log(res)
 						that.total = res.data.total
@@ -152,6 +153,7 @@
 				})
 			},
 			toCompanyDetail (id) {
+				console.log(id)
 				uni.navigateTo({
 					url: '/pages/companyDetail?id=' + id
 				})
@@ -273,6 +275,7 @@
 			    }
 			})
 			that.getCollectionList()
+			console.log(121212112)
 		},
 	}
 </script>

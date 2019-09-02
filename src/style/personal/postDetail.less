@@ -6,10 +6,8 @@
 		padding: 0 30upx 0 35upx;
 		.title{
 			font-size: 30upx;
-			line-height: 68upx;
 			height: 68upx;
 			border-bottom: @g_border;
-			display: inline-block;
 			width: 100%;
 		}
 	}
@@ -64,5 +62,36 @@
 		width: 90%;
 		margin: 20upx 5%;
 		font-size: 30upx;
+	}
+	table {
+		line-height: 1.5;
+		// border: 1px 1px 0 1px solid #b5b8c2
+		border-top: 1px solid #b5b8c2;
+		border-left: 1px solid #b5b8c2;
+		text{
+			border-bottom: 1px solid #b5b8c2;
+			height: 50upx;
+			line-height: 50upx
+		}
+	}
+	tr {
+		border-bottom: 1px solid #666;
+		display: flex;
+	}
+	.td {
+		flex:1;
+		text-align: center;
+		border-right: 1px solid #b5b8c2;
+	}
+	th {
+		flex: 1;
+		border-right: 1px solid #b5b8c2;
+	}
+	.white{
+		color:white
+	}
+	.partTime{
+		line-height: 1.8;
+		margin: 10upx 0
 	}
 }

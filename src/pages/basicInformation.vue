@@ -1,9 +1,10 @@
 <template>
-	<view class="editInformation">
+	<view class="editInformation" v-if="basic">
 		<text class="iconfont icon-jiantou3" :style="{top: statusBarHeight + 'px'}" @click="back" v-if="showBack"></text>
 		<text class="bigTitle f_46">完善信息</text>
 		<view class="avatarList" @click="chooseImg">
-			<image class="avatar" :src="imgUrl + avatar" mode=""></image>
+			<image class="avatar" :src="imgUrl + avatar" mode="" v-if="avatar"></image>
+			<image class="avatar" src="/static/icon/moren.png" mode="" v-else></image>
 			<text class="iconfont icon-xiangji"></text>
 		</view>		
 		<view class="form">
@@ -37,7 +38,7 @@
 				<view class="list">
 					<picker mode="multiSelector" @change="bindBirthDateChange" :value="indexInterval" :range="dateInterval">
 						<view class="title f_24 c_999 row just_btw"><text>出生年份</text><text class="iconfont icon-youjiantou"></text></view>
-						<text class="f_30">{{birthDate}}</text>
+						<text class="f_30">{{birthDate}} </text>
 					</picker>	
 				</view>
 				<view class="list">
@@ -45,6 +46,12 @@
 						<view class="title f_24 c_999 row just_btw"><text>参加工作时间</text><text class="iconfont icon-youjiantou"></text></view>
 						<text class="f_30">{{workDate}}</text>
 					</picker>	
+				</view>
+				<view class="list">
+					<picker @change="bindPickerwork_exp" :value="work_exp_Index" :range="basicConfig.work_exp" name="work_experience">
+						<view class="title f_24 c_999 row just_btw"><text>工作经验 </text><text class="iconfont icon-youjiantou"></text></view>
+						<text class="f_30">{{basicConfig.work_exp[work_exp_Index]}}</text>
+					</picker>
 				</view>
 				<view class="list">
 					<view class="title f_24 c_999 row just_btw"><text>邮箱</text><text class="iconfont icon-youjiantou"></text></view>
@@ -80,7 +87,7 @@
 				statusBarHeight: getApp().globalData.statusBarHeight,
 				info: {},
 				imgUrl: config.imgUrl,
-				avatar: '/static/icon/moren.png',
+				avatar: '',
 				sex: [{name: '男',id:' 1'}, {name: '女',id: '2'}],
 				identity: ['学生', '非学生'],
 				qualification: ['本科','中专'],
@@ -88,6 +95,7 @@
 				sexname: '',				
 				identityIndex: 0,				
 				qualificationIndex: 0,
+				work_exp_Index: 0,
 				date: currentDate,
 				showBack: false,
 				birthDate: currentDate,
@@ -97,6 +105,7 @@
 				region: '',
 				province_id: '', // 现居地址-省
 				city_id: '', // 现居地址-市
+				basic: ''
 			};
 		},
 		onNavigationBarButtonTap (val){
@@ -118,9 +127,10 @@
 				var formData = e.detail.value
 				formData.brithday = this.birthDate +'-01'
 				formData.start_work_time = this.workDate+'-01'
-				formData.sex = formData.sex + 1
-				formData.identity = formData.identity + 1
-				formData.edu_level = formData.edu_level + 1
+				formData.sex = Number(formData.sex) + 1
+				formData.identity = Number(formData.identity) + 1
+				formData.edu_level = Number(formData.edu_level) + 1
+				formData.work_experience = Number(formData.work_experience) + 1
 				formData.province_id = this.province_id
 				formData.city_id = this.city_id
 				formData.avatar = this.avatar
@@ -237,10 +247,10 @@
 			},
 			bindPickerSex (e) { // 性别选择器		
 				console.log(e)	
-				this.sexIndex = e.detail.value
+				this.sexIndex = Number(e.detail.value)
 			},
 			bindPickerIdentity(e){ // 身份选择器
-				this.identityIndex = e.detail.value
+				this.identityIndex = Number(e.detail.value)
 			},
 			bindPickerQualification (e) {// 学历选择器
 				this.qualificationIndex = e.detail.value
@@ -252,6 +262,10 @@
 			bindWorkDateChange (e) { // 工作时间选择
 				const ind = e.detail.value
 				this.workDate = this.dateInterval[0][ind[0]].replace('年','') + '-' + this.dateInterval[1][ind[1]].replace('月','')
+			},
+			bindPickerwork_exp (e) {
+				this.work_exp_Index = e.detail.value
+				this.$forceUpdate()
 			},
 			bindCityChange (e) { // 城市选择器
 				
@@ -304,13 +318,14 @@
 		watch:{
 			basicConfig(val){
 				console.log(val)
+				this.basic = this.basicConfig
 			}
 		},
 		onLoad() {
 			this.$store.dispatch('getBasicConfig')
-			this.basic = this.basicConfig
-			console.log(this.basic)
-			console.log(this.basic.age)
+			
+			// console.log(this.basic)
+			// console.log(this.basic.age)
 			this.getProvinces()
 			console.log(this.dateInterval)
 			console.log(this.indexInterval)

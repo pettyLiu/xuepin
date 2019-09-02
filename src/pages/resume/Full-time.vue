@@ -43,7 +43,7 @@
 						<text class="partTopTit">{{item.finish_school}}</text>
 						<text class="iconfont icon-youjiantou"></text>
 						<text class="time f_22 c_999">{{item.text7}}</text>
-						<text class="f_22 c_999 address">{{item.edu_levelName}} {{item.major}}</text>
+						<text class="f_22 c_999 address"> {{item.major}}</text>
 					</view>
 					<text class="btn" @click="toEducation(1)">添加教育经历</text>
 				</view>	
@@ -118,6 +118,7 @@ import { setTimeout } from 'timers';
 						id: that.id
 					}
 				}).then(res => {
+					console.log(res)
 					that.detail = res.data
 				})
 			},

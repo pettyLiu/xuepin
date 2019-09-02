@@ -257,6 +257,7 @@
 				delete this.info.ifrstAreaName
 				delete this.info.twoAreaName
 				delete this.info.name
+				this.region = this.info.city +  ' ' +  this.info.district
 				console.log(this.info)
 			}
 			this.getProvinces()

@@ -138,7 +138,6 @@
 					that.tt = (res.windowWidth/3 - sliderWidth)/2
 				}
 			})
-			console.log(1111222222222222)
 			if(this.roleType == 2){
 				this.tabs = 2
 				this.alias = 'full_rec'
@@ -171,7 +170,7 @@
 						that.top = rect.top
 					}).exec()
 				})
-			},500)	
+			},1000)	
 		},
 		onPullDownRefresh() {
 			var that = this
@@ -258,6 +257,7 @@
 			},
 			chooseArea () { // 点击地区
 				// this.changePlace()
+				console.log(this.city)
 				uni.navigateTo({
 					url:'/pages/filterArea?city=' + JSON.stringify(this.city) 
 				})
@@ -286,8 +286,7 @@
 			changeTabs (e) {
 				if(e.target.id != this.tabs){
 					this.tabs = e.target.id
-					this.currentPage = 1
-					this.postList = []
+					this.currentPage = 1					
 					if(this.tabs == 2){
 						this.alias = 'full_rec'
 						this.post = '职位类型'
@@ -299,8 +298,9 @@
 					}else{
 						this.alias = ''
 					}
-					this.sliderLeft = e.target.offsetLeft + this.tt					
+					this.postList = []			
 					this.getPostList()
+					
 				}	
 			},
 			toNext (title, type) {

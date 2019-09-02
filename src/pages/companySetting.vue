@@ -107,7 +107,7 @@
 
 <script>
 	import config from '../lib/config'
-	import basicConfig from '../store/modules/basicConfig';
+	// import basicConfig from '../store/modules/basicConfig';
 import { setTimeout } from 'timers';
 	var  graceChecker = require("../lib/graceChecker.js");
 	export default {

@@ -145,7 +145,9 @@
 						resume_id: that.id
 					}
 				}).then(res => {
+					console.log(res)
 					if(res.code == 1){
+						that.show_status = true
 						uni.showToast({ title: '已获取联系方式！' + that.detail.contact_tel, icon: 'none' })
 					}else{
 						uni.showModal({

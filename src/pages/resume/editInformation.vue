@@ -300,18 +300,16 @@
 				})
 			},
 			bindPickerSex (e) { // 性别选择器
-				this.info.sex_id = e.detail.value + 1
+				this.info.sex_id = Number(e.detail.value) + 1
 			},
 			bindPickerIdentity(e){ // 身份选择器
-				this.info.identity_id = e.detail.value + 1
+				this.info.identity_id = Number(e.detail.value) + 1
 			},
 			bindPickerQualification (e) {// 学历选择器
-				this.info.edu_level_id = e.detail.value + 1
+				this.info.edu_level_id = Number(e.detail.value) + 1
 			},
 			bindPickerwork_exp (e) {
-				this.info.work_exp_id = e.detail.value + 1
-				console.log(this.info.work_exp_id)
-				console.log(this.basic.work_exp[this.info.work_exp_id - 1])
+				this.info.work_exp_id = Number(e.detail.value) + 1
 				this.$forceUpdate()
 			},
 			bindBirthDateChange (e) { // 生日时间选择
@@ -339,28 +337,19 @@
 			// 	return true
 			// }
 		},
-		onShow(){
-			console.log(this.userInfo)
-			this.info = this.userInfo
-		},
 		onLoad() {
 			const that = this
 			this.$axios({
 				url: 'api/user/ajaxEditUser',
 				method: 'post'
 			}).then(res=>{
-				console.log(res)
 				that.info = res.data.original.data
+				that.region = that.info.province + ' ' + that.info.city
+				that.region1 = that.info.census_province + ' ' + that.info.census_city
 				console.log(that.info)
 				that.getProvinces()
 				that.getProvinces1()
 			})
-			// uni.showModal({
-			// 	content: this.basic.edu_level[0]
-			// })
-			// this.info = this.userInfo
-			// console.log(this.info)
-			
 		},
 		watch:{
 			info: { // 检查是否修改过内容

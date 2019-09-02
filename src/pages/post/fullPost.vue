@@ -81,7 +81,7 @@
 					<view class="title f_24 c_999 row just_btw">
 						<text>职位描述</text>
 					</view>
-                    <editor id="editor" class="ql-container" placeholder="输入"
+                    <editor id="editor" class="ql-container" placeholder="输入" :read-only="readOnly" @click="changeReadOnly"
                     @ready="onEditorReady" @input="changeContent"></editor>
 					<!-- <textarea name="content" id="" cols="20" rows="10" placeholder="请输入企业介绍"></textarea> -->
 				</view>
@@ -110,7 +110,7 @@
 					<view class="title f_24 c_999 row just_btw">
 						<text>联系邮箱</text>
 					</view>
-					<input name="contact_email" type="text" :value="detail.contact_email"  placeholder="请输入联系邮箱" 
+					<input name="contact_email" type="text" :value="detail.contact_email?detail.contact_email:''"  placeholder="请输入联系邮箱" 
 					placeholder-class="placeholder"/>
 				</view>
 				<button class="formBtn" formType="submit">保存</button>
@@ -145,7 +145,8 @@ export default {
                 work_address: '',
                 contact_email: ''
             },
-            info: {}
+            info: {},
+            readOnly: true,
         }
     },
     onLoad (options) {
@@ -187,7 +188,8 @@ export default {
             var formData = e.detail.value
             formData.category_id = this.jobIntension.length > 0 ? this.jobIntension[0].id : ''
             formData.welfare = JSON.stringify(this.welfare)
-            formData.content = '121212'
+            formData.content = this.content
+            console.log(typeof this.salaryIndex+1)
             formData.salary = this.salaryIndex + 1
             formData.age = this.ageIndex + 1
             formData.edu_level = this.edu_levelIndex + 1
@@ -198,10 +200,12 @@ export default {
             formData.province_id = this.province_id
             formData.city_id = this.city_id
             formData.district_id = this.district_id
+            console.log(formData)
             if(this.type == 2){
                 formData.jobId = this.jobId
             }
             var checkRes = graceChecker.check(formData, rule)
+            console.log(formData)
             if (checkRes) {
                 const that = this
                 that.$axios({
@@ -220,11 +224,16 @@ export default {
                                 url: '/pages/company/index'
                             })
                         }, 1000)
+                    }else{
+                        uni.showToast({ title: res.msg, icon: 'none' })
                     }
                 })
             }else{
                 uni.showToast({ title: graceChecker.error, icon: "none" })
             }
+        },
+        changeReadOnly(){
+            this.readOnly = false
         },
         getPostDetail (id) {
             const that = this
@@ -234,6 +243,7 @@ export default {
                     id: id
                 }
             }).then(res => {
+                console.log(res)
                 if(res.code == 1){
                     const data = res.data
                     that.salaryIndex = data.salary - 1
@@ -246,6 +256,7 @@ export default {
                     let expect_jobs = []
                     expect_jobs.push({id: data.category_id, name: data.category_name})
                     this.$store.commit('changeIntentsion', expect_jobs)
+                    that.content = data.content
                     if(that.editorCtx){
                         that.editorCtx.setContents({
                             html: that.content,
@@ -255,6 +266,7 @@ export default {
                     that.info.city = data.city_name
                     that.info.district = data.district_name
                     data.tags = JSON.parse(data.tags)
+                    console.log(that.basicConfig)
                     if(data.tags){
                         for(var i = 0; i < data.tags.length; i++){
                             for(let j= 0; j<that.basicConfig.job_benefits.length; j++){
@@ -414,19 +426,19 @@ export default {
             }
         },
         bindPickerSalary (e) { // 薪资选择器
-            this.salaryIndex = e.detail.value
+            this.salaryIndex = Number(e.detail.value)
         },
         bindPickerAge (e) { // 年龄选择器
-            this.ageIndex = e.detail.value
+            this.ageIndex = Number(e.detail.value) 
         },
         bindPickerEdu_level (e){ // 学历要求
-            this.edu_levelIndex = e.detail.value
+            this.edu_levelIndex = Number(e.detail.value)
         },
         bindPickerWork_exp (e) { // 工作经验
-            this.work_expIndex = e.detail.value
+            this.work_expIndex = Number(e.detail.value)
         },
         bindPickerSex (e) { // 性别选择器
-            this.sexIndex = e.detail.value
+            this.sexIndex = Number(e.detail.value)
         },
         checkboxChange: function (e) { // 职位福利
             var items = this.basicConfig.job_benefits,
@@ -447,6 +459,7 @@ export default {
             this.content = e.detail.html
         },
         onEditorReady () {
+            const that = this
             uni.createSelectorQuery().select('#editor').context((res) => {
                 this.editorCtx = res.context
                 if(that.content){

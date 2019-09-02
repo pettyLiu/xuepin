@@ -12,13 +12,45 @@
 			</view>
 		</view>
 		<view class="content">
-			<text class="title">职位信息</text>
+			<view class="title row ali_center">
+				<text class="listTitleLine"></text>
+				<text>职位信息</text>	
+			</view>
 			<view class="postDescribe">
 				<rich-text :nodes="detail.content"></rich-text>
 			</view>	
 		</view>
+		<view class="content" v-if="detail.validity">
+			<view class="title row ali_center">
+				<text class="listTitleLine"></text>
+				<text>兼职详情</text>	
+			</view>
+			<view class="list">
+				<view class="partTime f_26 column">
+					<text>兼职类型：{{detail.validity}}</text>
+					<text v-if="detail.short_validity_time">兼职日期：{{detail.short_validity_time}}</text>
+				</view>
+				<table class="column">
+					<tr><th class="" v-for="item in week" :key="item">{{item}}</th></tr>
+					<view class="row">
+						<view class="column td">
+							<text>上午</text>
+							<text>下午</text>
+							<text>晚上</text>
+						</view>
+						<view class="column td" v-for="(ite, index) in detail.part_time" :key="index">
+							<text class="iconfont icon-duigou white" v-bind:class="{'globelColor': it} "
+							v-for="(it,i) in ite" :key="i" @click="checked(index, i)"></text>                             
+						</view>
+					</view>
+				</table>
+			</view>	
+		</view>
 		<view class="footer">
-			<text class="title">公司信息</text>
+			<view class="title row ali_center">
+				<text class="listTitleLine"></text>
+				<text>公司信息</text>	
+			</view>
 			<view class="row companyTxt" @click="toCompany(detail.enterprise_id)">
 				<image class="companyAvatar" :src="imgUrl + detail.logo" mode=""></image>
 				<view class="tocompany column just_btw">
@@ -46,7 +78,8 @@
 				imgUrl: config.imgUrl,
 				longitude: '',
 				latitude: '',
-				distance: ''
+				distance: '',
+				week: ['','周一','周二','周三','周四','周五','周六','周日'],
 			};
 		},
 		onLoad (options) {
@@ -192,4 +225,11 @@
 
 <style lang="less">
 	@import '../style/personal/postDetail';
+	.listTitleLine{
+            height: 30upx;
+            width: 6upx;
+            background: #5E57EB;
+            display: inline-block;
+            margin-right: 16upx;
+        }
 </style>

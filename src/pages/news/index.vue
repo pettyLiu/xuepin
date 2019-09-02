@@ -22,7 +22,7 @@
 					</view>
 					<view class="newsTip row just_btw" @click.stop="toInterviewDetail(item.id)">
 						<text class="time">{{item.created_at}}</text>
-						<text class="newstype">{{item.status}}<text class="iconfont icon-youjiantou"></text></text>	
+						<text class="newstype">企业{{item.status=='不合适'?'标为':''}}{{item.status}}<text class="iconfont icon-youjiantou"></text></text>	
 					</view>	
 				</view>
 			</view>
@@ -51,7 +51,7 @@
 		},
 		data(){
 			return{
-				tabs: ['全部','查看','待面试','不合适'],
+				tabs: ['全部投递','被查看','邀请面试','不合适'],
 				activeTab: 0,
 				news: [],
 				sliderLeft: 0,

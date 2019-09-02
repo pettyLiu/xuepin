@@ -50,6 +50,7 @@
 					if(this.checkRadio != ''){
 						this.showBtn = true
 					}
+					
 					this.pay = this.Beliel * e.detail.value
 				}else {
 					this.pay = 0
